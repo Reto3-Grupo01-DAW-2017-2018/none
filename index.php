@@ -20,17 +20,17 @@ function cargarControlador($controller){
 
     switch ($controller) {
         case 'Usuario':
-            $strFileController='controller/BodegaController.php';
+            $strFileController='controller/UsuarioController.php';
             require_once $strFileController;
-            $controllerObj=new BodegaController();
+            $controllerObj=new UsuarioController();
             break;
         case 'Proyecto':
-            $strFileController='controller/VinoController.php';
+            $strFileController='controller/ProyectoController.php';
             require_once $strFileController;
             $controllerObj=new UsuarioController();
             break;
         default:
-            $strFileController='controller/BodegaController.php';
+            $strFileController='controller/UsuarioController.php';
             require_once $strFileController;
             $controllerObj=new BodegaController();
             break; 
@@ -45,24 +45,5 @@ function lanzarAccion($controllerObj){
         $controllerObj->run(ACCION_DEFECTO);
     }
 }
-
-/*
-function cargarControlador($controller){
-	// Creamos el nombre del controlador: e.j. usuarioController
-    $controlador=ucwords($controller).'Controller';
-    // Creamos el nombre del archivo del controlador: e.j. controller/usuarioController.php
-    $strFileController='controller/'.$controlador.'.php';
-    //Si no existe ningun controlador con ese nombre, cargamos el definido por defecto.
-    if(!is_file($strFileController)){
-        $strFileController='controller/'.ucwords(CONTROLADOR_DEFECTO).'Controller.php';   
-    }
-    //Cargamos el archivo donde está definido el controlador:
-    require_once $strFileController;
-    //Creamos el objeto
-    $controllerObj=new $controlador();
-    return $controllerObj;
-}
-*/
-
 
 ?>

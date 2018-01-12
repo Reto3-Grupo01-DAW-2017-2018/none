@@ -95,8 +95,8 @@ class Comentario {
 
     public function save(){
 
-        $consulta = $this->conexion->prepare("INSERT INTO " . $this->table . " (contenido,fecha,participante,proyecto)
-                                        VALUES (:contenido,SYSDATE(),:participante,:proyecto)");
+        $consulta = $this->conexion->prepare("INSERT INTO " . $this->table . " (contenido,fecha,editado,participante,proyecto)
+                                        VALUES (:contenido,SYSDATE(),no,:participante,:proyecto)");
         $save = $consulta->execute(array(
             "contenido" => $this->contenido,
             "participante" => $this->participante,
@@ -109,7 +109,7 @@ class Comentario {
 
     public function getAll(){
         /*Nota, este get all esta para coger todos los comentarios de un proyecto (se filtra por el proyecto)*/
-        $consulta = $this->conexion->prepare("SELECT idComentario,contenido,fecha,participante,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto ORDER BY fecha");
+        $consulta = $this->conexion->prepare("SELECT idComentario,contenido,fecha,editado,participante,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto ORDER BY fecha");
         $consulta->execute(array(
                 "proyecto" => $this->proyecto)
         );
@@ -122,7 +122,7 @@ class Comentario {
 
     public function getComentarioById(){
 
-        $consulta = $this->conexion->prepare("SELECT idComentario,contenido,fecha,participante,proyecto FROM " . $this->table . " WHERE idComentario = :idComentario");
+        $consulta = $this->conexion->prepare("SELECT idComentario,contenido,fecha,editado,participante,proyecto FROM " . $this->table . " WHERE idComentario = :idComentario");
         $consulta->execute(array(
                 "idComentario" => $this->idComentario)
         );
@@ -135,12 +135,12 @@ class Comentario {
     /**/
 
     public function update(){
-        $consulta = $this->conexion->prepare("UPDATE " . $this->table . " SET nombre = :nombre, descripcion = :descripcion, fechaInicioProyecto = :fechaInicioProyecto, responsable = :responsable WHERE idProyecto = :idProyecto");
+        $consulta = $this->conexion->prepare("UPDATE " . $this->table . " SET contenido = :contenido, fecha = :fecha, editado = si, participante = :participante, proyecto = :proyecto WHERE idComentario = :idComentario");
         $update = $consulta->execute(array(
-            "nombre" => $this->nombre,
-            "descripcion" => $this->descripcion,
-            "fechaInicioProyecto" => $this->anyo,
-            "responsable" => $this->tipo,
+            "contenido" => $this->contenido,
+            "fecha" => $this->fecha,
+            "participante" => $this->participante,
+            "proyecto" => $this->proyecto,
             "idProyecto" => $this->idProyecto
         ));
         $this->conexion = null;
@@ -149,9 +149,9 @@ class Comentario {
 
     public function remove(){
 
-        $consulta = $this->conexion->prepare("DELETE FROM " . $this->table . " WHERE idProyecto = :idProyecto" );
+        $consulta = $this->conexion->prepare("DELETE FROM " . $this->table . " WHERE idComentario = :idComentario" );
         $consulta->execute(array(
-                "idProyecto" => $this->idProyecto)
+                "idComentario" => $this->idComentario)
         );
         /* Fetch all of the remaining rows in the result set */
         $resultado = $consulta->rowCount();

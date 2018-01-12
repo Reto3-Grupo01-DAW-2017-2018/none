@@ -73,11 +73,24 @@ class Participante {
         return $save;
     }
 
-    public function getAll(){
+    public function getAllParticipantes(){
     /*Nota, este get all esta para coger todos los participante de un proyecto (se filtra por el proyecto)*/
         $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto");
         $consulta->execute(array(
                 "proyecto" => $this->proyecto)
+        );
+
+        $resultados = $consulta->fetchAll();
+        $this->conexion = null; //cierre de conexión
+        return $resultados;
+
+    }
+
+    public function getAllProyectos(){
+        /*Nota, este get all esta para coger todos los proyectos de un usuario (se filtra por el usuario)*/
+        $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE usuario = :usuario");
+        $consulta->execute(array(
+                "usuario" => $this->usuario)
         );
 
         $resultados = $consulta->fetchAll();

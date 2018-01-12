@@ -1,4 +1,4 @@
 <?php
-define("CONTROLADOR_DEFECTO", "proyecto");
+define("CONTROLADOR_DEFECTO", "usuario");
 define("ACCION_DEFECTO", "index");
 ?>

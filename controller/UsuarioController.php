@@ -34,16 +34,14 @@ class UsuarioController{
      *
      */
     public function index(){
+        if(!isset($_SESSION["user"])){
+            /*Aqui cargamos la vista de bienvenida/login*/
+            echo $this->twig->render("loginView.html");
+        }else{
+            /*cargamos la vista de la lista de proyectos*/
+            echo $this->twig->render("listaProyectos.html");
+        }
 
-        //Creamos el objeto empleado
-        $vino=new Proyecto($this->conexion);
-
-        //Conseguimos todos los empleados
-        $vino->setBodega($_GET["idbodega"]);
-        $vino=$vino->getAll();
-
-        //Cargamos la vista index y le pasamos valores
-        $this->view("listaVinos",$vino);
     }
 
     /**
@@ -112,17 +110,5 @@ class UsuarioController{
         }
         header('Location: index.php');
     }
-
-    /**
-     * Crea la vista que le pasemos con los datos indicados.
-     *
-     */
-    public function view($vista,$datos){
-        $data = $datos;
-
-        $idbodega = $_GET["idbodega"];
-        require_once  __DIR__ . "/../view/" . $vista . "View.php";
-    }
-
 }
 ?>
