@@ -38,7 +38,7 @@ class ProyectoController extends BaseController{
     public function index(){
         
         //Creamos el objeto empleado
-        $bodega=new Usuario(parent::conexion);
+        $bodega=new Usuario($this->conexion);
         
         //Conseguimos todos los empleados
         $bodega=$bodega->getAll();

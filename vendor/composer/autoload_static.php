@@ -18,6 +18,7 @@ class ComposerStaticInite676d7d631e412781c2e8ed06f559485
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Component\\Templating\\' => 29,
         ),
     );
 
@@ -29,6 +30,10 @@ class ComposerStaticInite676d7d631e412781c2e8ed06f559485
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Component\\Templating\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/templating',
         ),
     );
 

@@ -80,15 +80,16 @@ class Usuario {
 
         $consulta = $this->conexion->prepare("INSERT INTO " . $this->table . " (idUser,username,password,email)
                                         VALUES (:idUser,:username,:password,:email)");
-        $save = $consulta->execute(array(
+        $resultado = $consulta->execute(array(
             "idUser" => $this->idUser,
             "username" => $this->username,
             "password" => $this->password,
             "email" => $this->email
         ));
+        $resultado = $consulta->rowCount();
         $this->conexion = null;
 
-        return $save;
+        return $resultado;
     }
     
     public function getAll(){
@@ -107,6 +108,31 @@ class Usuario {
         $consulta->execute(array(
                 "idUser" => $this->idUser)
         );
+        /* Fetch all of the remaining rows in the result set */
+        $resultado=$consulta->fetchObject();
+        $this->conexion = null; //cierre de conexión
+        return $resultado;
+    }
+
+    public function getUsuarioByUsername(){
+
+        $consulta = $this->conexion->prepare("SELECT idUser,username,password,email FROM " . $this->table . " WHERE username = :username");
+        $consulta->execute(array(
+                "username" => $this->username)
+        );
+        /* Fetch all of the remaining rows in the result set */
+        $resultado=$consulta->fetchObject();
+        $this->conexion = null; //cierre de conexión
+        return $resultado;
+    }
+
+    public function getUsuarioLogin(){
+
+        $consulta = $this->conexion->prepare("SELECT idUser,username,password,email FROM " . $this->table . " WHERE (username = :username OR email = :username ) AND password = :password ");
+        $consulta->execute(array(
+                "username" => $this->username,
+                "password" => $this->password
+            ));
         /* Fetch all of the remaining rows in the result set */
         $resultado=$consulta->fetchObject();
         $this->conexion = null; //cierre de conexión

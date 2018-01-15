@@ -7,15 +7,5 @@ define("DB_PASS", "");
 define("DB_DATABASE", "nonecollab");
 define("DB_CHARSET", "utf8");
 
-/*
-return array(
-    "driver"    =>"mysql",
-    "host"      =>"localhost",
-    "user"      =>"root",
-    "pass"      =>"",
-    "database"  =>"mvc1",
-    "charset"   =>"utf8"
-);
-*/
 
 ?>

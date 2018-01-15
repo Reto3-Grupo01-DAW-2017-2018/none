@@ -27,12 +27,12 @@ function cargarControlador($controller){
         case 'Proyecto':
             $strFileController='controller/ProyectoController.php';
             require_once $strFileController;
-            $controllerObj=new UsuarioController();
+            $controllerObj=new ProyectoController();
             break;
         default:
             $strFileController='controller/UsuarioController.php';
             require_once $strFileController;
-            $controllerObj=new BodegaController();
+            $controllerObj=new UsuarioController();
             break; 
     }
     return $controllerObj;

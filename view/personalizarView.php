@@ -1,5 +1,4 @@
-{% extends "layout.html" %}
-{% block head%}
+<!--
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Personalizar</title>
@@ -7,40 +6,20 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" type="text/css" href="reset.css">
     <link rel="stylesheet" type="text/css" href="main.css">
-{% endblock %}
-{% block container%}
+
 
 <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<script src="https://use.fontawesome.com/aa95071b26.js"></script>
+<script src="https://use.fontawesome.com/aa95071b26.js"></script>-->
+<?php include_once "head.php"?>
+
 <div id="container">
     <div class="out-wrap">
         <h1 id="titulo">Personaliza el navegador</h1>
-        <ul id="navPrincipal">
-            <li class="menu">
-                <a href="#">Home</a>
-            </li>
-            <li class="menu">
-                <a href="#">Trayectoria</a>
-            </li>
-            <li class="menu">
-                <a href="#">Proyectos</a>
-            </li>
-            <li class="menu">
-                <a href="#">Testimonios</a>
-            </li>
-            <li class="menu">
-                <a href="#">Legal</a>
-            </li>
-            <li class="menu">
-                <a href="#">DOPodcast</a>
-            </li>
-            <li class="menu">
-                <a href="#">Contacto</a>
-            </li>
-        </ul>
+        <?php include_once "header.php"?>
         <div class="tab-container">
             <ul id="tabs">
                 <li class="active" title="reds" vc-code="#f44336"></li>
@@ -387,12 +366,9 @@
         </div>
     </div>
 </div>
-
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://use.fontawesome.com/aa95071b26.js"></script>
 <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/TweenLite.min.js"></script>
 <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/EasePack.min.js"></script>
 <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/demo.js"></script>
-<script src="js.js"></script>
-{% endblock %}
-
-</body>
-</html>
+<?php include_once "footer.php"?>
