@@ -16,7 +16,7 @@
 <script src="https://use.fontawesome.com/aa95071b26.js"></script>-->
 <?php include_once "head.php"?>
 
-<div id="container">
+<div class="container">
     <div class="out-wrap">
         <h1 id="titulo">Personaliza el navegador</h1>
         <?php include_once "header.php"?>

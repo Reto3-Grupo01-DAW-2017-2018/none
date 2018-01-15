@@ -24,11 +24,17 @@ class UsuarioController extends BaseController{
             case "update" :
                 $this->update();
                 break;
-            case "detalle" :
-                $this->crearDetalleVinoView();
+            case "perfil" :
+                $this->crearPerfilView();
+                break;
+            case "custom" :
+                $this->crearCustomView();
                 break;
             case "login" :
                 $this->login();
+                break;
+            case "logout" :
+                $this->logout();
                 break;
             default:
                 $this->index();
@@ -104,11 +110,30 @@ class UsuarioController extends BaseController{
     }
 
     /**
+     * Comprueba el login mediante el (username||email) y password, si esta correcto nos devuelve el objeto completo y lo guardamos en session
+     */
+    public function logout(){
+        if(isset($_SESSION["user"])){
+            session_destroy();
+        }
+        header('Location: index.php');
+    }
+
+    /**
      * Como para crear esta view no necesitamos datos (estan en session), comprobamos que la session exita y lanzamos la view.
      */
     public function crearPerfilView(){
         if(isset($_SESSION["user"])){
-            $this->view("perfil");
+            $this->view("perfil","");
+        }
+    }
+
+    /**
+     * Como para crear esta view no necesitamos datos (estan en session), comprobamos que la session exita y lanzamos la view.
+     */
+    public function crearCustomView(){
+        if(isset($_SESSION["user"])){
+            $this->view("personalizar","");
         }
     }
 
