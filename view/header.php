@@ -24,8 +24,8 @@
             <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="glyphicon glyphicon-user"> </span> <?php echo $usuario->username." "; ?><span class="caret"></span>
             </a>
-            <ul id="dropdownPerfil" class="dropdown-menu">
-                <li><a class="dropdown-item" href="#"><span class="glyphicon glyphicon-cog"></span> Administrar perfil</a></li>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#"><span class="glyphicon glyphicon-cog"></span> Perfil</a></li>
                 <li><a class="dropdown-item" href="/../nonecollab/index.php?controller=usuario&action=custom"><span class="glyphicon glyphicon-wrench"></span> Personalizar</a></li>
                 <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="/../nonecollab/index.php?controller=usuario&action=logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>

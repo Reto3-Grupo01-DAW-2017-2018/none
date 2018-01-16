@@ -8,6 +8,5 @@
         <input type="password" id="passwordInput" class="form-control" name="password">
         <input type="submit" value="Log-in" class="btn btn-success"/>
     </form>
-    <?php include_once "footer.php"?>
 </div>
-
+<?php include_once "footer.php"?>

@@ -69,7 +69,6 @@ class Participante {
             "proyecto" => $this->proyecto
         ));
         $this->conexion = null;
-
         return $save;
     }
 

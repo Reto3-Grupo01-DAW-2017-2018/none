@@ -1,0 +1,64 @@
+{% block head %}
+    <!DOCTYPE HTML>
+    <html lang="es">
+    <head>
+        <meta charset="utf-8"/>
+        <title>NoneCollab</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/../nonecollab/css/main.css">
+        <link rel="icon" type="image/ico" href="/../nonecollab/img/folder.ico">
+    </head>
+    <body>
+{% endblock %}
+{% block header %}
+    <header>
+        <ul id="navPrincipal">
+            <li class="menu">
+                <a href="index.php?controller=usuario&action=index">Inicio</a>
+            </li>
+            <li class="menu">
+                <a href="#">Trayectoria</a>
+            </li>
+            <li class="menu">
+                <a href="#">Proyectos</a>
+            </li>
+            <li class="menu">
+                <a href="#">Testimonios</a>
+            </li>
+            {% if  user is defined %}
+                <li class="menu dropdown" id="dropdownPerfil">
+                    <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user"> </span> {{user.username}} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><span class="glyphicon glyphicon-cog"></span> Perfil</a></li>
+                        <li><a class="dropdown-item" href="/../nonecollab/index.php?controller=usuario&action=custom"><span class="glyphicon glyphicon-wrench"></span> Personalizar</a></li>
+                        <div class="dropdown-divider"></div>
+                        <li><a class="dropdown-item" href="/../nonecollab/index.php?controller=usuario&action=logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li class="menu"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Acceder</a></li>
+                <li class="menu"><a href="#"><span class="glyphicon glyphicon-user"></span> Registro</a></li>
+            {% endif %}
+        </ul>
+    </header>
+{% endblock %}
+<div class="container">
+    {% block container %}
+
+    {% endblock %}
+</div>
+{% block footer %}
+<footer>
+    <div>
+        <hr/>Copyright &copy; <?php echo  date("Y"); ?>
+    </div>
+</footer>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/../nonecollab/js/js.js"></script>
+</body>
+</html>
+{% endblock %}

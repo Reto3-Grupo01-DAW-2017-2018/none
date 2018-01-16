@@ -60,10 +60,9 @@ function LightenDarkenColor(col, amt) {
 $(document).ready(eventos);
 
 function eventos(){
-    cookieColorNav();
-    cookieColorFontNav();
+    cookieColorPrincipal();
+    cookieColorFontPrincipal();
     $("#divColor>div>div>a").bind('click', { param: $(this) }, cambiarColorPicked);
-    //$("#botonAceptarColor").bind('click', comprobarColor);
     $("#botonAceptarColor").click(comprobarColor);
 }
 
@@ -80,28 +79,28 @@ function comprobarColor (){
         var colorSelected=$("#colorSelected > p").text();
         document.cookie="colorNav="+encodeURIComponent(colorSelected)+";max-age=86400";
         //Cookies.set("colorFondo",colorSelected);
-        cookieColorNav();
+        cookieColorPrincipal();
         if($(".toggle input:checked").length>0){
             document.cookie="colorNavFont="+encodeURIComponent("black")+";max-age=86400";
-            cookieColorFontNav();
+            cookieColorFontPrincipal();
         }else{
             document.cookie="colorNavFont="+encodeURIComponent("white")+";max-age=86400";
-            cookieColorFontNav();
+            cookieColorFontPrincipal();
         }
     }
 }
 
-function cookieColorNav(){
+function cookieColorPrincipal(){
     var color=readCookie('colorNav');
     if(color!=null){
-        $("#navPrincipal").css("background-color",color);
+        $("#navPrincipal,footer>div,.dropdown-menu").css("background-color",color);
     }
 }
 
-function cookieColorFontNav(){
+function cookieColorFontPrincipal(){
     var color=readCookie('colorNavFont');
     if(color!=null){
-        $("#navPrincipal>li>a").css("color",color);
+        $("#navPrincipal>li>a,footer>div,.dropdown-menu>li>a").css("color",color);
     }
 }
 

@@ -15,9 +15,6 @@ class BaseController{
         $this->conectar=new Conectar();
         $this->conexion=$this->conectar->conexion();
     }
-    /*public function render($view){
-        echo $this->twig->render($view);
-    }*/
 
 }
 ?>

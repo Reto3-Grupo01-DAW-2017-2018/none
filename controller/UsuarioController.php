@@ -1,9 +1,13 @@
 <?php
 require_once __DIR__ . "/BaseController.php";
-require_once __DIR__ . "/../model/Usuario.php";
-session_start();
 class UsuarioController extends BaseController{
 
+
+    public function __construct(){
+        parent::__construct();
+        require_once __DIR__ . "/../model/Usuario.php";
+        session_start();
+    }
 
     /**
      * Ejecuta la acción correspondiente.
@@ -48,11 +52,16 @@ class UsuarioController extends BaseController{
     public function index(){
         if(!isset($_SESSION["user"])){
             /*Aqui cargamos la vista de bienvenida/login*/
-            $this->view("login","");
-            //echo $this->twig->render("loginView.html");
+            //$this->view("login","");
+            echo $this->twig->render("loginView.html",array(
+
+            ));
         }else{
             /*cargamos la vista de la lista de proyectos*/
-            $this->view("board","");
+            //$this->view("board","");
+            echo $this->twig->render("boardView.html",array(
+                "user"=>$_SESSION["user"]
+            ));
         }
     }
 
@@ -103,7 +112,7 @@ class UsuarioController extends BaseController{
             $usuario->setPassword($_POST["password"]);
             $user=$usuario->getUsuarioLogin();
             if($user!=null){
-                $_SESSION["user"]=serialize($user);
+                $_SESSION["user"]=$user;
             }
         }
         header('Location: index.php');
@@ -124,7 +133,9 @@ class UsuarioController extends BaseController{
      */
     public function crearPerfilView(){
         if(isset($_SESSION["user"])){
-            $this->view("perfil","");
+            echo $this->twig->render("perfilView.html",array(
+                "user"=>$_SESSION["user"]
+            ));
         }
     }
 
@@ -133,7 +144,9 @@ class UsuarioController extends BaseController{
      */
     public function crearCustomView(){
         if(isset($_SESSION["user"])){
-            $this->view("personalizar","");
+            echo $this->twig->render("personalizarView.html",array(
+                "user"=>$_SESSION["user"]
+            ));
         }
     }
 

@@ -12,9 +12,9 @@
     margin: 0 auto;
 }
 .container .out-wrap > h1 {
-    color: #fff;
+    color: black;
     text-align: center;
-    margin: 0 0 20px;
+    margin: 20px 0 20px;
 }
 .container .out-wrap .tab-container > ul#tabs {
     padding: 0 15px;
@@ -67,7 +67,7 @@
     -ms-flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
-@incldue justify-content (space-between);
+@include justify-content (space-between);
     display: none;
 }
 .container .out-wrap .tab-container .tab-panes > div:before {
@@ -88,18 +88,28 @@
     height: 30px;
     display: none;
 }
-.container .out-wrap .tab-container .tab-panes > div > div[style*="background"] {
+.container .out-wrap .tab-container .tab-panes > div > div {
     display: flex !important;
     justify-content: center;
     align-items: center;
 }
-.container .out-wrap .tab-container .tab-panes > div > div[style*="background"] p {
+.container .out-wrap .tab-container .tab-panes > div > div a {
     color: #fff;
     font-size: 16px;
     margin: 0;
+    text-align: center;
+}
+#contenedorColorSelected div:nth-child(1){
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 30%;
+    margin:5px auto;
+}
+#contenedorColorSelected>div>p{
+    margin:5px auto;
 }
 #colorSelected{
-    width:30%;
     margin:5px auto;
     height:100px;
     color:white;
@@ -107,6 +117,7 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.75);
+    flex-basis: 100%;
 }
 #contenedorColorSelected{
     padding-bottom: 10px;
@@ -126,18 +137,28 @@
     box-shadow: inset 0px 0px 30px 5px rgba(0,0,0,0.75);
     /*transform: skew(-15deg)*/
 }
+#contenedorColorSelected{
+    box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 /*Footer*/
 footer{
-    padding: 20px;
-    background: gray;
-    color: white;
+    padding:15px 15px 0px 15px;
     width:100%;
-    border-radius: 10px;
     margin-top: auto;
-    text-align: center;
-    text-shadow: 1px 1px 1px black;
     min-height: 15vh;
     max-height: 15vh;
+}
+footer>div{
+    padding: 15px;
+    position: relative;
+    background: gray;
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+    text-shadow: 1px 1px 1px black;
 }
 
 
@@ -150,6 +171,12 @@ body{
     flex-direction: column;
 }
 
+header{
+    padding: 0px 15px;
+    width: 100%;
+}
+
+
 #navPrincipal {
     border-radius: 10px;
     width: 100%;
@@ -159,6 +186,8 @@ body{
     flex:1;
     margin-right:0;
     margin-top: 20px;
+    font-size: 14px;
+
 }
 
 .menu {
@@ -183,6 +212,9 @@ body{
     border-bottom-right-radius: 10px;
     box-shadow: inset 0px 0px 30px 5px rgba(0,0,0,0.20);
 }
+.dropdown-menu>li>a:hover{
+    box-shadow: inset 0px 0px 30px 5px rgba(0,0,0,0.20);
+}
 
 .menu a {
     color: white;
@@ -201,6 +233,10 @@ body{
     flex:1;
 }
 
+#dropdownPerfil>ul{
+    right:0;
+    font-size: 12px;
+}
 
 
 /*TOGGLE*/
@@ -297,17 +333,21 @@ p{
     #titulo{
         font-size: 30px;
     }
-    #colorSelected{
+    #contenedorColorSelected div:nth-child(1){
         width:50%;
     }
     #divColor>div>div{
         flex-basis: 20%;
+    }
+    #divColor>div>div>a{
         font-size: 10px;
     }
 }
 @media (max-width: 400px) {
     #divColor>div>div{
         flex-basis: 33%;
+    }
+    #divColor>div>div>a{
         font-size: 10px;
     }
 }
@@ -329,11 +369,13 @@ p{
     #contenedorColorSelected{
         padding-bottom: 20px;
     }
-    #colorSelected{
+    #contenedorColorSelected div:nth-child(1){
         width:50%;
     }
     #divColor>div>div{
         flex-basis: 33%;
+    }
+    #divColor>div>div>a{
         font-size: 10px;
     }
 }
