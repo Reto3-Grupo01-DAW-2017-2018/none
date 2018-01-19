@@ -315,6 +315,22 @@ p{
     text-align: center;
 }
 
+/*BoardView*/
+.ftr{
+    margin-bottom: 0;
+}
+input{
+    margin-top:5px;
+    margin-bottom:5px;
+}
+.right{
+    float:right;
+}
+section a{
+    text-decoration: none;
+}
+
+
 /*Media*/
 
 @media (max-width: 775px) {

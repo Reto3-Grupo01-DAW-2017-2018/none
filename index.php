@@ -19,15 +19,20 @@ if(isset($_GET["controller"])){
 function cargarControlador($controller){
 
     switch ($controller) {
-        case 'Usuario':
+        case 'usuario':
             $strFileController='controller/UsuarioController.php';
             require_once $strFileController;
             $controllerObj=new UsuarioController();
             break;
-        case 'Proyecto':
+        case 'proyecto':
             $strFileController='controller/ProyectoController.php';
             require_once $strFileController;
             $controllerObj=new ProyectoController();
+            break;
+        case 'archivo':
+            $strFileController='controller/ArchivoController.php';
+            require_once $strFileController;
+            $controllerObj=new ArchivoController();
             break;
         default:
             $strFileController='controller/UsuarioController.php';

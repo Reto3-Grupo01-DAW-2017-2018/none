@@ -73,7 +73,7 @@ class Participante {
     }
 
     public function getAllParticipantes(){
-    /*Nota, este get all esta para coger todos los participante de un proyecto (se filtra por el proyecto)*/
+    /*Nota, este get all esta para coger todos los participantes de un proyecto (se filtra por el proyecto)*/
         $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto");
         $consulta->execute(array(
                 "proyecto" => $this->proyecto)
@@ -85,8 +85,8 @@ class Participante {
 
     }
 
-    public function getAllProyectos(){
-        /*Nota, este get all esta para coger todos los proyectos de un usuario (se filtra por el usuario)*/
+    public function getAll(){
+        /*Nota, este get all esta para coger todos las participaciones de un usuario (se filtra por el usuario)*/
         $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE usuario = :usuario");
         $consulta->execute(array(
                 "usuario" => $this->usuario)
@@ -102,7 +102,7 @@ class Participante {
 
         $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE idParticipante = :idParticipante");
         $consulta->execute(array(
-                "idUser" => $this->idUser)
+                "idParticipante" => $this->idParticipante)
         );
         /* Fetch all of the remaining rows in the result set */
         $resultado=$consulta->fetchObject();

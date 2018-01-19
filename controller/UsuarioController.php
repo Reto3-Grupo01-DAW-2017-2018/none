@@ -5,8 +5,8 @@ class UsuarioController extends BaseController{
 
     public function __construct(){
         parent::__construct();
-        require_once __DIR__ . "/../model/Usuario.php";
         session_start();
+        require_once __DIR__ . "/../model/Usuario.php";
     }
 
     /**
@@ -54,14 +54,13 @@ class UsuarioController extends BaseController{
             /*Aqui cargamos la vista de bienvenida/login*/
             //$this->view("login","");
             echo $this->twig->render("loginView.html",array(
-
+                "titulo"=>"Login - Nonecollab"
             ));
         }else{
             /*cargamos la vista de la lista de proyectos*/
             //$this->view("board","");
-            echo $this->twig->render("boardView.html",array(
-                "user"=>$_SESSION["user"]
-            ));
+
+            header('Location: index.php?controller=proyecto&action=proyectosusuario');
         }
     }
 
@@ -79,9 +78,8 @@ class UsuarioController extends BaseController{
             $resultado=$usuario->save();
             //Despues comprobamos si se ha insertado y si se ha insertado cogemos los datos para hacer un login "manual"
             if($resultado!=0){
-                session_start();
                 $user=$usuario->getUsuarioByUsername();
-                $_SESSION["user"]=serialize($user);
+                $_SESSION["user"]=$user;
             }else{
                 //no se ha insertado ninguna fila, sacar mensaje de error.
             }
@@ -95,7 +93,7 @@ class UsuarioController extends BaseController{
     public function deleteById(){
         if(isset($_SESSION["user"])) {
             //borramos el usuario logueado Cuidado!
-            $user=unserialize($_SESSION["user"]);
+            $user=$_SESSION["user"];
             $filasborradas=$user->remove();
             session_destroy();
         }
@@ -112,6 +110,7 @@ class UsuarioController extends BaseController{
             $usuario->setPassword($_POST["password"]);
             $user=$usuario->getUsuarioLogin();
             if($user!=null){
+
                 $_SESSION["user"]=$user;
             }
         }

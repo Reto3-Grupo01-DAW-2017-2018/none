@@ -9,8 +9,8 @@ class ArchivoController extends BaseController {
     Función que, según la acción pasada en la url, manda a cada función correspondiente*/
     public function run($accion){
         switch($accion) { 
-            case "index" :
-                $this->index();
+            case "archivosPorProyecto" :
+                $this->archivosPorProyecto();
                 break;
             case "aniadirArchivo" :
                 $this->view('aniadirArchivo', "");
@@ -38,7 +38,7 @@ class ArchivoController extends BaseController {
     
     /*-------------------------------------------------------------------
     Función que carga la lista de archivos en el proyecto indicado, conseguida del modelo (Archivo)*/
-    public function index() {
+    public function archivosPorProyecto() {
         //Creamos el objeto 'Archivo'
         $archivo = new Archivo($this->conexion);
         $archivo->setProyecto($_GET['proyecto']);
@@ -124,9 +124,12 @@ class ArchivoController extends BaseController {
             unlink(__DIR__.'../zip/archivosByCheck.zip');
         }
         $zip = new ZipArchive;
-        if ($zip->open(__DIR__.'../../zip/curriculumsByCheck.zip',  ZipArchive::CREATE) === TRUE) {
+        if ($zip->open(__DIR__.'../zip/archivosByCheck.zip',  ZipArchive::CREATE) === TRUE) {
             foreach ($idsArchivos as $id) {
-                $archivo=/*Aquí va la query*/;
+                $archivo= new Archivo($this->conexion);
+                $archivo->setIdArchivo($id);
+                /*Aquí va la query*/;
+
                 array_push($archivos, $archivo);
             }
             foreach ($archivos as $archivo){

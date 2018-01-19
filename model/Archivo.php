@@ -121,6 +121,19 @@ class Archivo {
 
     }
 
+    public function getAllByUser($iduser){
+        /*Nota, este get all esta para coger todos los archivos de un usuario (se filtra por el usuario)*/
+        $consulta = $this->conexion->prepare("SELECT idArchivo,nombreArchivo,rutaArchivo,participante,proyecto FROM " . $this->table . " WHERE participante IN (Select distinct idParticipante from participante where usuario = :iduser)");
+        $consulta->execute(array(
+                "iduser" => $iduser)
+        );
+        /* Fetch all of the remaining rows in the result set */
+        $resultados = $consulta->fetchAll();
+        $this->conexion = null; //cierre de conexión
+        return $resultados;
+
+    }
+
     public function getArchivoById(){
 
         $consulta = $this->conexion->prepare("SELECT idArchivo,nombreArchivo,rutaArchivo,participante,proyecto FROM " . $this->table . " WHERE idArchivo = :idArchivo");
