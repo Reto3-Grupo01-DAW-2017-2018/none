@@ -78,10 +78,9 @@ class Usuario {
 
     public function save(){
 
-        $consulta = $this->conexion->prepare("INSERT INTO " . $this->table . " (idUser,username,password,email)
-                                        VALUES (:idUser,:username,:password,:email)");
+        $consulta = $this->conexion->prepare("INSERT INTO " . $this->table . " (username,password,email)
+                                        VALUES (:username,:password,:email)");
         $resultado = $consulta->execute(array(
-            "idUser" => $this->idUser,
             "username" => $this->username,
             "password" => $this->password,
             "email" => $this->email
@@ -90,6 +89,70 @@ class Usuario {
         $this->conexion = null;
 
         return $resultado;
+    }
+
+    /**
+     * Funcion para comprobar si existe un correo en la base de datos
+     */
+    public function correo()
+    {
+
+
+        $consulta= $this->conexion->prepare('
+            SELECT email
+            FROM usuario
+            WHERE email = :email');
+
+        $consulta->execute(array(
+            'email' => $this->email
+        ));
+
+        if($consulta->fetchColumn())
+        {
+            //echo 'Ya existe un usuario registrado con este Email.';
+
+            die(false);
+        }
+        else
+        {
+            /*echo 'NO SE HA ENCONTRADO ESTE EMAIL EN LA BD<br>
+          rteetr  (AQUI HABRIA QUE MANDAR A LA VISTA DEL LOGIN DE NUEVO (DND ESTABA)).';
+            */
+
+            die(true);
+        }
+        $this->conexion = null;
+    }
+
+    /**
+     * Funcion para comprobar si existe un alias en la base de datos
+     */
+    public function username()
+    {
+        $consulta= $this->conexion->prepare('
+            SELECT username
+            FROM usuario
+            WHERE username = :username');
+
+        $consulta->execute(array(
+            'username' => $this->username
+        ));
+
+        if($consulta->fetchColumn())
+        {
+            //echo 'Ya existe un usuario registrado con este alias.';
+
+            die(false);
+        }
+        else
+        {
+            /*echo 'NO SE HA ENCONTRADO ESTE EMAIL EN LA BD<br>
+          rteetr  (AQUI HABRIA QUE MANDAR A LA VISTA DEL LOGIN DE NUEVO (DND ESTABA)).';
+            */
+
+            die(true);
+        }
+        $this->conexion = null;
     }
     
     public function getAll(){
@@ -147,8 +210,9 @@ class Usuario {
             "email" => $this->email,
             "idUser" => $this->idUser
         ));
+        $resultado = $consulta->rowCount();
         $this->conexion = null;
-        return $update;
+        return $resultado;
     }
 
     public function remove(){

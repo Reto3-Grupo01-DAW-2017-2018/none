@@ -1,7 +1,10 @@
 <?php
+require_once __DIR__ . "/BaseController.php";
 
 class ArchivoController extends BaseController {
     public function __construct() {
+        parent::__construct();
+        session_start();
         require_once __DIR__. "/../model/Archivo.php";
     }
     
@@ -11,6 +14,9 @@ class ArchivoController extends BaseController {
         switch($accion) { 
             case "archivosPorProyecto" :
                 $this->archivosPorProyecto();
+                break;
+            case "archivosUsuario" :
+                $this->buscarArchivosUser();
                 break;
             case "aniadirArchivo" :
                 $this->view('aniadirArchivo', "");
@@ -31,7 +37,7 @@ class ArchivoController extends BaseController {
                 $this->descargarArchivo();
                 break;
             default:
-                $this->index();
+                $this->archivosPorProyecto();
                 break;
         }
     }
@@ -52,7 +58,39 @@ class ArchivoController extends BaseController {
             'titulo' => 'ARCHIVOS'
         ));
     }
-    
+
+    /*-------------------------------------------------------------------
+    Función que carga la lista de todos los archivos del usuario indicado, conseguida del modelo (Archivo)*/
+    public function buscarArchivosUser() {
+
+        //Creamos el objeto 'Archivo'
+        $archivoUser = new Archivo($this->conexion);
+        $listaArchivosUser = $archivoUser->getAllByUser($_SESSION['user']->idUser);
+
+        $listaProyectosPorArchivo = array();
+        //Comprobamos si hay algún archivo o no
+        if($listaArchivosUser != null){
+            //Si hay archivo o archivos, buscamos el id y el nombre del proyecto de cada archivo, conseguido del modelo 'Proyecto'
+            require_once __DIR__. '/../model/Proyecto.php';
+            //Este array será coincidente con el de '$listaArchivosUser'
+            foreach ($listaArchivosUser as $archivo) {
+                $proyectoArchivo = new Proyecto($this->conexion);
+                $proyectoArchivo->setIdProyecto($archivo['proyecto']);
+                array_push($listaProyectosPorArchivo, $proyectoArchivo->getProyectoById());
+            }
+        }
+        else {
+            array_push($listaProyectosPorArchivo, 'sin archivos');
+        }
+
+        //Mandamos a la función view() para crear la vista 'tareasUserView'
+        $this->view('archivosUser', array(
+            'archivosUsuario' => $listaArchivosUser,
+            'archivosEnProyectos' => $listaProyectosPorArchivo,
+            'titulo' => "ARCHIVOS DEL USUARIO"
+        ));
+    }
+
     /*--------------------------------------------------------------
     Función para crear el nuevo archivo (objeto 'Archivo') y mandarlo a su clase (Archivo.php)*/
     public function guardarArchivo() {

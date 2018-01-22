@@ -19,6 +19,12 @@ class UsuarioController extends BaseController{
             case "index" :
                 $this->index();
                 break;
+            case "correo" :
+                $this->comprobarC();
+                break;
+            case "username" :
+                $this->username();
+                break;
             case "alta" :
                 $this->crear();
                 break;
@@ -27,6 +33,9 @@ class UsuarioController extends BaseController{
                 break;
             case "update" :
                 $this->update();
+                break;
+            case "registerView" :
+                $this->crearRegisterView();
                 break;
             case "perfil" :
                 $this->crearPerfilView();
@@ -65,6 +74,34 @@ class UsuarioController extends BaseController{
     }
 
     /**
+     * Funcion para comporbar si existe en la bd nuest5ro correo
+     */
+    public function comprobarC()
+    {
+
+        if(isset($_POST["email"]))
+        {
+            $correo=$_POST["email"]."";
+            $usuario=new Usuario($this->conexion);
+            $usuario->setEmail($correo);
+            $usuario->correo();
+        }
+    }
+
+    /**
+     * Funcion para comporbar si existe en la bd nuest5ro correo
+     */
+    public function username()
+    {
+        if(isset($_POST["username"]))
+        {
+            $username=$_POST["username"]."";
+            $usuario=new Usuario($this->conexion);
+            $usuario->setUsername($username);
+            $usuario->username();
+        }
+    }
+    /**
      * Crea un nuevo Usuario a partir de los parámetros POST
      */
     public function crear(){
@@ -78,6 +115,8 @@ class UsuarioController extends BaseController{
             $resultado=$usuario->save();
             //Despues comprobamos si se ha insertado y si se ha insertado cogemos los datos para hacer un login "manual"
             if($resultado!=0){
+                $usuario = new Usuario ($this->conexion);
+                $usuario->setUsername($_POST["username"]);
                 $user=$usuario->getUsuarioByUsername();
                 $_SESSION["user"]=$user;
             }else{
@@ -110,7 +149,6 @@ class UsuarioController extends BaseController{
             $usuario->setPassword($_POST["password"]);
             $user=$usuario->getUsuarioLogin();
             if($user!=null){
-
                 $_SESSION["user"]=$user;
             }
         }
@@ -132,8 +170,18 @@ class UsuarioController extends BaseController{
      */
     public function crearPerfilView(){
         if(isset($_SESSION["user"])){
-            echo $this->twig->render("perfilView.html",array(
+            echo $this->twig->render("updateView.html",array(
                 "user"=>$_SESSION["user"]
+            ));
+        }
+    }
+
+    /**
+     * Como para crear esta view no necesitamos datos (estan en session), comprobamos que la session exita y lanzamos la view.
+     */
+    public function crearRegisterView(){
+        if(!isset($_SESSION["user"])){
+            echo $this->twig->render("registerView.html",array(
             ));
         }
     }
@@ -150,14 +198,14 @@ class UsuarioController extends BaseController{
     }
 
     public function update(){
-        if(isset($_POST["iduser"])){
+        if(isset($_POST["idUser"])){
             //borramos un usuario
             $usuario = new Usuario($this->conexion);
-            $usuario->setIdUsuario($_POST["iduser"]);
+            $usuario->setIdUser($_POST["idUser"]);
             $usuario->setUsername($_POST["username"]);
             $usuario->setPassword($_POST["password"]);
             $usuario->setEmail($_POST["email"]);
-            $update=$usuario->update();
+            $resultado=$usuario->update();
         }
         header('Location: index.php');
     }

@@ -1,8 +1,6 @@
 <?php
 require_once __DIR__ . "/BaseController.php";
 
-//ESTA HABRÁ QUE QUITARLA CUANDO PONGA EL USUARIO EN SESION QUE VENDRA DE UsuarioController
-$_SESSION['idUsuario'] = 1;
 
 class ProyectoController extends BaseController {
     
@@ -46,11 +44,7 @@ class ProyectoController extends BaseController {
     public function proyectosUsuario() {
         //Creamos el objeto 'Proyecto'
         $proyecto = new Proyecto($this->conexion);
-        
-        //HE COMENTADO LO SIGUIENTE (HARÁ FALTA LUEGO) (VENDRA EN SESION)
-        //$proyecto->setResponsable($_GET['responsable']);
-        
-        //HE PUESTO LO SIGUIENTE PARA COMPROBACION
+
         $proyecto->setResponsable($_SESSION['user']->idUser);
         
         //Conseguimos todas los proyectos del usuario através del modelo 'Proyecto.php'
@@ -108,26 +102,28 @@ class ProyectoController extends BaseController {
     /*--------------------------------------------------------------
     Función manda al modelo para buscar los datos del proyecto seleccionado en el boton 'Ver Proyecto' */
     public function mostrarDatosProyecto() {
-        //Creamos el objeto solo con el Id y con esto sacaremos todos sus datos de BD
-        $proyectoDetalle = new Proyecto($this->conexion);
-        $proyectoDetalle ->setIdProyecto($_GET['proyecto']);
-        $profile = $proyectoDetalle->getProyectoById();
-        
-        
-        //Para conseguir todas las tareas en este proyecto, las conseguimos del modelo 'Tarea.php'
-        include_once  __DIR__. "/../model/Tarea.php";
-        //Creamos el objeto Tarea con el id del proyecto seleccionado
-        $tareaProyecto = new Tarea($this->conexion);
-        $tareaProyecto->setProyecto($proyectoDetalle->getIdProyecto());
-        $listadoTareasProyecto = $tareaProyecto->getAll();
-        
-        //Mandamos a la función view() para crear la vista 'detalleComentarioView'
-        echo $this->twig->render("proyectoView.html",array(
-            "user"=>$_SESSION["user"],
-            "proyecto"=>$profile,
-            "tareas" => $listadoTareasProyecto,
-            "titulo" => "Proyecto - Nonecollab"
-        ));
+        if(isset($_GET["proyecto"])) {
+            //Creamos el objeto solo con el Id y con esto sacaremos todos sus datos de BD
+            $proyectoDetalle = new Proyecto($this->conexion);
+            $proyectoDetalle->setIdProyecto($_GET['proyecto']);
+            $profile = $proyectoDetalle->getProyectoById();
+
+
+            //Para conseguir todas las tareas en este proyecto, las conseguimos del modelo 'Tarea.php'
+            include_once __DIR__ . "/../model/Tarea.php";
+            //Creamos el objeto Tarea con el id del proyecto seleccionado
+            $tareaProyecto = new Tarea($this->conexion);
+            $tareaProyecto->setProyecto($proyectoDetalle->getIdProyecto());
+            $listadoTareasProyecto = $tareaProyecto->getAll();
+
+            //Mandamos a la función view() para crear la vista 'detalleComentarioView'
+            echo $this->twig->render("proyectoView.html", array(
+                "user" => $_SESSION["user"],
+                "proyecto" => $profile,
+                "tareas" => $listadoTareasProyecto,
+                "titulo" => "Proyecto - Nonecollab"
+            ));
+        }
     }    
     
     /*-------------------------------------------------------------------

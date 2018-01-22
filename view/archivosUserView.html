@@ -1,33 +1,66 @@
 {% extends "layout.html" %}
 {% block container %}
-    <div class="col-lg-9" style="overflow-x:scroll;">
-        <h3>Panel del Proyecto</h3>
+    <div class="col-lg-9">
+        <h3>Archivos del Usuario</h3>
         <hr/>
-        {% for tarea in tareas %}
-            <!-- <div class="col-lg-2" style="width: 300px; height: 200px; border: 1px solid black; padding-top: 10px; padding-left: 25px;"> -->
-            <ul class="col-lg-5 list-group">
-                <li class="list-group-item">Tarea: <strong>{{tarea.nombreTarea}}</strong></li>
-                <li class="list-group-item">Inicio: <strong>{{tarea.fechaInicioTarea}}</strong></li>
-                <li class="list-group-item">Finalización: <strong>{{tarea.fechaFinTarea}}</strong></li>
-                <li class="list-group-item">Urgente: <strong>{{tarea.urgente}}</strong></li>
-                <li class="col-lg-12 list-group-item">Asignada a: <strong>Falta por crear columna en la BD para asignar personas</strong>
-                </li>
-                <li class="col-lg-12 list-group-item">
-                    <span>Finalizada:&nbsp;&nbsp;<input type="checkbox" name="finalizada" value="si" style="transform: scale(2)"></span>&nbsp;&nbsp;
-                    <a href="#" class="col-lg-4 col-lg-offset-8 btn btn-warning btn-sm" style="margin-top: -25px;"><span class="glyphicon glyphicon-edit"></span>&nbsp;Editar</a>
-                </li>
-            </ul>
-        {% endfor %}
+        <?php
+            if($data['archivosEnProyectos'][0] == 'sin archivos') {
+        ?>
+            <div id="mensajeArchivosUser" style="border: 1px solid black; text-align: center;">
+                <h5>
+                    El usuario no ha subido ningún archivo.
+                </h5>
+            </div>
+        <?php
+            }
+            else {
+        ?>
+        <!-- Tabla para mostrar los datos de cada archivo del usuario -->
+        <table class="table col-lg-12">
+            <thead>
+                <tr>
+                    <th scope="col">Proyecto</th>
+                    <th scope="col">Archivo</th>
+                    <th scope="col">Tipo de archivo</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+
+                    for($i = 0; $i < count($data['archivosEnProyectos']); $i++) {
+                    ?>
+                    <tr>
+                        <td><?php echo $data['archivosEnProyectos'][$i]->nombre; ?></td>
+                        <td><?php echo $data['archivosUsuario'][$i]['nombreArchivo']; ?></td>
+                        <td><?php echo 'TIPO DE ARCHIVO??'; ?></td>
+                        <td>
+
+                            <!-- Enlace para el boton Eliminar para eliminar de BD el archivo seleccionado (se pasa como action -> eliminar) -->
+                            <a href="index.php?controller=archivo&action=eliminar&archivo=<?php echo $data['archivosUsuario'][$i]->idArchivo; ?>" class="btn btn-danger btn-sm" style="text-decoration: none">
+                                Eliminar
+                            </a>
+
+                        </td>
+                    </tr>
+
+                    <?php
+                    }
+                }
+                ?>
+            </tbody>
+        </table>
+        <hr/>
     </div>
     <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
         <h4><strong>Proyecto:</strong></h4>
         Nombre:
         <br>
-        <input type="text" name="nombreProyecto" class="form-control" value="{{proyecto.nombre}}" disabled />
+        <input type="text" name="nombreProyecto" class="form-control" value="<?php echo $data['proyecto']->nombre ?>" disabled />
         <br>
         Descripción:
         <br>
-        <input type="text" name="descripcionProyecto" class="form-control" value="{{proyecto.descripcion}}" disabled />
+        <input type="text" name="descripcionProyecto" class="form-control" value="<?php echo $data['proyecto']->descripcion ?>" disabled />
         <br>
         <a href="" class="btn btn-warning btn-sm" title="Modificar Datos" style="width: 252px !important">Modificar Datos</a> <!-- antes era 180px -->
         <br>
