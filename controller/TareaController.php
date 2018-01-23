@@ -4,7 +4,6 @@ require_once __DIR__ . "/BaseController.php";
 class TareaController extends BaseController {
     public function __construct() {
         parent::__construct();
-        session_start();
         require_once __DIR__. "/../model/Tarea.php";
     }
     

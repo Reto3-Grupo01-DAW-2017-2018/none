@@ -1,7 +1,7 @@
 <?php
 //Configuración global
 require_once 'config/global.php';
-
+session_start();
 //Cargamos el controlador y ejecutamos la accion
 if(isset($_GET["controller"])){
     // Cargamos la instancia del controlador correspondiente
@@ -9,12 +9,16 @@ if(isset($_GET["controller"])){
     // Lanzamos la acción
     lanzarAccion($controllerObj);
 }else{
+    if(!isset($_SESSION["user"])){
+        $controllerObj=cargarControlador(CONTROLADOR_DEFECTO);
+    }else{
+        $controllerObj=cargarControlador("proyecto");
+    }
     // Cargamos la instancia del controlador por defecto
-    $controllerObj=cargarControlador(CONTROLADOR_DEFECTO);
+
     // Lanzamos la acción
     lanzarAccion($controllerObj);
 }
-
 
 function cargarControlador($controller){
 

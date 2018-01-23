@@ -4,7 +4,6 @@ require_once __DIR__ . "/BaseController.php";
 class ArchivoController extends BaseController {
     public function __construct() {
         parent::__construct();
-        session_start();
         require_once __DIR__. "/../model/Archivo.php";
     }
     
@@ -46,17 +45,22 @@ class ArchivoController extends BaseController {
     Función que carga la lista de archivos en el proyecto indicado, conseguida del modelo (Archivo)*/
     public function archivosPorProyecto() {
         //Creamos el objeto 'Archivo'
-        $archivo = new Archivo($this->conexion);
-        $archivo->setProyecto($_GET['proyecto']);
-        
-        //Conseguimos todas los archivos (lista de los archivos en BD)
-        $listaArchivos = $archivo->getAll();
-        
-        //Cargamos la vista archivosView.php con la función 'view()' y le pasamos valores (usaremos 'archivos')
-        $this->view('archivos', array(
-            'archivos' => $listaArchivos,
-            'titulo' => 'ARCHIVOS'
-        ));
+        if(isset($_GET["proyecto"])&&isset($_GET["proyectoNombre"])){
+            $archivo = new Archivo($this->conexion);
+            $archivo->setProyecto($_GET['proyecto']);
+
+            //Conseguimos todas los archivos (lista de los archivos en BD)
+            $listaArchivos = $archivo->getAll();
+
+            echo $this->twig->render("archivosProyectoView.html",array(
+                "user" => $_SESSION["user"],
+                "archivos" => $listaArchivos,
+                "nombreProyecto"=>$_GET["proyectoNombre"],
+                "idProyecto"=>$_GET['proyecto'],
+                "titulo" => "Archivos - Nonecollab"
+            ));
+        }
+
     }
 
     /*-------------------------------------------------------------------

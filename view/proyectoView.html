@@ -35,15 +35,15 @@
         <h4><strong>Acciones:</strong></h4>
         <a href="" class="btn btn-success btn-sm" title="Nueva Tarea" style="width: 252px !important">Nueva Tarea</a>
         <br><br>
-        <a href="index.php?controller=participante&action=listadoParticipantes&proyecto=<?php echo $data['proyecto']->idProyecto; ?>&idUsuario=<?php ?>" class="btn btn-info btn-sm" title="Ver Participantes" style="width: 252px !important">Ver Participantes</a>
+        <a href="index.php?controller=participante&action=listadoParticipantes&proyecto={{proyecto.idProyecto}}&idUsuario=<?php ?>" class="btn btn-info btn-sm" title="Ver Participantes" style="width: 252px !important">Ver Participantes</a>
         <br><br>
-        <a href="" class="btn btn-info btn-sm" title="Ver Archivos" style="width: 252px !important">Ver Archivos</a>
+        <a href="index.php?controller=archivo&action=archivosPorProyecto&proyecto={{proyecto.idProyecto}}&proyectoNombre={{proyecto.nombre}}" class="btn btn-info btn-sm" title="Ver Archivos" style="width: 252px !important">Ver Archivos</a>
         <br><br>
         <a href="" class="btn btn-info btn-sm" title="Ver Comentarios" style="width: 252px !important">Ver Comentarios</a>
         <br><br>
         <a class="btn btn-danger btn-sm" title="Eliminar Proyecto" data-toggle="modal" data-target="#confirmarEliminacion" style="width: 252px !important">Eliminar Proyecto</a>
         <br><br>
-        <a href="index.php?controller=proyectos&action=index&idUsuario=<?php ?>" class="btn btn-primary btn-sm" title="Volver" style="width: 252px !important">Volver</a>
+        <a href="index.php?controller=proyectos&action=index&idUsuario={{user.idUser}}" class="btn btn-primary btn-sm" title="Volver" style="width: 252px !important">Volver</a>
 
         <!-- Modal de bootstrap para confirmar la eliminación del proyecto -->
         <div class="modal fade" id="confirmarEliminacion" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminacion" aria-hidden="true">

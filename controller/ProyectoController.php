@@ -6,7 +6,6 @@ class ProyectoController extends BaseController {
     
     public function __construct() {        
         parent::__construct();
-        session_start();
         require_once __DIR__. "/../model/Proyecto.php";
     }
     
@@ -14,7 +13,7 @@ class ProyectoController extends BaseController {
     Función que, según la acción pasada en la url, manda a cada función correspondiente*/
     public function run($accion){
         switch($accion) { 
-            case "proyectosUsuario" :
+            case "index" :
                 $this->proyectosUsuario();
                 break;            
             case "aniadirProyecto" :

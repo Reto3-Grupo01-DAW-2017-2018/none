@@ -5,16 +5,18 @@
         <hr/>
         <table class="table col-lg-12">
             <!-- Tabla para mostrar los datos de cada tarea del usuario -->
-            <thead>
-                <tr>
-                    <th scope="col">Proyecto</th>
-                    <th scope="col">Tarea</th>
-                    <th scope="col">Inicio</th>
-                    <th scope="col">Finalización</th>
-                    <th scope="col">Urgente</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
+            {% if tareasUser is null %}
+                <thead>
+                    <tr>
+                        <th scope="col">Proyecto</th>
+                        <th scope="col">Tarea</th>
+                        <th scope="col">Inicio</th>
+                        <th scope="col">Finalización</th>
+                        <th scope="col">Urgente</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+            {% endif %}
             <tbody>
             {% for tarea in tareasUser %}
                 <tr>

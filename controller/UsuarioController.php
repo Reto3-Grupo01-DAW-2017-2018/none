@@ -2,10 +2,8 @@
 require_once __DIR__ . "/BaseController.php";
 class UsuarioController extends BaseController{
 
-
     public function __construct(){
         parent::__construct();
-        session_start();
         require_once __DIR__ . "/../model/Usuario.php";
     }
 
@@ -65,11 +63,6 @@ class UsuarioController extends BaseController{
             echo $this->twig->render("loginView.html",array(
                 "titulo"=>"Login - Nonecollab"
             ));
-        }else{
-            /*cargamos la vista de la lista de proyectos*/
-            //$this->view("board","");
-
-            header('Location: index.php?controller=proyecto&action=proyectosusuario');
         }
     }
 

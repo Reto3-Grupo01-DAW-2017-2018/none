@@ -110,7 +110,7 @@ class Archivo {
 
     public function getAll(){
         /*Nota, este get all esta para coger todos los archivos de un proyecto (se filtra por el proyecto)*/
-        $consulta = $this->conexion->prepare("SELECT idArchivo,nombreArchivo,rutaArchivo,participante,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto");
+        $consulta = $this->conexion->prepare("SELECT idArchivo,nombreArchivo,rutaArchivo,participante,archivo.proyecto,proyecto.nombre,usuario.username FROM " . $this->table . " INNER JOIN proyecto ON proyecto=proyecto.idProyecto INNER JOIN participante ON participante=participante.idParticipante INNER JOIN usuario ON participante.usuario=usuario.idUser WHERE archivo.proyecto = :proyecto");
         $consulta->execute(array(
                 "proyecto" => $this->proyecto)
         );
