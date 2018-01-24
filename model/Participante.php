@@ -76,8 +76,8 @@ class Participante {
     /*Nota, este get all esta para coger todos los participantes de un proyecto (se filtra por el proyecto)*/
         $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto");
         $consulta->execute(array(
-                "proyecto" => $this->proyecto)
-        );
+                "proyecto" => $this->proyecto
+            ));
 
         $resultados = $consulta->fetchAll();
         $this->conexion = null; //cierre de conexión
@@ -89,8 +89,8 @@ class Participante {
         /*Nota, este get all esta para coger todos las participaciones de un usuario (se filtra por el usuario)*/
         $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE usuario = :usuario");
         $consulta->execute(array(
-                "usuario" => $this->usuario)
-        );
+                "usuario" => $this->usuario
+            ));
 
         $resultados = $consulta->fetchAll();
         $this->conexion = null; //cierre de conexión
@@ -99,11 +99,22 @@ class Participante {
     }
 
     public function getParticipanteById(){
-
         $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE idParticipante = :idParticipante");
         $consulta->execute(array(
-                "idParticipante" => $this->idParticipante)
-        );
+                "idParticipante" => $this->idParticipante
+            ));
+        /* Fetch all of the remaining rows in the result set */
+        $resultado=$consulta->fetchObject();
+        $this->conexion = null; //cierre de conexión
+        return $resultado;
+    }
+
+    public function getParticipanteByUsuarioAndProyecto(){
+        $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE usuario = :usuario AND proyecto = :proyecto");
+        $consulta->execute(array(
+                "usuario" => $this->usuario,
+                "proyecto" => $this->proyecto
+            ));
         /* Fetch all of the remaining rows in the result set */
         $resultado=$consulta->fetchObject();
         $this->conexion = null; //cierre de conexión
@@ -116,8 +127,8 @@ class Participante {
 
         $consulta = $this->conexion->prepare("DELETE FROM " . $this->table . " WHERE idParticipante = :idParticipante" );
         $consulta->execute(array(
-            "idParticipante" => $this->idParticipante)
-        );
+            "idParticipante" => $this->idParticipante
+            ));
         /* Fetch all of the remaining rows in the result set */
         $resultado = $consulta->rowCount();
         $this->conexion = null; //cierre de conexión

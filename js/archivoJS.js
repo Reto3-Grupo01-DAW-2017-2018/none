@@ -18,19 +18,20 @@ function comprobarArchivos(evt) {
     var files = document.getElementById('archivos').files;
     // comprobamos si hay archivos seleccionados
     if(files.length>0) {
-        $("#formArchivos").attr("action","index.php?controller=archivo&action=subir");
+        /*$("#formArchivos").attr("action","index.php?controller=archivo&action=nuevoArchivo");
         $("#formArchivos").submit();
-        /* Hacer ajax una vez probado el post tradicional
+        */
+
         $.ajax
         ({
             type: 'POST',
-            url: '/../nonecollab/index.php?controller=archivo&action=subir',
+            url: 'index.php?controller=archivo&action=nuevoArchivo',
             data: files,
             success: function (data)
             {
                 resultado=data;
                 if(resultado==true) {
-
+                    $("#myModal").css("display","block");
                 }
                 else {
 
@@ -42,7 +43,7 @@ function comprobarArchivos(evt) {
                 alert("Error del servidor, vuelve a intentarlo mas tarde o contacte con nuestro soporte: nonesoporte@viweb.corp");
                 console.log('Error: '+error);
             }
-        });*/
+        });
     }else{
         $("#myModal").css("display","block");
     }
