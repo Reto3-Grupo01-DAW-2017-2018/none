@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% block container %}
+    <div class="col-lg-9">
+        <h3>Archivos del Usuario</h3>
+        <hr/>
+        <?php
+            if($data['archivosEnProyectos'][0] == 'sin archivos') {
+        ?>
+            <div id="mensajeArchivosUser" style="border: 1px solid black; text-align: center;">
+                <h5>
+                    El usuario no ha subido ningún archivo.
+                </h5>
+            </div>
+        <?php
+            }
+            else {
+        ?>
+        <!-- Tabla para mostrar los datos de cada archivo del usuario -->
+        <table class="table col-lg-12">
+            <thead>
+                <tr>
+                    <th scope="col">Proyecto</th>
+                    <th scope="col">Archivo</th>
+                    <th scope="col">Tipo de archivo</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+
+                    for($i = 0; $i < count($data['archivosEnProyectos']); $i++) {
+                    ?>
+                    <tr>
+                        <td><?php echo $data['archivosEnProyectos'][$i]->nombre; ?></td>
+                        <td><?php echo $data['archivosUsuario'][$i]['nombreArchivo']; ?></td>
+                        <td><?php echo 'TIPO DE ARCHIVO??'; ?></td>
+                        <td>
+
+                            <!-- Enlace para el boton Eliminar para eliminar de BD el archivo seleccionado (se pasa como action -> eliminar) -->
+                            <a href="index.php?controller=archivo&action=eliminar&archivo=<?php echo $data['archivosUsuario'][$i]->idArchivo; ?>" class="btn btn-danger btn-sm" style="text-decoration: none">
+                                Eliminar
+                            </a>
+
+                        </td>
+                    </tr>
+
+                    <?php
+                    }
+                }
+                ?>
+            </tbody>
+        </table>
+        <hr/>
+    </div>
+    <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
+        <h4><strong>Proyecto:</strong></h4>
+        Nombre:
+        <br>
+        <input type="text" name="nombreProyecto" class="form-control" value="<?php echo $data['proyecto']->nombre ?>" disabled />
+        <br>
+        Descripción:
+        <br>
+        <input type="text" name="descripcionProyecto" class="form-control" value="<?php echo $data['proyecto']->descripcion ?>" disabled />
+        <br>
+        <a href="" class="btn btn-warning btn-sm" title="Modificar Datos" style="width: 252px !important">Modificar Datos</a> <!-- antes era 180px -->
+        <br>
+        <hr style="border:1px solid black"/>
+        <h4><strong>Acciones:</strong></h4>
+        <a href="" class="btn btn-success btn-sm" title="Nueva Tarea" style="width: 252px !important">Nueva Tarea</a>
+        <br><br>
+        <a href="index.php?controller=participante&action=listadoParticipantes&proyecto=<?php echo $data['proyecto']->idProyecto; ?>&idUsuario=<?php ?>" class="btn btn-info btn-sm" title="Ver Participantes" style="width: 252px !important">Ver Participantes</a>
+        <br><br>
+        <a href="" class="btn btn-info btn-sm" title="Ver Archivos" style="width: 252px !important">Ver Archivos</a>
+        <br><br>
+        <a href="" class="btn btn-info btn-sm" title="Ver Comentarios" style="width: 252px !important">Ver Comentarios</a>
+        <br><br>
+        <a class="btn btn-danger btn-sm" title="Eliminar Proyecto" data-toggle="modal" data-target="#confirmarEliminacion" style="width: 252px !important">Eliminar Proyecto</a>
+        <br><br>
+        <a href="index.php?controller=proyectos&action=index&idUsuario=<?php ?>" class="btn btn-primary btn-sm" title="Volver" style="width: 252px !important">Volver</a>
+
+        <!-- Modal de bootstrap para confirmar la eliminación del proyecto -->
+        <div class="modal fade" id="confirmarEliminacion" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminacion" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminación del proyecto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    Indique si realmente desea eliminar el proyecto:
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                        <button type="button" class="btn btn-danger" onclick="location.replace('index.php?controller=proyectos&action=eliminar&idProyecto=<?php echo $data['proyecto']->idProyecto; ?>')">ELIMINAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+    </aside>
+{% endblock %}

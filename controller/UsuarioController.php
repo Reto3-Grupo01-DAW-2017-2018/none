@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . "/BaseController.php";
-require_once __DIR__ . "/../model/Usuario.php";
-session_start();
 class UsuarioController extends BaseController{
 
+    public function __construct(){
+        parent::__construct();
+        require_once __DIR__ . "/../model/Usuario.php";
+    }
 
     /**
      * Ejecuta la acción correspondiente.
@@ -15,6 +17,12 @@ class UsuarioController extends BaseController{
             case "index" :
                 $this->index();
                 break;
+            case "correo" :
+                $this->comprobarC();
+                break;
+            case "username" :
+                $this->username();
+                break;
             case "alta" :
                 $this->crear();
                 break;
@@ -24,11 +32,20 @@ class UsuarioController extends BaseController{
             case "update" :
                 $this->update();
                 break;
-            case "detalle" :
-                $this->crearDetalleVinoView();
+            case "registerView" :
+                $this->crearRegisterView();
+                break;
+            case "perfil" :
+                $this->crearPerfilView();
+                break;
+            case "custom" :
+                $this->crearCustomView();
                 break;
             case "login" :
                 $this->login();
+                break;
+            case "logout" :
+                $this->logout();
                 break;
             default:
                 $this->index();
@@ -42,14 +59,41 @@ class UsuarioController extends BaseController{
     public function index(){
         if(!isset($_SESSION["user"])){
             /*Aqui cargamos la vista de bienvenida/login*/
-            $this->view("login","");
-            //echo $this->twig->render("loginView.html");
-        }else{
-            /*cargamos la vista de la lista de proyectos*/
-            $this->view("board","");
+            //$this->view("login","");
+            echo $this->twig->render("loginView.html",array(
+                "titulo"=>"Login - Nonecollab"
+            ));
         }
     }
 
+    /**
+     * Funcion para comporbar si existe en la bd nuest5ro correo
+     */
+    public function comprobarC()
+    {
+
+        if(isset($_POST["email"]))
+        {
+            $correo=$_POST["email"]."";
+            $usuario=new Usuario($this->conexion);
+            $usuario->setEmail($correo);
+            $usuario->correo();
+        }
+    }
+
+    /**
+     * Funcion para comporbar si existe en la bd nuest5ro correo
+     */
+    public function username()
+    {
+        if(isset($_POST["username"]))
+        {
+            $username=$_POST["username"]."";
+            $usuario=new Usuario($this->conexion);
+            $usuario->setUsername($username);
+            $usuario->username();
+        }
+    }
     /**
      * Crea un nuevo Usuario a partir de los parámetros POST
      */
@@ -64,9 +108,10 @@ class UsuarioController extends BaseController{
             $resultado=$usuario->save();
             //Despues comprobamos si se ha insertado y si se ha insertado cogemos los datos para hacer un login "manual"
             if($resultado!=0){
-                session_start();
+                $usuario = new Usuario ($this->conexion);
+                $usuario->setUsername($_POST["username"]);
                 $user=$usuario->getUsuarioByUsername();
-                $_SESSION["user"]=serialize($user);
+                $_SESSION["user"]=$user;
             }else{
                 //no se ha insertado ninguna fila, sacar mensaje de error.
             }
@@ -80,7 +125,7 @@ class UsuarioController extends BaseController{
     public function deleteById(){
         if(isset($_SESSION["user"])) {
             //borramos el usuario logueado Cuidado!
-            $user=unserialize($_SESSION["user"]);
+            $user=$_SESSION["user"];
             $filasborradas=$user->remove();
             session_destroy();
         }
@@ -97,8 +142,18 @@ class UsuarioController extends BaseController{
             $usuario->setPassword($_POST["password"]);
             $user=$usuario->getUsuarioLogin();
             if($user!=null){
-                $_SESSION["user"]=serialize($user);
+                $_SESSION["user"]=$user;
             }
+        }
+        header('Location: index.php');
+    }
+
+    /**
+     * Comprueba el login mediante el (username||email) y password, si esta correcto nos devuelve el objeto completo y lo guardamos en session
+     */
+    public function logout(){
+        if(isset($_SESSION["user"])){
+            session_destroy();
         }
         header('Location: index.php');
     }
@@ -108,19 +163,42 @@ class UsuarioController extends BaseController{
      */
     public function crearPerfilView(){
         if(isset($_SESSION["user"])){
-            $this->view("perfil");
+            echo $this->twig->render("updateView.html",array(
+                "user"=>$_SESSION["user"]
+            ));
+        }
+    }
+
+    /**
+     * Como para crear esta view no necesitamos datos (estan en session), comprobamos que la session exita y lanzamos la view.
+     */
+    public function crearRegisterView(){
+        if(!isset($_SESSION["user"])){
+            echo $this->twig->render("registerView.html",array(
+            ));
+        }
+    }
+
+    /**
+     * Como para crear esta view no necesitamos datos (estan en session), comprobamos que la session exita y lanzamos la view.
+     */
+    public function crearCustomView(){
+        if(isset($_SESSION["user"])){
+            echo $this->twig->render("personalizarView.html",array(
+                "user"=>$_SESSION["user"]
+            ));
         }
     }
 
     public function update(){
-        if(isset($_POST["iduser"])){
+        if(isset($_POST["idUser"])){
             //borramos un usuario
             $usuario = new Usuario($this->conexion);
-            $usuario->setIdUsuario($_POST["iduser"]);
+            $usuario->setIdUser($_POST["idUser"]);
             $usuario->setUsername($_POST["username"]);
             $usuario->setPassword($_POST["password"]);
             $usuario->setEmail($_POST["email"]);
-            $update=$usuario->update();
+            $resultado=$usuario->update();
         }
         header('Location: index.php');
     }

@@ -1,122 +1,167 @@
 <?php
-class ProyectoController extends BaseController{
+require_once __DIR__ . "/BaseController.php";
 
 
-   /**
-    * Ejecuta la acción correspondiente.
-    *
-    */
+class ProyectoController extends BaseController {
+    
+    public function __construct() {        
+        parent::__construct();
+        require_once __DIR__. "/../model/Proyecto.php";
+    }
+    
+    /*-------------------------------------------------------------------
+    Función que, según la acción pasada en la url, manda a cada función correspondiente*/
     public function run($accion){
-        switch($accion)
-        { 
+        switch($accion) { 
             case "index" :
-                $this->index();
+                $this->proyectosUsuario();
+                break;            
+            case "aniadirProyecto" :
+                $this->view('aniadirProyecto', "");
                 break;
-            case "alta" :
-                $this->crear();
+            case "nuevoProyecto" :
+                $this->guardarProyecto();
                 break;
-            case "baja" :
-                $this->deleteById();
+            case "verDetalle" :
+                $this->mostrarDatosProyecto();
                 break;
-            case "update" :
-                $this->update();
+            case "eliminar" :
+                $this->borrarProyecto();
                 break;
-            case "detalle" :
-                $this->crearDetalleBodegaView();
+            case "modificarProyecto" :
+                $this->modificarDatosProyecto();
                 break;
             default:
-                $this->index();
+                $this->proyectosUsuario();
                 break;
         }
     }
     
-   /**
-    * Carga la página principal de empleados con la lista de
-    * empleados que consigue del modelo.
-    *
-    */ 
-    public function index(){
+    /*-------------------------------------------------------------------
+    Función que carga la lista de proyectos del usuario indicado en 'responsable', conseguida del modelo 'Proyecto.php'
+    y la lista de los proyectos en los que participa el usuario, conseguida del modelo 'Participante.php'  */
+    public function proyectosUsuario() {
+        //Creamos el objeto 'Proyecto'
+        $proyecto = new Proyecto($this->conexion);
+
+        $proyecto->setResponsable($_SESSION['user']->idUser);
         
-        //Creamos el objeto empleado
-        $bodega=new Usuario($this->conexion);
+        //Conseguimos todas los proyectos del usuario através del modelo 'Proyecto.php'
+        $listaProyectosUsuario = $proyecto->getAll();
         
-        //Conseguimos todos los empleados
-        $bodega=$bodega->getAll();
-       
-        //Cargamos la vista index y le pasamos valores
-        $this->view("index",$bodega);
+        //Ahora conseguimos la lista de los proyectos en los que participa el usuario a través del modelo 'Participante.php'
+        require_once __DIR__. "/../model/Participante.php";
+        //Creamos el objeto Participante
+        $participanteEnProyectos = new Participante($this->conexion);
+        $participanteEnProyectos->setUsuario($_SESSION['user']->idUser);
+        $listaParticipandoEnProyectos = $participanteEnProyectos->getAll();
+        
+        //Buscamos los datos de cada proyecto en los que participa el usuario a través del modelo 'Proyecto.php'
+        $listaProyectosParticipados = array();
+        foreach ($listaParticipandoEnProyectos as $participacion) {
+            $proyectoParticipado = new Proyecto($this->conexion);
+            $proyectoParticipado->setIdProyecto($participacion['proyecto']);
+            array_push($listaProyectosParticipados, $proyectoParticipado->getProyectoById());
+        }       
+        
+        //Cargamos la vista proyectosView.php con la función 'view()' y le pasamos valores (usaremos 'proyectos' para los proyectos del usuario y 'participando' para los proyectos en los que participa)
+        echo $this->twig->render("boardView.html",array(
+            "user" => $_SESSION["user"],
+            "proyectos" => $listaProyectosUsuario,
+            "participando" => $listaProyectosParticipados,
+            "titulo" => "Proyecto - Nonecollab"
+        ));
     }
     
-   /**
-    * Crea un nuevo empleado a partir de los parámetros POST 
-    * y vuelve a cargar el index.php.
-    *
-    */
-    public function crear(){
-        if(isset($_POST["nombre"])){
-            
-            //Creamos un usuario
-            $bodega = new Usuario($this->conexion);
-            $bodega->setNombre($_POST["nombre"]);
-            $bodega->setDireccion($_POST["direccion"]);
-            $bodega->setEmail($_POST["email"]);
-            $bodega->setTelefono($_POST["telefono"]);
-            $bodega->setContacto($_POST["contacto"]);
-            $bodega->setFechafundacion($_POST["fechafundacion"]);
-            $bodega->setRestaurante($_POST["restaurante"]);
-            $bodega->setHotel($_POST["hotel"]);
-            $save=$bodega->save();
-        }
-        header('Location: index.php');
+    /*-------------------------------------------------------------------
+    Función que carga la lista de proyectos en los que participa el usuario indicado en 'usuario', conseguida del modelo ('Participante.php')*/
+    public function participandoProyectos() {
+        
     }
 
-    public function deleteById(){
-        if(isset($_GET["idbodega"])) {
-            //borramos un usuario
-            $bodega = new Usuario($this->conexion);
-            $bodega->setIdbodega($_GET["idbodega"]);
-            $filasborradas=$bodega->remove();
-        }
-        header('Location: index.php');
-    }
 
-    public function crearDetalleBodegaView(){
-        if(isset($_GET["idbodega"])){
-            //borramos un usuario
-            $bodega = new Usuario($this->conexion);
-            $bodega->setIdbodega($_GET["idbodega"]);
-            $bodega=$bodega->getBodegaById();
-
-            $this->view("detalle",$bodega);
+    /*--------------------------------------------------------------
+    Función para crear el nuevo proyecto (objeto 'Proyecto') y mandarlo a su clase ('Proyecto.php')*/
+    public function guardarProyecto() {
+        if(isset($_POST['guardar'])) {
+            //Construimos un nuevo objeto 'proyecto' completo para mandar a BD            
+            $proyecto = new Proyecto($this->conexion);           
+            $proyecto->setNombre($_POST['nombre']);
+            $proyecto->setDescripcion($_POST['descripcion']);
+            $proyecto->setFechaInicioProyecto($_POST['fechaInicioProyecto']);
+            $proyecto->setResponsable($_POST['responsable']);
+            $insercion = $proyecto->save();
         }
-    }
-
-    public function update(){
-        if(isset($_POST["idbodega"])){
-            //borramos un usuario
-            $bodega = new Usuario($this->conexion);
-            $bodega->setIdbodega($_POST["idbodega"]);
-            $bodega->setNombre($_POST["nombre"]);
-            $bodega->setDireccion($_POST["direccion"]);
-            $bodega->setEmail($_POST["email"]);
-            $bodega->setTelefono($_POST["telefono"]);
-            $bodega->setContacto($_POST["contacto"]);
-            $bodega->setFechafundacion($_POST["fechafundacion"]);
-            $bodega->setRestaurante($_POST["restaurante"]);
-            $bodega->setHotel($_POST["hotel"]);
-            $update=$bodega->update();
-        }
+        
+        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
+        //Mandamos a la vista principal
         header('Location: index.php');
     }
     
-   /**
-    * Crea la vista que le pasemos con los datos indicados.
-    *
-    */
-    public function view($vista,$datos){
+    /*--------------------------------------------------------------
+    Función manda al modelo para buscar los datos del proyecto seleccionado en el boton 'Ver Proyecto' */
+    public function mostrarDatosProyecto() {
+        if(isset($_GET["proyecto"])) {
+            //Creamos el objeto solo con el Id y con esto sacaremos todos sus datos de BD
+            $proyectoDetalle = new Proyecto($this->conexion);
+            $proyectoDetalle->setIdProyecto($_GET['proyecto']);
+            $profile = $proyectoDetalle->getProyectoById();
+
+
+            //Para conseguir todas las tareas en este proyecto, las conseguimos del modelo 'Tarea.php'
+            include_once __DIR__ . "/../model/Tarea.php";
+            //Creamos el objeto Tarea con el id del proyecto seleccionado
+            $tareaProyecto = new Tarea($this->conexion);
+            $tareaProyecto->setProyecto($proyectoDetalle->getIdProyecto());
+            $listadoTareasProyecto = $tareaProyecto->getAll();
+
+            //Mandamos a la función view() para crear la vista 'detalleComentarioView'
+            echo $this->twig->render("proyectoView.html", array(
+                "user" => $_SESSION["user"],
+                "proyecto" => $profile,
+                "tareas" => $listadoTareasProyecto,
+                "titulo" => "Proyecto - Nonecollab"
+            ));
+        }
+    }    
+    
+    /*-------------------------------------------------------------------
+    Función que manda a modificar los datos del proyecto seleccionado*/
+    public function modificarDatosProyecto() {        
+        //Creamos el objeto completo y lo mandamos a actualizar al modelo
+        $proyectoModificar = new Proyecto($this->conexion);
+        $proyectoModificar->setIdProyecto($_POST['idProyecto']);
+        $proyectoModificar->setNombre($_POST['nuevoNombre']);
+        $proyectoModificar->setDescripcion($_POST['nuevoDescripcion']);
+        $proyectoModificar->setFechaInicioProyecto($_POST['nuevoFechaInicioProyecto']);
+        $proyectoModificar->setResponsable($_POST['nuevoResponsable']);
+        $update = $proyectoModificar->update();
+        
+        //Volvemos a cargar index.php pasándole los datos del 'controller', 'action' y el id del proyecto para cargar de nuevo 'detalleProyectoView.php' 
+        header('Location: index.php?controller=proyectos&action=verDetalle&idProyecto='. $proyectoModificar->getIdProyecto());
+    }
+    
+    /*-------------------------------------------------------------------
+    Función que manda a borrar el proyecto seleccionado*/
+    public function borrarProyecto() {
+        //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
+        $proyectoBorrar = new Proyecto($this->conexion);
+        $proyectoBorrar ->setIdProyecto($_GET['idProyecto']);
+        $delete = $proyectoBorrar->remove();
+        
+        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
+        //Volvemos a cargar index.php
+        header('Location: index.php');
+    }
+    
+    /*------------------------------------------------------------------
+    Función para crear la vista con el nombre que le pasemos y con los datos que le indiquemos*/
+    public function view($vista, $datos) {
         $data = $datos;
-        require_once  __DIR__ . "/../view/" . $vista . "View.php";
+        
+        /*echo 'el primero (de proyecyos)-> '. $data['proyectos'][0]['idProyecto']. '<br>';
+        echo 'el segundo (de participando)--> '. $data['participando'][0]->idProyecto;*/
+        
+        require_once __DIR__. '/../views/'. $vista. 'View.php';        
     }
-
 }
-?>

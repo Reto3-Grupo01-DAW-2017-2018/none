@@ -109,7 +109,7 @@ class Comentario {
 
     public function getAll(){
         /*Nota, este get all esta para coger todos los comentarios de un proyecto (se filtra por el proyecto)*/
-        $consulta = $this->conexion->prepare("SELECT idComentario,contenido,fecha,editado,participante,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto ORDER BY fecha");
+        $consulta = $this->conexion->prepare("SELECT idComentario,contenido,DATE_FORMAT(fecha,'%d/%m/%Y')AS fecha,editado,participante,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto ORDER BY fecha");
         $consulta->execute(array(
                 "proyecto" => $this->proyecto)
         );
@@ -122,7 +122,7 @@ class Comentario {
 
     public function getComentarioById(){
 
-        $consulta = $this->conexion->prepare("SELECT idComentario,contenido,fecha,editado,participante,proyecto FROM " . $this->table . " WHERE idComentario = :idComentario");
+        $consulta = $this->conexion->prepare("SELECT idComentario,contenido,DATE_FORMAT(fecha,'%d/%m/%Y')AS fecha,editado,participante,proyecto FROM " . $this->table . " WHERE idComentario = :idComentario");
         $consulta->execute(array(
                 "idComentario" => $this->idComentario)
         );

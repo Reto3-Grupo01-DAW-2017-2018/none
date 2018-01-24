@@ -109,7 +109,7 @@ class Proyecto {
 
     public function getAll(){
 
-        $consulta = $this->conexion->prepare("SELECT idProyecto,nombre,descripcion,fechaInicioProyecto,responsable FROM " . $this->table . " WHERE responsable = :responsable ORDER BY fechaInicioProyecto");
+        $consulta = $this->conexion->prepare("SELECT idProyecto,nombre,descripcion,DATE_FORMAT(fechaInicioProyecto,'%d/%m/%Y')AS fechaInicioProyecto,responsable FROM " . $this->table . " WHERE responsable = :responsable ORDER BY fechaInicioProyecto");
         $consulta->execute(array(
                 "responsable" => $this->responsable)
         );
@@ -122,7 +122,7 @@ class Proyecto {
 
     public function getProyectoById(){
 
-        $consulta = $this->conexion->prepare("SELECT idProyecto,nombre,descripcion,fechaInicioProyecto,responsable FROM " . $this->table . " WHERE idProyecto = :idProyecto");
+        $consulta = $this->conexion->prepare("SELECT idProyecto,nombre,descripcion,DATE_FORMAT(fechaInicioProyecto,'%d/%m/%Y')AS fechaInicioProyecto,responsable FROM " . $this->table . " WHERE idProyecto = :idProyecto");
         $consulta->execute(array(
                 "idProyecto" => $this->idProyecto)
         );

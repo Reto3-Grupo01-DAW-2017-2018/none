@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-01-2018 a las 12:19:36
+-- Tiempo de generación: 19-01-2018 a las 13:47:03
 -- Versión del servidor: 10.1.26-MariaDB
 -- Versión de PHP: 7.1.9
 
@@ -36,6 +36,13 @@ CREATE TABLE `archivo` (
   `proyecto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `archivo`
+--
+
+INSERT INTO `archivo` (`idArchivo`, `nombreArchivo`, `rutaArchivo`, `participante`, `proyecto`) VALUES
+(1, 'foto.png', '/data/2/foto.png', 1, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -46,7 +53,9 @@ CREATE TABLE `comentario` (
   `idComentario` int(11) NOT NULL,
   `contenido` varchar(300) NOT NULL,
   `fecha` date NOT NULL,
-  `participante` int(11) NOT NULL
+  `editado` varchar(2) NOT NULL,
+  `participante` int(11) NOT NULL,
+  `proyecto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -60,6 +69,13 @@ CREATE TABLE `participante` (
   `usuario` int(11) NOT NULL,
   `proyecto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `participante`
+--
+
+INSERT INTO `participante` (`idParticipante`, `usuario`, `proyecto`) VALUES
+(1, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -75,6 +91,13 @@ CREATE TABLE `proyecto` (
   `responsable` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `proyecto`
+--
+
+INSERT INTO `proyecto` (`idProyecto`, `nombre`, `descripcion`, `fechaInicioProyecto`, `responsable`) VALUES
+(2, 'prueba', 'asdasd', '2018-01-11', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -86,9 +109,17 @@ CREATE TABLE `tarea` (
   `nombreTarea` varchar(50) NOT NULL,
   `fechaInicioTarea` date NOT NULL,
   `fechaFinTarea` date NOT NULL,
+  `urgente` varchar(2) NOT NULL,
   `participante` int(11) NOT NULL,
   `proyecto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `tarea`
+--
+
+INSERT INTO `tarea` (`idTarea`, `nombreTarea`, `fechaInicioTarea`, `fechaFinTarea`, `urgente`, `participante`, `proyecto`) VALUES
+(1, 'Comprar', '2018-01-19', '2018-01-31', 'si', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -102,6 +133,13 @@ CREATE TABLE `usuario` (
   `password` varchar(15) NOT NULL,
   `email` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`idUser`, `username`, `password`, `email`) VALUES
+(1, 'root', '123', 'root@example.org');
 
 --
 -- Índices para tablas volcadas
@@ -120,7 +158,8 @@ ALTER TABLE `archivo`
 --
 ALTER TABLE `comentario`
   ADD PRIMARY KEY (`idComentario`),
-  ADD KEY `AU-CO-FK` (`participante`);
+  ADD KEY `AU-CO-FK` (`participante`),
+  ADD KEY `PR-CO-FK` (`proyecto`);
 
 --
 -- Indices de la tabla `participante`
@@ -150,7 +189,8 @@ ALTER TABLE `tarea`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`idUser`),
-  ADD UNIQUE KEY `EM-US-UN` (`email`);
+  ADD UNIQUE KEY `EM-US-UN` (`email`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -160,7 +200,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `archivo`
 --
 ALTER TABLE `archivo`
-  MODIFY `idArchivo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idArchivo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `comentario`
@@ -172,25 +212,25 @@ ALTER TABLE `comentario`
 -- AUTO_INCREMENT de la tabla `participante`
 --
 ALTER TABLE `participante`
-  MODIFY `idParticipante` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idParticipante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `proyecto`
 --
 ALTER TABLE `proyecto`
-  MODIFY `idProyecto` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idProyecto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tarea`
 --
 ALTER TABLE `tarea`
-  MODIFY `idTarea` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idTarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
@@ -207,7 +247,8 @@ ALTER TABLE `archivo`
 -- Filtros para la tabla `comentario`
 --
 ALTER TABLE `comentario`
-  ADD CONSTRAINT `AU-CO-FK` FOREIGN KEY (`participante`) REFERENCES `participante` (`idParticipante`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `AU-CO-FK` FOREIGN KEY (`participante`) REFERENCES `participante` (`idParticipante`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `PR-CO-FK` FOREIGN KEY (`proyecto`) REFERENCES `proyecto` (`idProyecto`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `participante`

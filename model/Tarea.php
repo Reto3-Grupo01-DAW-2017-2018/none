@@ -146,7 +146,7 @@ class Tarea {
 
     public function getAll(){
         /*Nota, este get all esta para coger todos las tareas de un proyecto (se filtra por el proyecto)*/
-        $consulta = $this->conexion->prepare("SELECT idTarea,nombreTarea,fechaInicioTarea,fechaFinTarea,urgente,participante,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto ORDER BY urgente AND fechaFinTarea");
+        $consulta = $this->conexion->prepare("SELECT idTarea,nombreTarea,DATE_FORMAT(fechaInicioTarea,'%d/%m/%Y')AS fechaInicioTarea,DATE_FORMAT(fechaFinTarea,'%d/%m/%Y')AS fechaFinTarea,urgente,participante,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto ORDER BY urgente AND fechaFinTarea");
         $consulta->execute(array(
                 "proyecto" => $this->proyecto)
         );
@@ -157,9 +157,22 @@ class Tarea {
 
     }
 
+    public function getAllByUser($iduser){
+        /*Nota, este get all esta para coger todos los archivos de un usuario (se filtra por el usuario)*/
+        $consulta = $this->conexion->prepare("SELECT idTarea,nombreTarea,DATE_FORMAT(fechaInicioTarea,'%d/%m/%Y')AS fechaInicioTarea,DATE_FORMAT(fechaFinTarea,'%d/%m/%Y')AS fechaFinTarea,urgente,participante,proyecto,proyecto.idProyecto,proyecto.nombre FROM " . $this->table . " INNER JOIN proyecto ON proyecto=proyecto.idProyecto WHERE participante IN (Select distinct idParticipante from participante where usuario = :iduser)");
+        $consulta->execute(array(
+                "iduser" => $iduser)
+        );
+        /* Fetch all of the remaining rows in the result set */
+        $resultados = $consulta->fetchAll();
+        $this->conexion = null; //cierre de conexión
+        return $resultados;
+
+    }
+
     public function getTareaById(){
 
-        $consulta = $this->conexion->prepare("SELECT idTarea,nombreTarea,fechaInicioTarea,fechaFinTarea,urgente,participante,proyecto FROM " . $this->table . " WHERE idTarea = :idTarea");
+        $consulta = $this->conexion->prepare("SELECT idTarea,nombreTarea,DATE_FORMAT(fechaInicioTarea,'%d/%m/%Y')AS fechaInicioTarea,DATE_FORMAT(fechaFinTarea,'%d/%m/%Y')AS fechaFinTarea,urgente,participante,proyecto FROM " . $this->table . " WHERE idTarea = :idTarea");
         $consulta->execute(array(
                 "idTarea" => $this->idTarea)
         );
