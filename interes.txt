@@ -1,0 +1,9 @@
+DELIMITER $$
+
+CREATE TRIGGER ins_participante_responsable
+AFTER INSERT ON proyecto
+FOR EACH ROW
+BEGIN
+    INSERT INTO participante (`usuario`,`proyecto`) VALUES (NEW.responsable,NEW.idProyecto);
+END$$
+DELIMITER ;
