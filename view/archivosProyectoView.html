@@ -7,7 +7,7 @@
     <hr/>
     <section class="col-lg-12 usuario" style="height:300px;overflow-y:scroll;">
         {% if archivos is not null %}
-        <!-- Tabla para mostrar los datos de cada tarea del usuario -->
+        <!-- Tabla para mostrar los datos de cada archivo del proyecto -->
         <form id="formListaArchivos" method="post">
             <table class="table col-lg-12">
                 <thead>
@@ -19,26 +19,24 @@
                     </tr>
                 </thead>
                 <tbody>
-        {% endif %}
-        {% for archivo in archivos %}
-            <tr>
-                <td><input type="checkbox" name="archivosSeleccionados" value="{{archivo.idArchivo}}"></td>
-                <td>{{archivo.nombreArchivo}}</td>
-                <td><a href="index.php?action=buscar&username={{archivo.username}}">{{archivo.username}}</a></td>
-                <td><a href="index.php?controller=archivo&action=delete&idArchivo={{archivo.idArchivo}}" style="text-decoration: none">
-                        <button type="button" class="btn btn-danger btn-sm">Borrar</button>
-                    </a>
-                </td>
-            </tr>
-        {% else %}
+            {% for archivo in archivos %}
+                    <tr>
+                        <td><input type="checkbox" name="archivosSeleccionados" value="{{archivo.idArchivo}}"></td>
+                        <td>{{archivo.nombreArchivo}}</td>
+                        <td><a href="index.php?action=buscar&username={{archivo.username}}">{{archivo.username}}</a></td>
+                        <td><a href="index.php?controller=archivo&action=delete&idArchivo={{archivo.idArchivo}}" style="text-decoration: none">
+                                <button type="button" class="btn btn-danger btn-sm">Borrar</button>
+                            </a>
+                        </td>
+                    </tr>
+            {% else %}
                     <div id="mensajeProyecto" style="border: 1px solid black; text-align: center;">
                         <h5>El proyecto {{nombreProyecto}} no tiene ningun archivo subido</h5>
                     </div>
-        {% endfor %}
-        {% if archivos is not null %}
-                    </tbody>
-                </table>
-            </form>
+            {% endfor %}
+                </tbody>
+            </table>
+        </form>
         {% endif %}
         <hr>
     </section>
@@ -59,8 +57,8 @@
     <h4><strong>Acciones:</strong></h4>
     <form id="formArchivos" method="post" enctype="multipart/form-data">
         <input type="file" id="archivos" name="archivos[]" class="form-control" />
-        <input type="hidden" name="idProyecto" value="{{idProyecto}}">
-        <input type="hidden" name="nombreProyecto" value="{{nombreProyecto}}">
+        <input type="hidden" id="idProyecto" name="idProyecto" value="{{idProyecto}}">
+        <input type="hidden" id="nombreProyecto" name="nombreProyecto" value="{{nombreProyecto}}">
         <a href="#" id="subirArchivos" class="btn btn-success btn-sm" title="Subir Archivo" style="width: 252px !important">Subir archivo</a>
     </form>
     <br>
@@ -75,13 +73,11 @@
 <div id="myModal" class="modal">
 
     <!-- Modal content -->
-    <div class="modal-content">
-        <span class="close glyphicon glyphicon-remove"></span>
-        <p>No has seleccionado ningun archivo</p>
-    </div>
+
 
 </div>
 {% endblock %}
 {% block scripts %}
+    <script src="/../nonecollab/js/Upload.js"></script>
     <script src="/../nonecollab/js/archivoJS.js"></script>
 {% endblock %}

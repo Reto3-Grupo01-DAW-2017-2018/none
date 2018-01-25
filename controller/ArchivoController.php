@@ -99,10 +99,10 @@ class ArchivoController extends BaseController {
     /*--------------------------------------------------------------
     Función para crear el nuevo archivo (objeto 'Archivo') y mandarlo a su clase (Archivo.php)*/
     public function guardarArchivo() {
-        if(isset($_POST['idProyecto'])) {
-
+        die(false);
+        if(isset($_GET['idProyecto'])) {
             //CREAMOS VARIABLE PARA GUARDAR LA RUTA A LA CARPETA DE DESTINO DND GUARDAR LA FOTO SUBIDA
-            $carpetaDestinoGuardarFoto = __DIR__."\..\data\\".$_POST['idProyecto']."\\";
+            $carpetaDestinoGuardarFoto = __DIR__."\..\data\\".$_GET['idProyecto']."\\";
             if(realpath($carpetaDestinoGuardarFoto)==false){
                 mkdir($carpetaDestinoGuardarFoto);
             }
@@ -113,33 +113,33 @@ class ArchivoController extends BaseController {
                 $archivoTmp = $archivos["tmp_name"][$x];
                 //CONFIRMAMOS QUE LA RUTA DE LA FOTO SUBIDA SE HA GUARDADO EN LA CARPETA DE DESTINO
                 if(move_uploaded_file($archivoTmp, $carpetaDestinoGuardarFoto.$nombreArchivoSubido) == false || file_exists($carpetaDestinoGuardarFoto.$nombreArchivoSubido)) {
-                    header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_POST['idProyecto']."&proyectoNombre=".$_POST['nombreProyecto']);
-
+                    //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET."&proyectoNombre=".$_GET['nombreProyecto']);
+                    die(false);
                 }
                 else {
                     //Construimos un nuevo objeto 'archivo' completo para mandar a BD
                     $archivo = new Archivo($this->conexion);
                     $archivo->setNombreArchivo($nombreArchivoSubido);
-                    $archivo->setRutaArchivo("/data/".$_POST['idProyecto']."/".$nombreArchivoSubido);
+                    $archivo->setRutaArchivo("/data/".$_GET['idProyecto']."/".$nombreArchivoSubido);
                     /*necesitamos conocer el id del participante hacemos la consulta con el id del
                     usuario + el id del proyecto*/
                     $participante = new Participante ($this->conexion);
-                    $participante->setProyecto($_POST['idProyecto']);
+                    $participante->setProyecto($_GET['idProyecto']);
                     $participante->setUsuario($_SESSION['user']->idUser);
                     $participante=$participante->getParticipanteByUsuarioAndProyecto();
                     /*Ahora pasamos el participante a el archivo*/
                     $archivo->setParticipante($participante->idParticipante);
-                    $archivo->setProyecto($_POST['idProyecto']);
+                    $archivo->setProyecto($_GET['idProyecto']);
                     $insercion = $archivo->save();
 
                     //COMPROBAMOS QUE SE HA HECHO EL INSERT
                     if($insercion < 1) {
-                        header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_POST['idProyecto']."&proyectoNombre=".$_POST['nombreProyecto']);
-
+                        //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
+                        die(false);
                     }
                     else {
-                        header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_POST['idProyecto']."&proyectoNombre=".$_POST['nombreProyecto']);
-
+                        //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
+                        die(true);
                     }
                 }
             }
@@ -148,7 +148,7 @@ class ArchivoController extends BaseController {
         
         //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
         //Mandamos a la vista principal
-        header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_POST['idProyecto']."&proyectoNombre=".$_POST['nombreProyecto']);
+        header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
     }
     
     /*--------------------------------------------------------------

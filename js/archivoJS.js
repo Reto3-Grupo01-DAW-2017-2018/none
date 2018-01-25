@@ -2,7 +2,7 @@ $(document).ready(eventos);
 
 function eventos(){
     $("#subirArchivos").click(comprobarArchivos);
-    $(".close").click(ocultarModal);
+    $("span.close").click(ocultarModal);
 }
 
 function modalDefault()
@@ -12,29 +12,36 @@ function modalDefault()
 
 function ocultarModal(){
     $("#myModal").css("display","none");
+    $("#myModal").html('');
 }
 
 function comprobarArchivos(evt) {
     var files = document.getElementById('archivos').files;
     // comprobamos si hay archivos seleccionados
     if(files.length>0) {
+        var upload=new Upload(files[0]);
+        upload.doUpload();
         /*$("#formArchivos").attr("action","index.php?controller=archivo&action=nuevoArchivo");
         $("#formArchivos").submit();
-        */
-
-        $.ajax
-        ({
+        *//*
+        var archivos=jQuery.parseJSON(files);
+        $.ajax({
             type: 'POST',
             url: 'index.php?controller=archivo&action=nuevoArchivo',
-            data: files,
+            data: archivos,
             success: function (data)
             {
                 resultado=data;
                 if(resultado==true) {
-                    $("#myModal").css("display","block");
+
                 }
                 else {
-
+                    $("#myModal").html('' +
+                        '    <div class="modal-content">\n' +
+                        '        <span class="close glyphicon glyphicon-remove"></span>\n' +
+                        '        <p>Error, no se ha podido completar la subida del archivo o ya existe un archivo con ese nombre en el servidor.</p>\n' +
+                        '    </div>');
+                    $("#myModal").css("display","block");
                 }
 
             },
@@ -43,8 +50,13 @@ function comprobarArchivos(evt) {
                 alert("Error del servidor, vuelve a intentarlo mas tarde o contacte con nuestro soporte: nonesoporte@viweb.corp");
                 console.log('Error: '+error);
             }
-        });
+        });*/
     }else{
+        $("#myModal").html('' +
+            '    <div class="modal-content">\n' +
+            '        <span class="close glyphicon glyphicon-remove" onclick="ocultarModal()"></span>\n' +
+            '        <p>No has seleccionado ningun archivo</p>\n' +
+            '    </div>');
         $("#myModal").css("display","block");
     }
 }
