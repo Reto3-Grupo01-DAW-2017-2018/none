@@ -115,11 +115,17 @@ class ProyectoController extends BaseController {
             $tareaProyecto->setProyecto($proyectoDetalle->getIdProyecto());
             $listadoTareasProyecto = $tareaProyecto->getAll();
 
+            include_once __DIR__. '/../model/Participante.php';
+            $participanteProyecto = new Participante($this->conexion);
+            $participanteProyecto->setProyecto($proyectoDetalle->getIdProyecto());
+            $listaParticipantesEnProyecto = $participanteProyecto->getAllParticipantes();
+
             //Mandamos a la función view() para crear la vista 'detalleComentarioView'
             echo $this->twig->render("proyectoView.html", array(
                 "user" => $_SESSION["user"],
                 "proyecto" => $profile,
                 "tareas" => $listadoTareasProyecto,
+                "participantes" => $listaParticipantesEnProyecto,
                 "titulo" => "Proyecto - Nonecollab"
             ));
         }

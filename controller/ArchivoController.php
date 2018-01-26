@@ -52,6 +52,9 @@ class ArchivoController extends BaseController {
 
             //Conseguimos todas los archivos (lista de los archivos en BD)
             $listaArchivos = $archivo->getAll();
+            if(count($listaArchivos)==0){
+                $listaArchivos=null;
+            }
 
             echo $this->twig->render("archivosProyectoView.html",array(
                 "user" => $_SESSION["user"],
@@ -99,7 +102,6 @@ class ArchivoController extends BaseController {
     /*--------------------------------------------------------------
     Función para crear el nuevo archivo (objeto 'Archivo') y mandarlo a su clase (Archivo.php)*/
     public function guardarArchivo() {
-        die(false);
         if(isset($_GET['idProyecto'])) {
             //CREAMOS VARIABLE PARA GUARDAR LA RUTA A LA CARPETA DE DESTINO DND GUARDAR LA FOTO SUBIDA
             $carpetaDestinoGuardarFoto = __DIR__."\..\data\\".$_GET['idProyecto']."\\";
@@ -108,13 +110,14 @@ class ArchivoController extends BaseController {
             }
             //RECOGEMOS LOS DATOS DEL ARCHIVO SUBIDO EN EL INPUT FILE DEL FORMULARIO
             $archivos= $_FILES['archivos'];
-            for($x=0;$x<count($archivos["name"]);$x++){
-                $nombreArchivoSubido = $archivos["name"][$x];
-                $archivoTmp = $archivos["tmp_name"][$x];
+            //for($x=0;$x<count($archivos);$x++){
+
+                $nombreArchivoSubido = $archivos["name"];
+                $archivoTmp = $archivos["tmp_name"];
                 //CONFIRMAMOS QUE LA RUTA DE LA FOTO SUBIDA SE HA GUARDADO EN LA CARPETA DE DESTINO
-                if(move_uploaded_file($archivoTmp, $carpetaDestinoGuardarFoto.$nombreArchivoSubido) == false || file_exists($carpetaDestinoGuardarFoto.$nombreArchivoSubido)) {
+                if(file_exists($carpetaDestinoGuardarFoto.$nombreArchivoSubido) == true  || move_uploaded_file($archivoTmp, $carpetaDestinoGuardarFoto.$nombreArchivoSubido) == false) {
                     //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET."&proyectoNombre=".$_GET['nombreProyecto']);
-                    die(false);
+                    echo "false";
                 }
                 else {
                     //Construimos un nuevo objeto 'archivo' completo para mandar a BD
@@ -131,21 +134,20 @@ class ArchivoController extends BaseController {
                     $archivo->setParticipante($participante->idParticipante);
                     $archivo->setProyecto($_GET['idProyecto']);
                     $insercion = $archivo->save();
-
                     //COMPROBAMOS QUE SE HA HECHO EL INSERT
                     if($insercion < 1) {
                         //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
-                        die(false);
+                        echo "false";
                     }
                     else {
                         //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
-                        die(true);
+                        echo "true";
                     }
                 }
-            }
+            //}
 
         }
-        
+        die();
         //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
         //Mandamos a la vista principal
         header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);

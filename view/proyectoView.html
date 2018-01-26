@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block container %}
     <div class="col-lg-9" style="overflow-x:scroll;">
-        <h3>Panel del Proyecto</h3>
+        <h3>Panel del Proyecto - {{proyecto.nombre}}</h3>
         <hr/>
         {% for tarea in tareas %}
             <!-- <div class="col-lg-2" style="width: 300px; height: 200px; border: 1px solid black; padding-top: 10px; padding-left: 25px;"> -->
@@ -19,44 +19,61 @@
             </ul>
         {% endfor %}
     </div>
-    <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
-        <h4><strong>Proyecto:</strong></h4>
-        Nombre:
+<aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
+    <h4><strong>Crear nueva Tarea:</strong></h4>
+    <div>
+        <form id="formTarea" method="post" action="/../reto3/js/tareaJS.js">
+            Nombre Tarea:
+            <input type="text" id="nnt" name="nombreTarea" class="form-control" required />
+            <br>
+            Fecha Inicio:
+            <input type="date" id="fit" name="fechaInicioTarea" class="form-control" required />
+            <br>
+            Fecha Finalización:
+            <input type="date" id="fft" name="fechaFinTarea" class="form-control" required />
+            <br>
+            Urgente:&nbsp;&nbsp;
+            <span class="form-check form-check-inline">
+                        <strong>Si</strong>&nbsp;<input class="form-check-input" type="radio" name="urgente" id="u1" value="si" checked>
+                    </span>
+            &nbsp;&nbsp;&nbsp;
+            <span class="form-check form-check-inline">
+                        <strong>No</strong>&nbsp;<input class="form-check-input" type="radio" name="urgente" id="u2" value="no">
+                    </span>
+            <br><br>
+            Asignar tarea a:&nbsp;&nbsp;
+            <select class="form-control-sm" id="et" name="encargadoTarea" required>
+                <option></option>
+                {% for participante in participantes %}
+                    <option value='{{participante.idParticipante}}'><strong>{{participante.username}}</strong></option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name="idProyecto" value="<?php echo $data['proyecto']->idProyecto; ?>" />
+            <br><br>
+            <input type="submit" id="nuevaTarea" class="col-xs-12 btn btn-success btn-sm" title="Crear Tarea" value="Crear Tarea"/>
+        </form>
         <br>
-        <input type="text" name="nombreProyecto" class="form-control" value="{{proyecto.nombre}}" disabled />
-        <br>
-        Descripción:
-        <br>
-        <input type="text" name="descripcionProyecto" class="form-control" value="{{proyecto.descripcion}}" disabled />
-        <br>
-        <a href="" class="btn btn-warning btn-sm" title="Modificar Datos" style="width: 252px !important">Modificar Datos</a> <!-- antes era 180px -->
-        <br>
-        <hr style="border:1px solid black"/>
+        <hr style="border:1px solid black;"/>
         <h4><strong>Acciones:</strong></h4>
-        <a href="" class="btn btn-success btn-sm" title="Nueva Tarea" style="width: 252px !important">Nueva Tarea</a>
+        <a href="index.php?controller=participante&action=participantesPorProyecto&proyecto=<?php echo $data['proyecto']->idProyecto; //AQUÍ SE PASARÁ CON TWIG  ?>" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Ver Participantes en el Proyecto">Participantes Proyecto</a>
         <br><br>
-        <a href="index.php?controller=participante&action=listadoParticipantes&proyecto={{proyecto.idProyecto}}&idUsuario=<?php ?>" class="btn btn-info btn-sm" title="Ver Participantes" style="width: 252px !important">Ver Participantes</a>
+        <a href="index.php?controller=archivo&action=archivosPorProyecto&proyecto={{proyecto.idProyecto}}&proyectoNombre={{proyecto.nombre}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Ver Archivos del Proyecto">Archivos Proyecto</a>
         <br><br>
-        <a href="index.php?controller=archivo&action=archivosPorProyecto&proyecto={{proyecto.idProyecto}}&proyectoNombre={{proyecto.nombre}}" class="btn btn-info btn-sm" title="Ver Archivos" style="width: 252px !important">Ver Archivos</a>
+        <a href="index.php?controller=comentario&action=comentariosPorProyecto&proyecto=<?php echo $data['proyecto']->idProyecto; //AQUÍ SE PASARÁ CON TWIG  ?>" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Ver Comentarios en el Proyecto">Comentarios Proyecto</a>
         <br><br>
-        <a href="" class="btn btn-info btn-sm" title="Ver Comentarios" style="width: 252px !important">Ver Comentarios</a>
+        <a class="col-xs-12 btn btn-danger btn-sm acciones-btns" title="Eliminar Proyecto" data-toggle="modal" data-target="#confirmarEliminacion">Eliminar Proyecto</a>
         <br><br>
-        <a class="btn btn-danger btn-sm" title="Eliminar Proyecto" data-toggle="modal" data-target="#confirmarEliminacion" style="width: 252px !important">Eliminar Proyecto</a>
-        <br><br>
-        <a href="index.php?controller=proyectos&action=index&idUsuario={{user.idUser}}" class="btn btn-primary btn-sm" title="Volver" style="width: 252px !important">Volver</a>
+        <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
 
         <!-- Modal de bootstrap para confirmar la eliminación del proyecto -->
         <div class="modal fade" id="confirmarEliminacion" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminacion" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminación del proyecto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                        <h5 class="modal-title" id="exampleModalLabel"><strong>Confirmar eliminación</strong></h5>
                     </div>
                     <div class="modal-body">
-                    Indique si realmente desea eliminar el proyecto:
+                        Indique si realmente desea eliminar el proyecto:
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
@@ -65,6 +82,5 @@
                 </div>
             </div>
         </div>
-        <br><br>
-    </aside>
+</aside>
 {% endblock %}

@@ -1,26 +1,25 @@
 $(document).ready(eventos);
 
 function eventos(){
+    modal = new Modal("");
     $("#subirArchivos").click(comprobarArchivos);
-    $("span.close").click(ocultarModal);
+    $("#myModal>div>span").click(esconderModal,modal.ocultarModal);
+    //$("#myModal>div>span").bind('click', modal.ocultarModal);
 }
-
-function modalDefault()
-{
-    (function(a){a.createModal=function(b){defaults={title:"",message:"Your Message Goes Here!",closeButton:true,scrollable:false};var b=a.extend({},defaults,b);var c=(b.scrollable===true)?'style="max-height: 420px;overflow-y: auto;"':"";html='<div class="modal fade" id="myModal">';html+='<div class="modal-dialog">';html+='<div class="modal-content">';html+='<div class="modal-header">';html+='<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';if(b.title.length>0){html+='<h4 class="modal-title">'+b.title+"</h4>"}html+="</div>";html+='<div class="modal-body" '+c+">";html+=b.message;html+="</div>";html+='<div class="modal-footer">';if(b.closeButton===true){html+='<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>'}html+="</div>";html+="</div>";html+="</div>";html+="</div>";a("body").prepend(html);a("#myModal").modal().on("hidden.bs.modal",function(){a(this).remove()})}})(jQuery);
-}
-
+/*
 function ocultarModal(){
     $("#myModal").css("display","none");
     $("#myModal").html('');
-}
+}*/
 
 function comprobarArchivos(evt) {
     var files = document.getElementById('archivos').files;
     // comprobamos si hay archivos seleccionados
     if(files.length>0) {
-        var upload=new Upload(files[0]);
-        upload.doUpload();
+        for(let x=0;x<files.length;x++){
+            var upload=new Upload(files[x]);
+            upload.doUpload();
+        }
         /*$("#formArchivos").attr("action","index.php?controller=archivo&action=nuevoArchivo");
         $("#formArchivos").submit();
         *//*
@@ -29,13 +28,12 @@ function comprobarArchivos(evt) {
             type: 'POST',
             url: 'index.php?controller=archivo&action=nuevoArchivo',
             data: archivos,
-            success: function (data)
-            {
+            success: function (data){
                 resultado=data;
-                if(resultado==true) {
+                if(resultado==true){
 
                 }
-                else {
+                else{
                     $("#myModal").html('' +
                         '    <div class="modal-content">\n' +
                         '        <span class="close glyphicon glyphicon-remove"></span>\n' +
@@ -45,18 +43,18 @@ function comprobarArchivos(evt) {
                 }
 
             },
-            error: function (error)
-            {
+            error: function (error){
                 alert("Error del servidor, vuelve a intentarlo mas tarde o contacte con nuestro soporte: nonesoporte@viweb.corp");
                 console.log('Error: '+error);
             }
         });*/
     }else{
-        $("#myModal").html('' +
-            '    <div class="modal-content">\n' +
-            '        <span class="close glyphicon glyphicon-remove" onclick="ocultarModal()"></span>\n' +
-            '        <p>No has seleccionado ningun archivo</p>\n' +
-            '    </div>');
-        $("#myModal").css("display","block");
+        let text="No has seleccionado ningún archivo!";
+        modal.setText(text);
+        modal.getModal();
     }
+}
+function esconderModal(){
+    $(".modal").css("display","none");
+    $(".modal").html('');
 }

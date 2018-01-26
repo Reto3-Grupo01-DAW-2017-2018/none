@@ -19,21 +19,23 @@
                     </tr>
                 </thead>
                 <tbody>
-            {% for archivo in archivos %}
-                    <tr>
-                        <td><input type="checkbox" name="archivosSeleccionados" value="{{archivo.idArchivo}}"></td>
-                        <td>{{archivo.nombreArchivo}}</td>
-                        <td><a href="index.php?action=buscar&username={{archivo.username}}">{{archivo.username}}</a></td>
-                        <td><a href="index.php?controller=archivo&action=delete&idArchivo={{archivo.idArchivo}}" style="text-decoration: none">
-                                <button type="button" class="btn btn-danger btn-sm">Borrar</button>
-                            </a>
-                        </td>
-                    </tr>
-            {% else %}
-                    <div id="mensajeProyecto" style="border: 1px solid black; text-align: center;">
-                        <h5>El proyecto {{nombreProyecto}} no tiene ningun archivo subido</h5>
-                    </div>
-            {% endfor %}
+        {% endif %}
+        {% for archivo in archivos %}
+                <tr>
+                    <td><input type="checkbox" name="archivosSeleccionados" value="{{archivo.idArchivo}}"></td>
+                    <td>{{archivo.nombreArchivo}}</td>
+                    <td><a href="index.php?action=buscar&username={{archivo.username}}">{{archivo.username}}</a></td>
+                    <td><a href="index.php?controller=archivo&action=delete&idArchivo={{archivo.idArchivo}}" style="text-decoration: none">
+                            <button type="button" class="btn btn-danger btn-sm">Borrar</button>
+                        </a>
+                    </td>
+                </tr>
+        {% else %}
+                <div id="mensajeProyecto" style="border: 1px solid black; text-align: center;">
+                    <h5>El proyecto {{nombreProyecto}} no tiene ningun archivo subido</h5>
+                </div>
+        {% endfor %}
+        {% if archivos is not null %}
                 </tbody>
             </table>
         </form>
@@ -56,7 +58,7 @@
     <hr style="border:1px solid black;"/>
     <h4><strong>Acciones:</strong></h4>
     <form id="formArchivos" method="post" enctype="multipart/form-data">
-        <input type="file" id="archivos" name="archivos[]" class="form-control" />
+        <input type="file" id="archivos" name="archivos[]" class="form-control" multiple/>
         <input type="hidden" id="idProyecto" name="idProyecto" value="{{idProyecto}}">
         <input type="hidden" id="nombreProyecto" name="nombreProyecto" value="{{nombreProyecto}}">
         <a href="#" id="subirArchivos" class="btn btn-success btn-sm" title="Subir Archivo" style="width: 252px !important">Subir archivo</a>
@@ -71,13 +73,11 @@
 </aside>
 <!-- The Modal -->
 <div id="myModal" class="modal">
-
     <!-- Modal content -->
-
-
 </div>
 {% endblock %}
 {% block scripts %}
     <script src="/../nonecollab/js/Upload.js"></script>
+    <script src="/../nonecollab/js/Modal.js"></script>
     <script src="/../nonecollab/js/archivoJS.js"></script>
 {% endblock %}

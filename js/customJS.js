@@ -93,7 +93,7 @@ function comprobarColor (){
 function cookieColorPrincipal(){
     var color=readCookie('colorNav');
     if(color!=null){
-        $("#navPrincipal,footer>div,.dropdown-menu").css("background-color",color);
+        $("#navPrincipal,footer>div,.dropdown-menu>li>a,.dropdown-menu").css("background-color",color);
     }
 }
 

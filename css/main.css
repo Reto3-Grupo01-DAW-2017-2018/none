@@ -1,10 +1,11 @@
-.container {
-
+html{
     font-family: 'Josefin Sans', sans-serif;
     text-transform: uppercase;
     letter-spacing: 2px;
+}
+.container {
     width: 100%;
-    min-height: 85vh;
+    min-height: 80vh;
 }
 .container .out-wrap {
     position: relative;
@@ -148,7 +149,7 @@ footer{
     padding:15px 15px 0px 15px;
     width:100%;
     margin-top: auto;
-    min-height: 15vh;
+    min-height: 10vh;
     max-height: 15vh;
 }
 footer>div{
@@ -212,7 +213,7 @@ header{
     border-bottom-right-radius: 10px;
     box-shadow: inset 0px 0px 30px 5px rgba(0,0,0,0.20);
 }
-.dropdown-menu>li, .dropdown-menu>li:hover{
+.dropdown-menu>li>a:hover{
     box-shadow: inset 0px 0px 30px 5px rgba(0,0,0,0.20);
 }
 
@@ -352,13 +353,17 @@ section a{
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    text-align: center;
 }
-
+.modal-content p{
+    display: inline-block;
+}
 /* The Close Button */
 .close {
-    color: #aaaaaa;
-    float: right;
+    width: 28px;
+    heigth:28px;
     font-size: 28px;
+    float: right;
     font-weight: bold;
 }
 

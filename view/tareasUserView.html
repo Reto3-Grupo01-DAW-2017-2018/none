@@ -41,24 +41,12 @@
         </table>
         <hr/>
     </div>
-    <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
-        <h4><strong>Proyecto:</strong></h4>
-        Nombre:
-        <br>
-        <input type="text" name="nombreProyecto" class="form-control" value="{{user.username}}" disabled />
-        <br>
-        Descripción:
-        <br>
-        <input type="text" name="descripcionProyecto" class="form-control" value="{{user.email}}" disabled />
-        <br>
-        <a href="" class="btn btn-warning btn-sm" title="Modificar Datos" style="width: 252px !important">Modificar Datos</a> <!-- antes era 180px -->
-        <br>
-        <hr style="border:1px solid black"/>
-        <h4><strong>Acciones:</strong></h4>
-        <a href="" class="btn btn-info btn-sm" title="Ver Archivos" style="width: 252px !important">Ver Archivos</a>
-        <br><br>
-        <a href="" class="btn btn-info btn-sm" title="Ver Comentarios" style="width: 252px !important">Ver Comentarios</a>
-        <br><br>
-        <a href="javascript:history.back()" class="btn btn-primary btn-sm" title="Volver" style="width: 252px !important">Volver</a>
-    </aside>
+<aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
+    <h4><strong>Acciones:</strong></h4>
+    <a href="index.php?controller=archivo&action=archivosUsuario&usuario=<?php echo 1; //AQUI IRÁ EL USUARIO EN SESIÓN ?>" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Archivos del Usuario">Archivos del Usuario</a>
+    <br><br>
+    <a href="index.php?controller=comentario&action=comentariosUsuario&usuario=<?php echo 1; //AQUI IRÁ EL USUARIO EN SESIÓN ?>" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Comentarios del Usuario">Comentarios del Usuario</a>
+    <br><br>
+    <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
+</aside>
 {% endblock %}
