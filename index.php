@@ -43,6 +43,16 @@ function cargarControlador($controller){
             require_once $strFileController;
             $controllerObj=new TareaController();
             break;
+        case 'comentario':
+            $strFileController='controller/ComentarioController.php';
+            require_once $strFileController;
+            $controllerObj=new ComentarioController();
+            break;
+        case 'participante':
+            $strFileController='controller/ParticipanteController.php';
+            require_once $strFileController;
+            $controllerObj=new ParticipanteController();
+            break;
         default:
             $strFileController='controller/UsuarioController.php';
             require_once $strFileController;

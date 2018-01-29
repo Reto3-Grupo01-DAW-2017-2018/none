@@ -15,9 +15,6 @@ class ProyectoController extends BaseController {
         switch($accion) { 
             case "index" :
                 $this->proyectosUsuario();
-                break;            
-            case "aniadirProyecto" :
-                $this->view('aniadirProyecto', "");
                 break;
             case "nuevoProyecto" :
                 $this->guardarProyecto();
@@ -36,7 +33,7 @@ class ProyectoController extends BaseController {
                 break;
         }
     }
-    
+
     /*-------------------------------------------------------------------
     Función que carga la lista de proyectos del usuario indicado en 'responsable', conseguida del modelo 'Proyecto.php'
     y la lista de los proyectos en los que participa el usuario, conseguida del modelo 'Participante.php'  */
@@ -44,41 +41,46 @@ class ProyectoController extends BaseController {
         //Creamos el objeto 'Proyecto'
         $proyecto = new Proyecto($this->conexion);
 
+        //HE COMENTADO LO SIGUIENTE (HARÁ FALTA LUEGO) (VENDRA EN SESION)
+        //$proyecto->setResponsable($_GET['responsable']);
+
+        //HE PUESTO LO SIGUIENTE PARA COMPROBACION
         $proyecto->setResponsable($_SESSION['user']->idUser);
-        
+
         //Conseguimos todas los proyectos del usuario através del modelo 'Proyecto.php'
         $listaProyectosUsuario = $proyecto->getAll();
-        
+
         //Ahora conseguimos la lista de los proyectos en los que participa el usuario a través del modelo 'Participante.php'
         require_once __DIR__. "/../model/Participante.php";
         //Creamos el objeto Participante
         $participanteEnProyectos = new Participante($this->conexion);
         $participanteEnProyectos->setUsuario($_SESSION['user']->idUser);
         $listaParticipandoEnProyectos = $participanteEnProyectos->getAll();
-        
+
         //Buscamos los datos de cada proyecto en los que participa el usuario a través del modelo 'Proyecto.php'
         $listaProyectosParticipados = array();
         foreach ($listaParticipandoEnProyectos as $participacion) {
             $proyectoParticipado = new Proyecto($this->conexion);
             $proyectoParticipado->setIdProyecto($participacion['proyecto']);
             array_push($listaProyectosParticipados, $proyectoParticipado->getProyectoById());
-        }       
-        
+        }
+
+        //Filtramos para que solo muestre los proyectos de los que el usuario no es responsable (solo colabora)
+        $listaProyectosSoloParticipando = array();
+        for ($y = 0; $y < count($listaProyectosParticipados); $y++){
+            if($listaProyectosParticipados[$y]->responsable != $listaParticipandoEnProyectos[$y]['usuario']){
+                array_push($listaProyectosSoloParticipando, $listaProyectosParticipados[$y]);
+            }
+        }
+
         //Cargamos la vista proyectosView.php con la función 'view()' y le pasamos valores (usaremos 'proyectos' para los proyectos del usuario y 'participando' para los proyectos en los que participa)
         echo $this->twig->render("boardView.html",array(
             "user" => $_SESSION["user"],
             "proyectos" => $listaProyectosUsuario,
-            "participando" => $listaProyectosParticipados,
+            'participando' => $listaProyectosSoloParticipando,
             "titulo" => "Proyecto - Nonecollab"
         ));
     }
-    
-    /*-------------------------------------------------------------------
-    Función que carga la lista de proyectos en los que participa el usuario indicado en 'usuario', conseguida del modelo ('Participante.php')*/
-    public function participandoProyectos() {
-        
-    }
-
 
     /*--------------------------------------------------------------
     Función para crear el nuevo proyecto (objeto 'Proyecto') y mandarlo a su clase ('Proyecto.php')*/
@@ -106,7 +108,6 @@ class ProyectoController extends BaseController {
             $proyectoDetalle = new Proyecto($this->conexion);
             $proyectoDetalle->setIdProyecto($_GET['proyecto']);
             $profile = $proyectoDetalle->getProyectoById();
-
 
             //Para conseguir todas las tareas en este proyecto, las conseguimos del modelo 'Tarea.php'
             include_once __DIR__ . "/../model/Tarea.php";
@@ -159,15 +160,5 @@ class ProyectoController extends BaseController {
         //Volvemos a cargar index.php
         header('Location: index.php');
     }
-    
-    /*------------------------------------------------------------------
-    Función para crear la vista con el nombre que le pasemos y con los datos que le indiquemos*/
-    public function view($vista, $datos) {
-        $data = $datos;
-        
-        /*echo 'el primero (de proyecyos)-> '. $data['proyectos'][0]['idProyecto']. '<br>';
-        echo 'el segundo (de participando)--> '. $data['participando'][0]->idProyecto;*/
-        
-        require_once __DIR__. '/../views/'. $vista. 'View.php';        
-    }
+
 }

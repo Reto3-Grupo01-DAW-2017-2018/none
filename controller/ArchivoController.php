@@ -33,8 +33,11 @@ class ArchivoController extends BaseController {
             case "modificarArchivo" :
                 $this->modificarDatosArchivo();
                 break;
-            case "descargarArchivo" :
+            case "descargarArchivos" :
                 $this->descargarArchivo();
+                break;
+            case "descargarArchivosSelect" :
+                $this->descargarArchivosSelect();
                 break;
             default:
                 $this->archivosPorProyecto();
@@ -68,35 +71,19 @@ class ArchivoController extends BaseController {
     }
 
     /*-------------------------------------------------------------------
-    Función que carga la lista de todos los archivos del usuario indicado, conseguida del modelo (Archivo)*/
+    Función que carga la lista de todos los archivos del usuario logueado */
     public function buscarArchivosUser() {
 
-        //Creamos el objeto 'Archivo'
-        $archivoUser = new Archivo($this->conexion);
-        $listaArchivosUser = $archivoUser->getAllByUser($_SESSION['user']->idUser);
+        if(isset($_SESSION['user'])) {
+            $archivoUser = new Archivo($this->conexion);
+            $listaArchivosUser = $archivoUser->getAllByUser($_SESSION["user"]->idUser);
 
-        $listaProyectosPorArchivo = array();
-        //Comprobamos si hay algún archivo o no
-        if($listaArchivosUser != null){
-            //Si hay archivo o archivos, buscamos el id y el nombre del proyecto de cada archivo, conseguido del modelo 'Proyecto'
-            require_once __DIR__. '/../model/Proyecto.php';
-            //Este array será coincidente con el de '$listaArchivosUser'
-            foreach ($listaArchivosUser as $archivo) {
-                $proyectoArchivo = new Proyecto($this->conexion);
-                $proyectoArchivo->setIdProyecto($archivo['proyecto']);
-                array_push($listaProyectosPorArchivo, $proyectoArchivo->getProyectoById());
-            }
+            echo $this->twig->render("archivosUserView.html",array(
+                "user" => $_SESSION["user"],
+                "archivosUser" => $listaArchivosUser,
+                "titulo" => "Archivos del Usuario - Nonecollab"
+            ));
         }
-        else {
-            array_push($listaProyectosPorArchivo, 'sin archivos');
-        }
-
-        //Mandamos a la función view() para crear la vista 'tareasUserView'
-        $this->view('archivosUser', array(
-            'archivosUsuario' => $listaArchivosUser,
-            'archivosEnProyectos' => $listaProyectosPorArchivo,
-            'titulo' => "ARCHIVOS DEL USUARIO"
-        ));
     }
 
     /*--------------------------------------------------------------
@@ -112,45 +99,45 @@ class ArchivoController extends BaseController {
             $archivos= $_FILES['archivos'];
             //for($x=0;$x<count($archivos);$x++){
 
-                $nombreArchivoSubido = $archivos["name"];
-                $archivoTmp = $archivos["tmp_name"];
-                //CONFIRMAMOS QUE LA RUTA DE LA FOTO SUBIDA SE HA GUARDADO EN LA CARPETA DE DESTINO
-                if(file_exists($carpetaDestinoGuardarFoto.$nombreArchivoSubido) == true  || move_uploaded_file($archivoTmp, $carpetaDestinoGuardarFoto.$nombreArchivoSubido) == false) {
-                    //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET."&proyectoNombre=".$_GET['nombreProyecto']);
+            $nombreArchivoSubido = $archivos["name"];
+            $archivoTmp = $archivos["tmp_name"];
+            //CONFIRMAMOS QUE LA RUTA DE LA FOTO SUBIDA SE HA GUARDADO EN LA CARPETA DE DESTINO
+            if(file_exists($carpetaDestinoGuardarFoto.$nombreArchivoSubido) == true  || move_uploaded_file($archivoTmp, $carpetaDestinoGuardarFoto.$nombreArchivoSubido) == false) {
+                //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET."&proyectoNombre=".$_GET['nombreProyecto']);
+                echo "false";
+            }
+            else {
+                //Construimos un nuevo objeto 'archivo' completo para mandar a BD
+                $archivo = new Archivo($this->conexion);
+                $archivo->setNombreArchivo($nombreArchivoSubido);
+                $archivo->setRutaArchivo("/data/".$_GET['idProyecto']."/".$nombreArchivoSubido);
+                /*necesitamos conocer el id del participante hacemos la consulta con el id del
+                usuario + el id del proyecto*/
+                $participante = new Participante ($this->conexion);
+                $participante->setProyecto($_GET['idProyecto']);
+                $participante->setUsuario($_SESSION['user']->idUser);
+                $participante=$participante->getParticipanteByUsuarioAndProyecto();
+                /*Ahora pasamos el participante a el archivo*/
+                $archivo->setParticipante($participante->idParticipante);
+                $archivo->setProyecto($_GET['idProyecto']);
+                $insercion = $archivo->save();
+                //COMPROBAMOS QUE SE HA HECHO EL INSERT
+                if($insercion < 1) {
+                    //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
                     echo "false";
                 }
                 else {
-                    //Construimos un nuevo objeto 'archivo' completo para mandar a BD
-                    $archivo = new Archivo($this->conexion);
-                    $archivo->setNombreArchivo($nombreArchivoSubido);
-                    $archivo->setRutaArchivo("/data/".$_GET['idProyecto']."/".$nombreArchivoSubido);
-                    /*necesitamos conocer el id del participante hacemos la consulta con el id del
-                    usuario + el id del proyecto*/
-                    $participante = new Participante ($this->conexion);
-                    $participante->setProyecto($_GET['idProyecto']);
-                    $participante->setUsuario($_SESSION['user']->idUser);
-                    $participante=$participante->getParticipanteByUsuarioAndProyecto();
-                    /*Ahora pasamos el participante a el archivo*/
-                    $archivo->setParticipante($participante->idParticipante);
-                    $archivo->setProyecto($_GET['idProyecto']);
-                    $insercion = $archivo->save();
-                    //COMPROBAMOS QUE SE HA HECHO EL INSERT
-                    if($insercion < 1) {
-                        //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
-                        echo "false";
-                    }
-                    else {
-                        //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
-                        echo "true";
-                    }
+                    //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
+                    echo "true";
                 }
+            }
             //}
 
         }
-        die();
+
         //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
         //Mandamos a la vista principal
-        header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
+        //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
     }
     
     /*--------------------------------------------------------------
@@ -187,43 +174,47 @@ class ArchivoController extends BaseController {
     /*-------------------------------------------------------------------
     Función que manda a borrar el archivo seleccionado*/
     public function borrarArchivo() {
-        //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
-        $archivoBorrar = new Archivo($this->conexion);
-        $archivoBorrar ->setIdArchivo($_GET['idArchivo']);
-        $delete = $archivoBorrar->remove();
-        
-        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
-        //Volvemos a cargar index.php
-        header('Location: index.php');
+        if(isset($_GET['idArchivo'])&&isset($_GET['proyecto'])&&isset($_GET['nombreArchivo'])){
+            $path=__DIR__."/../data/".$_GET['proyecto']."/".$_GET['nombreArchivo'];
+            if(unlink($path)==true){
+                //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
+                $archivoBorrar = new Archivo($this->conexion);
+                $archivoBorrar->setIdArchivo($_GET['idArchivo']);
+                $delete = $archivoBorrar->remove();
+            }
+        }
+        header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['proyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
     }
+
     /*------------------------------------------------------------------
     Función que borra el zip si esta creado de una descarga anterior, despues lo crea zip con los archivos seleccionados y ejecuta la descarga.*/
-    public function descargarArchivo($archivos){
-        $idsArchivos=array_slice($archivos,1,1);
+    public function descargarArchivosSelect(){
+        $idsArchivos=$_POST["archivosSeleccionados"];
         $archivos = [];
-        if(file_exists(__DIR__.'../zip/archivosByCheck.zip')){
-            unlink(__DIR__.'../zip/archivosByCheck.zip');
+        if(file_exists(__DIR__.'/../zip/archivosByCheck.zip')){
+            unlink(__DIR__.'/../zip/archivosByCheck.zip');
         }
         $zip = new ZipArchive;
-        if ($zip->open(__DIR__.'../zip/archivosByCheck.zip',  ZipArchive::CREATE) === TRUE) {
+        if ($zip->open(__DIR__.'/../zip/archivosByCheck.zip',  ZipArchive::CREATE) === TRUE) {
             foreach ($idsArchivos as $id) {
                 $archivo= new Archivo($this->conexion);
                 $archivo->setIdArchivo($id);
-                /*Aquí va la query*/;
+                $archivo=$archivo->getArchivoById();
 
                 array_push($archivos, $archivo);
+
             }
             foreach ($archivos as $archivo){
-                $archivo = __DIR__."/../".$archivo->getRutaArchivo();
-                if(file_exists($archivo) && $archivo->getRutaArchivo() != ""){
-                    $zip->addFile($archivo, $archivo->getNombreArchivo());
+                $ruta = __DIR__."/..".$archivo->rutaArchivo;
+                if(file_exists($ruta) && $archivo->rutaArchivo != ""){
+                    $zip->addFile($ruta,$archivo->nombreArchivo);
                 }
             }
         }
         $zip->close();
         clearstatcache();
-        if(file_exists(__DIR__.'../zip/archivosByCheck.zip')){
-            $file = __DIR__.'../zip/archivosByCheck.zip';
+        if(file_exists(__DIR__.'/../zip/archivosByCheck.zip')){
+            $file = __DIR__.'/../zip/archivosByCheck.zip';
             header("Pragma: public");
             header("Expires: 0");
             header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -235,14 +226,6 @@ class ArchivoController extends BaseController {
             @readfile($file);
             //die(var_dump($file));
         }
-        header('Location:../Vista/Profesor/ofertaAlumnos.php');
-    }
-    
-    /*------------------------------------------------------------------
-    Función para crear la vista con el nombre que le pasemos y con los datos que le indiquemos*/
-    public function view($vista, $datos) {
-        $data = $datos;
-        
-        require_once __DIR__. '/../views/'. $vista. 'View.php';        
+        header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['proyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
     }
 }

@@ -6,19 +6,16 @@ class TareaController extends BaseController {
         parent::__construct();
         require_once __DIR__. "/../model/Tarea.php";
     }
-    
+
     /*-------------------------------------------------------------------
     Función que, según la acción pasada en la url, manda a cada función correspondiente*/
     public function run($accion){
-        switch($accion) { 
+        switch($accion) {
             case "index" :
                 $this->index();
                 break;
             case "tareasUsuario" :
                 $this->buscarTareasUser();
-                break;
-            case "aniadirTarea" :
-                $this->view('aniadirTarea', "");
                 break;
             case "nuevaTarea" :
                 $this->guardarTarea();
@@ -37,12 +34,12 @@ class TareaController extends BaseController {
                 break;
         }
     }
-    
+
     /*-------------------------------------------------------------------
     Función que carga la lista de tareas del proyecto indicado, conseguida del modelo (Tarea)*/
     public function index() {
         //DE MOMENTO NO SE USA, CREO
-        
+
         //Creamos el objeto 'Tarea'
         /*$tarea = new Tarea($this->conexion);
         $tarea->setProyecto($_GET['proyecto']);
@@ -69,44 +66,43 @@ class TareaController extends BaseController {
             'titulo' => 'TAREAS'
         ));*/
     }
-    
+
     /*--------------------------------------------------------------
-    Función que manda buscar las tareas del usuario*/
+    Función que manda buscar las tareas del usuario logueado*/
     public function buscarTareasUser() {
 
-        //Ahora buscamos las tareas en cada una de las participaciones del usuario, del modelo 'Tarea.php'
         if(isset($_SESSION["user"])){
             $tareaUser = new Tarea($this->conexion);
             $listaTareasUser=$tareaUser->getAllByUser($_SESSION["user"]->idUser);
 
-        echo $this->twig->render("tareasUserView.html",array(
-            "user" => $_SESSION["user"],
-            "tareasUser" => $listaTareasUser,
-            "titulo" => "Tareas del Usuario - Nonecollab"
-        ));
+            echo $this->twig->render("tareasUserView.html",array(
+                "user" => $_SESSION["user"],
+                "tareasUser" => $listaTareasUser,
+                "titulo" => "Tareas del Usuario - Nonecollab"
+            ));
         }
     }
-    
+
     /*--------------------------------------------------------------
     Función para crear la nueva tarea (objeto 'Tarea') y mandarlo a su clase ('Tarea.php')*/
     public function guardarTarea() {
-        if(isset($_POST['guardar'])) {
-            //Construimos un nuevo objeto 'tarea' completo para mandar a BD            
-            $tarea = new Tarea($this->conexion);            
-            $tarea->setNombreTarea($_POST['nombreTarea']);
-            $tarea->setFechaInicioTarea($_POST['fechaInicioTarea']);
-            $tarea->setFechaFinTarea($_POST['fechaFinTarea']);
-            $tarea->setUrgente($_POST['urgente']);
-            $tarea->setParticipante($_POST['participante']);
-            $tarea->setProyecto($_POST['proyecto']);            
-            $insercion = $tarea->save();
-        }
-        
-        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
-        //Mandamos a la vista principal
-        header('Location: index.php');
+
+        //Construimos un nuevo objeto 'tarea' completo para mandar a BD
+        $tarea = new Tarea($this->conexion);
+        $tarea->setNombreTarea($_POST['nombreTarea']);
+        $tarea->setFechaInicioTarea($_POST['fechaInicioTarea']);
+        $tarea->setFechaFinTarea($_POST['fechaFinTarea']);
+        $tarea->setUrgente($_POST['urgente']);
+        $tarea->setParticipante($_POST['encargadoTarea']);
+        $tarea->setProyecto($_POST['proyecto']);
+        $insercion = $tarea->save();
+
+        //AQUI, SI QUEREMOS, SE PUEDE PONER UN MODAL AVISANDO DE QUE SE HA GUARDADO O PASAR DIRECTAMENTE A LA VISTA DEL PROYECTO
+
+        //Recargamos la vista proyectoView.hml de nuevo
+        header('Location: index.php?controller=proyecto&action=verDetalle&proyecto='. $_POST['proyecto']);
     }
-    
+
     /*--------------------------------------------------------------
     Función manda al modelo para buscar los datos de la tarea seleccionada en el boton 'Ver Tarea' */
     public function mostrarDatosTarea() {
@@ -114,7 +110,7 @@ class TareaController extends BaseController {
         $tareaDetalle = new Tarea($this->conexion);
         $tareaDetalle ->setIdTarea($_GET['idTarea']);
         $profile = $tareaDetalle->getTareaById();
-        
+
         //Mandamos a la función view() para crear la vista 'detalleTareaView'
         /*$this->view('tarea',array(
             "tarea"=>$profile,
@@ -125,11 +121,11 @@ class TareaController extends BaseController {
             "tarea"=>$profile,
             "titulo" => "Detalle Tarea - Nonecollab"
         ));
-    }    
-    
+    }
+
     /*-------------------------------------------------------------------
     Función que manda a modificar los datos de la tarea seleccionada*/
-    public function modificarDatosTarea() {        
+    public function modificarDatosTarea() {
         //Creamos el objeto completo y lo mandamos a actualizar al modelo
         $tareaModificar = new Tarea($this->conexion);
         $tareaModificar->setIdTarea($_POST['idTarea']);
@@ -137,32 +133,24 @@ class TareaController extends BaseController {
         $tareaModificar->setFechaInicioTarea($_POST['fechaInicioTarea']);
         $tareaModificar->setFechaFinTarea($_POST['fechaFinTarea']);
         $tareaModificar->setUrgente($_POST['urgente']);
-        $tareaModificar->setParticipante($_POST['participante']);        
-        $tareaModificar->setProyecto($_POST['proyecto']);        
+        $tareaModificar->setParticipante($_POST['participante']);
+        $tareaModificar->setProyecto($_POST['proyecto']);
         $update = $tareaModificar->update();
-        
+
         //Volvemos a cargar index.php pasándole los datos del 'controller', 'action' y el id de la tarea para cargar de nuevo 'detalleTareaView.php' 
         header('Location: index.php?controller=tareas&action=verDetalle&idTarea='. $tareaModificar->getIdTarea());
     }
-    
+
     /*-------------------------------------------------------------------
     Función que manda a borrar la tarea seleccionada*/
     public function borrarTarea() {
         //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
         $tareaBorrar = new Tarea($this->conexion);
         $tareaBorrar ->setIdTarea($_GET['idTarea']);
-        $delete = $tareaBorrar->remove();        
-        
+        $delete = $tareaBorrar->remove();
+
         //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
         //Volvemos a cargar index.php
         header('Location: index.php');
-    }
-    
-    /*------------------------------------------------------------------
-    Función para crear la vista con el nombre que le pasemos y con los datos que le indiquemos*/
-    public function view($vista, $datos) {
-        $data = $datos;
-        
-        require_once __DIR__. '/../views/'. $vista. 'View.php';        
     }
 }

@@ -358,6 +358,9 @@ section a{
 .modal-content p{
     display: inline-block;
 }
+.modal-content modal-footer{
+    text-align: center !important;
+}
 /* The Close Button */
 .close {
     width: 28px;

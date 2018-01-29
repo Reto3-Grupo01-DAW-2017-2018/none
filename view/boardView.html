@@ -55,17 +55,20 @@
     <br>
     <input type="text" name="emailUsuario" class="form-control" value="{{user.email}}" disabled />
     <br>
-    <a href="" class="btn btn-info btn-sm" title="Ver perfil" style="width: 252px !important">Ver Perfil</a> <!-- antes era 180px -->
+    <a href="" class="col-xs-12 btn btn-warning btn-sm" title="Modificar perfil">Modificar Perfil</a>
     <br>
     <hr style="border:1px solid black;"/>
+
     <h4><strong>Acciones:</strong></h4>
-    <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm" title="Ver Tareas del Usuario" style="width: 252px !important">Tareas del Usuario</a>
+    <a href="" class="col-xs-12 btn btn-success btn-sm acciones-btns" title="Crear Proyecto" style="width: 252px !important">Crear Proyecto</a>
     <br><br>
-    <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm" title="Ver Archivos del Usuario" style="width: 252px !important">Archivos del Usuario</a>
+    <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Ver Tareas del Usuario" style="width: 252px !important">Tareas del Usuario</a>
     <br><br>
-    <a href="index.php?controller=comentario&action=comentariosUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm" title="Ver Comentarios del Usuario" style="width: 252px !important">Comentarios del Usuario</a>
+    <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Ver Archivos del Usuario" style="width: 252px !important">Archivos del Usuario</a>
     <br><br>
-    <a href="" class="btn btn-primary btn-sm" title="Salir del Programa" style="width: 252px !important">Salir del Programa</a>
+    <a href="index.php?controller=comentario&action=comentariosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Ver Comentarios del Usuario" style="width: 252px !important">Comentarios del Usuario</a>
+    <br><br>
+    <a href="" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Salir del Programa" style="width: 252px !important">Salir del Programa</a>
     <br><br>
 </aside>
 {% endblock %}

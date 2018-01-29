@@ -158,11 +158,16 @@ class Tarea {
     }
 
     public function getAllByUser($iduser){
-        /*Nota, este get all esta para coger todos los archivos de un usuario (se filtra por el usuario)*/
-        $consulta = $this->conexion->prepare("SELECT idTarea,nombreTarea,DATE_FORMAT(fechaInicioTarea,'%d/%m/%Y')AS fechaInicioTarea,DATE_FORMAT(fechaFinTarea,'%d/%m/%Y')AS fechaFinTarea,urgente,participante,proyecto,proyecto.idProyecto,proyecto.nombre FROM " . $this->table . " INNER JOIN proyecto ON proyecto=proyecto.idProyecto WHERE participante IN (Select distinct idParticipante from participante where usuario = :iduser)");
+        /*Nota, este get all esta para coger todas las tareas de un usuario (se filtra por el usuario)*/
+        $consulta = $this->conexion->prepare("SELECT t.idTarea, t.nombreTarea, t.fechaInicioTarea, t.fechaFinTarea, t.urgente, t.participante, t.proyecto, p.nombre AS nombreProyecto
+                                            FROM ". $this->table. " t  
+                                            JOIN proyecto p 
+                                            ON t.proyecto = p.idProyecto 
+                                            WHERE participante 
+                                            IN (SELECT DISTINCT idParticipante FROM participante WHERE usuario = :iduser)");
         $consulta->execute(array(
-                "iduser" => $iduser)
-        );
+            "iduser" => $iduser
+        ));
         /* Fetch all of the remaining rows in the result set */
         $resultados = $consulta->fetchAll();
         $this->conexion = null; //cierre de conexión

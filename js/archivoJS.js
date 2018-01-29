@@ -3,6 +3,7 @@ $(document).ready(eventos);
 function eventos(){
     modal = new Modal("");
     $("#subirArchivos").click(comprobarArchivos);
+    $("#descargarArchivos").click(download);
     $("#myModal>div>span").click(esconderModal,modal.ocultarModal);
     //$("#myModal>div>span").bind('click', modal.ocultarModal);
 }
@@ -20,40 +21,26 @@ function comprobarArchivos(evt) {
             var upload=new Upload(files[x]);
             upload.doUpload();
         }
-        /*$("#formArchivos").attr("action","index.php?controller=archivo&action=nuevoArchivo");
-        $("#formArchivos").submit();
-        *//*
-        var archivos=jQuery.parseJSON(files);
-        $.ajax({
-            type: 'POST',
-            url: 'index.php?controller=archivo&action=nuevoArchivo',
-            data: archivos,
-            success: function (data){
-                resultado=data;
-                if(resultado==true){
-
-                }
-                else{
-                    $("#myModal").html('' +
-                        '    <div class="modal-content">\n' +
-                        '        <span class="close glyphicon glyphicon-remove"></span>\n' +
-                        '        <p>Error, no se ha podido completar la subida del archivo o ya existe un archivo con ese nombre en el servidor.</p>\n' +
-                        '    </div>');
-                    $("#myModal").css("display","block");
-                }
-
-            },
-            error: function (error){
-                alert("Error del servidor, vuelve a intentarlo mas tarde o contacte con nuestro soporte: nonesoporte@viweb.corp");
-                console.log('Error: '+error);
-            }
-        });*/
     }else{
         let text="No has seleccionado ningún archivo!";
         modal.setText(text);
         modal.getModal();
     }
 }
+
+function download(){
+    let idProyecto= $("#idProyecto").val();
+    let nombreProyecto= $("#nombreProyecto").val();
+    var form = document.getElementById('formListaArchivos');
+    if($('#formListaArchivos input').is(':checked'))
+    {
+        form.setAttribute("action", "index.php?controller=archivo&action=descargarArchivosSelect&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto);
+    }else {
+        form.setAttribute("action", "index.php?controller=archivo&action=descargarArchivos&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto);
+    }
+    $('#formListaArchivos').submit();
+}
+
 function esconderModal(){
     $(".modal").css("display","none");
     $(".modal").html('');

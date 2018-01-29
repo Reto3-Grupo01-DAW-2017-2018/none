@@ -226,5 +226,16 @@ class Usuario {
         $this->conexion = null; //cierre de conexión
         return $resultado;
     }
+    public function getUsuarioByParticipante($participante){
+
+        $consulta = $this->conexion->prepare("SELECT idUser,username,email FROM " . $this->table . " WHERE idUser IN (Select distinct usuario from participante where idParticipante = :idParticipante)" );
+        $consulta->execute(array(
+            "idParticipante" => $participante
+        ));
+        /* Fetch all of the remaining rows in the result set */
+        $resultados = $consulta->fetchAll();
+        $this->conexion = null; //cierre de conexión
+        return $resultados;
+    }
 }
 ?>

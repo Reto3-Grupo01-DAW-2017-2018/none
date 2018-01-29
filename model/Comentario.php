@@ -120,6 +120,23 @@ class Comentario {
 
     }
 
+    public function getAllByUser($iduser){
+        /*Nota, este get all esta para coger todos los comentarios de un usuario (se filtra por el usuario) y con un JOIN a Proyecto para sacar el nombre del proyecto */
+        $consulta = $this->conexion->prepare("SELECT c.idComentario, c.contenido, DATE_FORMAT(c.fecha,'%d/%m/%Y') AS fecha, c.editado, c.participante, c.proyecto, p.nombre AS nombreProyecto
+                                            FROM " . $this->table . " c 
+                                            JOIN proyecto p 
+                                            ON c.proyecto = p.idProyecto 
+                                            WHERE participante 
+                                            IN (SELECT DISTINCT idParticipante FROM participante WHERE usuario = :iduser)");
+        $consulta->execute(array(
+                "iduser" => $iduser)
+        );
+        /* Fetch all of the remaining rows in the result set */
+        $resultados = $consulta->fetchAll();
+        $this->conexion = null; //cierre de conexión
+        return $resultados;
+    }
+
     public function getComentarioById(){
 
         $consulta = $this->conexion->prepare("SELECT idComentario,contenido,DATE_FORMAT(fecha,'%d/%m/%Y')AS fecha,editado,participante,proyecto FROM " . $this->table . " WHERE idComentario = :idComentario");
