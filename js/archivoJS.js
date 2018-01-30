@@ -4,14 +4,9 @@ function eventos(){
     modal = new Modal("");
     $("#subirArchivos").click(comprobarArchivos);
     $("#descargarArchivos").click(download);
-    $("#myModal>div>span").click(esconderModal,modal.ocultarModal);
-    //$("#myModal>div>span").bind('click', modal.ocultarModal);
+    //$("#myModal>div>span,#myModal>div>div>a").click(esconderModal);
+    $(".eliminarButton").click(confirmModal);
 }
-/*
-function ocultarModal(){
-    $("#myModal").css("display","none");
-    $("#myModal").html('');
-}*/
 
 function comprobarArchivos(evt) {
     var files = document.getElementById('archivos').files;
@@ -31,7 +26,7 @@ function comprobarArchivos(evt) {
 function download(){
     let idProyecto= $("#idProyecto").val();
     let nombreProyecto= $("#nombreProyecto").val();
-    var form = document.getElementById('formListaArchivos');
+    let form = document.getElementById('formListaArchivos');
     if($('#formListaArchivos input').is(':checked'))
     {
         form.setAttribute("action", "index.php?controller=archivo&action=descargarArchivosSelect&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto);
@@ -44,4 +39,12 @@ function download(){
 function esconderModal(){
     $(".modal").css("display","none");
     $(".modal").html('');
+}
+function confirmModal(){
+    event.preventDefault();
+    let text="El archivo se eliminara por completo,<br>¿Estas seguro?";
+    modal.setText(text);
+    let ruta=$("#enlaceDelete").attr('href');
+    modal.setPath(ruta);
+    modal.getModalConfirm();
 }

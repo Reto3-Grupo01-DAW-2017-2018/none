@@ -34,7 +34,7 @@ class ArchivoController extends BaseController {
                 $this->modificarDatosArchivo();
                 break;
             case "descargarArchivos" :
-                $this->descargarArchivo();
+                $this->descargarArchivos();
                 break;
             case "descargarArchivosSelect" :
                 $this->descargarArchivosSelect();
@@ -87,7 +87,7 @@ class ArchivoController extends BaseController {
     }
 
     /*--------------------------------------------------------------
-    Función para crear el nuevo archivo (objeto 'Archivo') y mandarlo a su clase (Archivo.php)*/
+    Función para crear el nuevo archivo (objeto 'Archivo') y subirlo a la carpeta del servidor*/
     public function guardarArchivo() {
         if(isset($_GET['idProyecto'])) {
             //CREAMOS VARIABLE PARA GUARDAR LA RUTA A LA CARPETA DE DESTINO DND GUARDAR LA FOTO SUBIDA
@@ -202,7 +202,6 @@ class ArchivoController extends BaseController {
                 $archivo=$archivo->getArchivoById();
 
                 array_push($archivos, $archivo);
-
             }
             foreach ($archivos as $archivo){
                 $ruta = __DIR__."/..".$archivo->rutaArchivo;
@@ -227,5 +226,43 @@ class ArchivoController extends BaseController {
             //die(var_dump($file));
         }
         header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['proyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
+    }
+
+    /*------------------------------------------------------------------
+    Función que borra el zip si esta creado de una descarga anterior, despues lo crea zip con los archivos seleccionados y ejecuta la descarga.*/
+    public function descargarArchivos(){
+        if(isset($_GET['proyecto'])&&isset($_GET['nombreProyecto'])){
+            if(file_exists(__DIR__.'/../zip/archivos.zip')){
+                unlink(__DIR__.'/../zip/archivos.zip');
+            }
+            $zip = new ZipArchive;
+            if ($zip->open(__DIR__.'/../zip/archivos.zip',  ZipArchive::CREATE) === TRUE) {
+                $archivo= new Archivo($this->conexion);
+                $archivo->setProyecto($_GET['proyecto']);
+                $archivos=$archivo->getAll();
+                foreach ($archivos as $archivo){
+                    $ruta = __DIR__."/..".$archivo["rutaArchivo"];
+                    if(file_exists($ruta) && $archivo["rutaArchivo"] != ""){
+                        $zip->addFile($ruta,$archivo["nombreArchivo"]);
+                    }
+                }
+            }
+            $zip->close();
+            clearstatcache();
+            if(file_exists(__DIR__.'/../zip/archivos.zip')){
+                $file = __DIR__.'/../zip/archivos.zip';
+                header("Pragma: public");
+                header("Expires: 0");
+                header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+                header("Content-Type: application/force-download");
+                header( "Content-Disposition: attachment; filename=".basename($file));
+                header( "Content-Description: File Transfer");
+                header('Accept-Ranges: bytes');
+                header('Content-Length: ' . filesize($file));
+                @readfile($file);
+                //die(var_dump($file));
+            }
+            header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['proyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
+        }
     }
 }

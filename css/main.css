@@ -361,6 +361,59 @@ section a{
 .modal-content modal-footer{
     text-align: center !important;
 }
+
+a{
+    text-decoration: none !important;
+}
+
+.mensajeProyecto{
+    border: 1px solid black;
+    text-align: center;
+}
+
+.usuario{
+    height:300px;
+    flex: 1;
+    overflow-y:scroll;
+}
+.container{
+    display: flex;
+    flex-direction: row;
+}
+.container>div{
+    flex: 4;
+}
+aside{
+    border-left: 1px solid black !important;
+    margin-top: 30px;
+    height: 750px;
+    flex: 1;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+aside > form{
+    display: flex;
+    flex-direction: column;
+}
+.acciones-btns{
+    margin-bottom: 10px !important;
+    align-self: stretch;
+}
+.separadorAside{
+    border:1px solid black;
+}
+#contenedorLogin{
+    margin-top: 15%;
+}
+#contenedorLogin>form{
+    display: flex;
+    flex-direction: column;
+}
+#contenedorLogin>form>button{
+    align-self: stretch;
+}
+
 /* The Close Button */
 .close {
     width: 28px;
@@ -387,10 +440,13 @@ section a{
     }
     .out-wrap{
         width:95% !important;
-    }
+    }/*
     .container{
         padding: 0px;
     }
+    header,footer{
+        padding: 0px;
+    }*/
     #titulo{
         font-size: 30px;
     }
