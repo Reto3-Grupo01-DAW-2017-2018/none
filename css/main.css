@@ -1,6 +1,6 @@
 html{
     font-family: 'Josefin Sans', sans-serif;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     letter-spacing: 2px;
 }
 .container {
@@ -146,6 +146,7 @@ html{
 }
 /*Footer*/
 footer{
+    display: none;
     padding:15px 15px 0px 15px;
     width:100%;
     margin-top: auto;
@@ -388,7 +389,7 @@ aside{
     margin-top: 30px;
     height: 750px;
     flex: 1;
-    padding-left: 10px;
+    padding:10px;
     display: flex;
     flex-direction: column;
 }
@@ -428,9 +429,36 @@ aside > form{
     text-decoration: none;
     cursor: pointer;
 }
+.openAside{
+    width: 40px;
+    height: 40px;
+    display: none;
+    position: absolute;
+    bottom: 50vh;
+    right: 0;
+    font-size:30px;
+    cursor:pointer;
+}
+.closeAside{
+    width: 40px;
+    height: 40px;
+    display: none;
+    position: absolute;
+    bottom: 50vh;
+    right: 382px;
+    font-size:30px;
+    cursor:pointer;
+}
 
 /*Media*/
-
+@media (min-width: 776px) {
+    .openAside{
+        display: none;
+    }
+    aside{
+        display: block;
+    }
+}
 @media (max-width: 775px) {
     #navPrincipal{
         flex-wrap: wrap;
@@ -440,13 +468,7 @@ aside > form{
     }
     .out-wrap{
         width:95% !important;
-    }/*
-    .container{
-        padding: 0px;
     }
-    header,footer{
-        padding: 0px;
-    }*/
     #titulo{
         font-size: 30px;
     }
@@ -458,6 +480,16 @@ aside > form{
     }
     #divColor>div>div>a{
         font-size: 10px;
+    }
+    .container>div:first-child{
+        margin-right: 40px;
+    }
+    .openAside{
+        display: inline-block;
+    }
+    aside{
+        display: none;
+        position: relative;
     }
 }
 @media (max-width: 400px) {

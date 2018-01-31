@@ -5,7 +5,8 @@ function eventos(){
     $("#subirArchivos").click(comprobarArchivos);
     $("#descargarArchivos").click(download);
     //$("#myModal>div>span,#myModal>div>div>a").click(esconderModal);
-    $(".eliminarButton").click(confirmModal);
+    $(".eliminarButton").bind('click', { param: $(this) }, confirmModal);
+    //$(".eliminarButton").click(confirmModal);
 }
 
 function comprobarArchivos(evt) {
@@ -40,11 +41,11 @@ function esconderModal(){
     $(".modal").css("display","none");
     $(".modal").html('');
 }
-function confirmModal(){
+function confirmModal(event){
     event.preventDefault();
+    var ruta=event.target.parentElement.href;
     let text="El archivo se eliminara por completo,<br>¿Estas seguro?";
     modal.setText(text);
-    let ruta=$("#enlaceDelete").attr('href');
     modal.setPath(ruta);
     modal.getModalConfirm();
 }

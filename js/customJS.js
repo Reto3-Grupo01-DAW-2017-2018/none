@@ -93,14 +93,14 @@ function comprobarColor (){
 function cookieColorPrincipal(){
     var color=readCookie('colorNav');
     if(color!=null){
-        $("#navPrincipal,footer>div,.dropdown-menu>li>a,.dropdown-menu").css("background-color",color);
+        $("#navPrincipal,footer>div,.dropdown-menu>li>a,.dropdown-menu,aside").css("background-color",color);
     }
 }
 
 function cookieColorFontPrincipal(){
     var color=readCookie('colorNavFont');
     if(color!=null){
-        $("#navPrincipal>li>a,footer>div,.dropdown-menu>li>a").css("color",color);
+        $("#navPrincipal>li>a,footer>div,.dropdown-menu>li>a,aside").css("color",color);
     }
 }
 

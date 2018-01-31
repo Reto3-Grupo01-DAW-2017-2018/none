@@ -27,7 +27,7 @@
                     <td>{{archivo.nombreArchivo}}</td>
                     <td><a href="index.php?action=buscar&username={{archivo.username}}">{{archivo.username}}</a></td>
                     <td>
-                        <a id="enlaceDelete" class="acciones-btns" href="index.php?controller=archivo&action=eliminar&idArchivo={{archivo.idArchivo}}&nombreArchivo={{archivo.nombreArchivo}}&proyecto={{idProyecto}}&nombreProyecto={{nombreProyecto}}">
+                        <a href="index.php?controller=archivo&action=eliminar&idArchivo={{archivo.idArchivo}}&nombreArchivo={{archivo.nombreArchivo}}&proyecto={{idProyecto}}&nombreProyecto={{nombreProyecto}}">
                             <button type="button" class="eliminarButton btn btn-danger btn-sm">Eliminar</button>
                         </a>
                     </td>
@@ -45,7 +45,13 @@
         <hr>
     </section>
 </div>
+<div class="openAside" >
+    <span class="glyphicon glyphicon-chevron-left" onclick="openNav()"></span>
+</div>
 <aside>
+    <div class="closeAside" >
+        <span class="glyphicon glyphicon-chevron-right" onclick="closeNav()"></span>
+    </div>
     <form id="formArchivos" method="post" enctype="multipart/form-data">
         <input type="file" id="archivos" name="archivos[]" class="form-control" multiple/>
         <input type="hidden" id="idProyecto" name="idProyecto" value="{{idProyecto}}">
@@ -74,6 +80,7 @@
 </div>
 {% endblock %}
 {% block scripts %}
+    <script src="/../nonecollab/js/genericoJS.js"></script>
     <script src="/../nonecollab/js/Upload.js"></script>
     <script src="/../nonecollab/js/Modal.js"></script>
     <script src="/../nonecollab/js/archivoJS.js"></script>
