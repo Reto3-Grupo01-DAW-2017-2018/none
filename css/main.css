@@ -387,11 +387,14 @@ a{
 aside{
     border-left: 1px solid black !important;
     margin-top: 30px;
-    height: 750px;
+    height: 100%;
     flex: 1;
     padding:10px;
     display: flex;
     flex-direction: column;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius:10px;
+
 }
 aside > form{
     display: flex;
@@ -434,31 +437,24 @@ aside > form{
     height: 40px;
     display: none;
     position: absolute;
-    bottom: 50vh;
+    top: 150px;
     right: 0;
     font-size:30px;
     cursor:pointer;
 }
 .closeAside{
+    align-self: flex-start;
     width: 40px;
     height: 40px;
     display: none;
-    position: absolute;
-    bottom: 50vh;
-    right: 382px;
+    position: relative;
+    top: 110px;
+    right:50px;
     font-size:30px;
     cursor:pointer;
+    z-index: 1;
 }
 
-/*Media*/
-@media (min-width: 776px) {
-    .openAside{
-        display: none;
-    }
-    aside{
-        display: block;
-    }
-}
 @media (max-width: 775px) {
     #navPrincipal{
         flex-wrap: wrap;
@@ -489,7 +485,6 @@ aside > form{
     }
     aside{
         display: none;
-        position: relative;
     }
 }
 @media (max-width: 400px) {

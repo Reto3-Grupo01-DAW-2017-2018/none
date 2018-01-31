@@ -15,6 +15,9 @@ class ArchivoController extends BaseController {
             case "archivosPorProyecto" :
                 $this->archivosPorProyecto();
                 break;
+            case "cargarArchivos":
+                $this->cargarArchivosAjax();
+                break;
             case "archivosUsuario" :
                 $this->buscarArchivosUser();
                 break;
@@ -40,7 +43,7 @@ class ArchivoController extends BaseController {
                 $this->descargarArchivosSelect();
                 break;
             default:
-                $this->archivosPorProyecto();
+                $this->cargarArchivosAjax();
                 break;
         }
     }
@@ -66,6 +69,21 @@ class ArchivoController extends BaseController {
                 "idProyecto"=>$_GET['proyecto'],
                 "titulo" => "Archivos - Nonecollab"
             ));
+        }
+
+    }
+
+    /*-------------------------------------------------------------------
+    Función que carga la lista de archivos en el proyecto indicado, conseguida del modelo (Archivo)*/
+    public function cargarArchivosAjax() {
+        //Creamos el objeto 'Archivo'
+        if(isset($_GET["idProyecto"])){
+            $archivo = new Archivo($this->conexion);
+            $archivo->setProyecto($_GET['idProyecto']);
+            //Conseguimos todas los archivos (lista de los archivos en BD)
+            $listaArchivos = $archivo->getAll();
+            $listaArchivosJson=json_encode($listaArchivos);
+            echo($listaArchivosJson);
         }
 
     }

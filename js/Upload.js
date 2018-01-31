@@ -22,7 +22,7 @@ class Upload{
         let nombreProyecto= $("#nombreProyecto").val();
         $.ajax({
             type: "POST",
-            url: "/../nonecollab/index.php?controller=archivo&action=nuevoArchivo&idProyecto="+idProyecto+"&nombreProyecto="+nombreProyecto,
+            url: "/../nonecollab/index.php?controller=archivo&action=nuevoArchivo&idProyecto="+idProyecto,
             dataType: "text",
             data: formData,
             cache: false,
