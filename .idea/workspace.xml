@@ -75,8 +75,13 @@
         <entry file="file://$PROJECT_DIR$/css/main.css">
           <provider selected="true" editor-type-id="text-editor">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <state relative-caret-position="493">
               <caret line="478" column="24" lean-forward="true" selection-start-line="478" selection-start-column="24" selection-end-line="478" selection-end-column="24" />
+=======
+            <state relative-caret-position="459">
+              <caret line="476" column="5" lean-forward="true" selection-start-line="476" selection-start-column="5" selection-end-line="476" selection-end-column="5" />
+>>>>>>> Stashed changes
               <folding />
 =======
             <state relative-caret-position="409">
@@ -414,22 +419,29 @@
       <workItem from="1516951076611" duration="18430000" />
       <workItem from="1517210645941" duration="18274000" />
       <workItem from="1517296744537" duration="16016000" />
+<<<<<<< Updated upstream
       <workItem from="1517383117619" duration="12982000" />
 =======
       <workItem from="1516274770892" duration="1190000" />
       <workItem from="1516541055337" duration="157000" />
       <workItem from="1516554220441" duration="18000" />
 >>>>>>> Stashed changes
+=======
+      <workItem from="1517383117619" duration="13894000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <option name="totallyTimeSpent" value="202581000" />
+=======
+    <option name="totallyTimeSpent" value="203493000" />
+>>>>>>> Stashed changes
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10208333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
 =======
@@ -1134,8 +1146,13 @@
     <entry file="file://$PROJECT_DIR$/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <state relative-caret-position="493">
           <caret line="478" column="24" lean-forward="true" selection-start-line="478" selection-start-column="24" selection-end-line="478" selection-end-column="24" />
+=======
+        <state relative-caret-position="459">
+          <caret line="476" column="5" lean-forward="true" selection-start-line="476" selection-start-column="5" selection-end-line="476" selection-end-column="5" />
+>>>>>>> Stashed changes
           <folding />
 =======
         <state relative-caret-position="409">
