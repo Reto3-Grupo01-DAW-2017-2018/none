@@ -52,7 +52,7 @@ class ArchivoController extends BaseController {
     Función que carga la lista de archivos en el proyecto indicado, conseguida del modelo (Archivo)*/
     public function archivosPorProyecto() {
         //Creamos el objeto 'Archivo'
-        if(isset($_GET["proyecto"])&&isset($_GET["proyectoNombre"])){
+        if(isset($_GET["proyecto"])&&isset($_GET["proyectoNombre"])&&isset($_GET["responsable"])){
             $archivo = new Archivo($this->conexion);
             $archivo->setProyecto($_GET['proyecto']);
 
@@ -62,11 +62,16 @@ class ArchivoController extends BaseController {
                 $listaArchivos=null;
             }
 
+            $proyecto=array(
+                "idProyecto"=>$_GET["proyecto"],
+                "nombre"=>$_GET["proyectoNombre"],
+                "responsable"=>$_GET["responsable"]
+            );
+
             echo $this->twig->render("archivosProyectoView.html",array(
                 "user" => $_SESSION["user"],
                 "archivos" => $listaArchivos,
-                "nombreProyecto"=>$_GET["proyectoNombre"],
-                "idProyecto"=>$_GET['proyecto'],
+                "proyecto"=>$proyecto,
                 "titulo" => "Archivos - Nonecollab"
             ));
         }
@@ -120,8 +125,11 @@ class ArchivoController extends BaseController {
             $nombreArchivoSubido = $archivos["name"];
             $archivoTmp = $archivos["tmp_name"];
             //CONFIRMAMOS QUE LA RUTA DE LA FOTO SUBIDA SE HA GUARDADO EN LA CARPETA DE DESTINO
-            if(file_exists($carpetaDestinoGuardarFoto.$nombreArchivoSubido) == true  || move_uploaded_file($archivoTmp, $carpetaDestinoGuardarFoto.$nombreArchivoSubido) == false) {
+            if(file_exists($carpetaDestinoGuardarFoto.$nombreArchivoSubido) == true) {
                 //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET."&proyectoNombre=".$_GET['nombreProyecto']);
+                if(move_uploaded_file($archivoTmp, $carpetaDestinoGuardarFoto.$nombreArchivoSubido) == false){
+                    die("false");
+                }
                 echo "false";
             }
             else {
@@ -134,9 +142,9 @@ class ArchivoController extends BaseController {
                 $participante = new Participante ($this->conexion);
                 $participante->setProyecto($_GET['idProyecto']);
                 $participante->setUsuario($_SESSION['user']->idUser);
-                $participante=$participante->getParticipanteByUsuarioAndProyecto();
+                $participante2=$participante->getParticipanteByUsuarioAndProyecto();
                 /*Ahora pasamos el participante a el archivo*/
-                $archivo->setParticipante($participante->idParticipante);
+                $archivo->setParticipante($participante2->idParticipante);
                 $archivo->setProyecto($_GET['idProyecto']);
                 $insercion = $archivo->save();
                 //COMPROBAMOS QUE SE HA HECHO EL INSERT
@@ -201,7 +209,7 @@ class ArchivoController extends BaseController {
                 $delete = $archivoBorrar->remove();
             }
         }
-        header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['proyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
+        header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['proyecto']."&proyectoNombre=".$_GET['nombreProyecto']."&responsable=".$_GET['responsable']);
     }
 
     /*------------------------------------------------------------------

@@ -96,7 +96,7 @@ class Comentario {
     public function save(){
 
         $consulta = $this->conexion->prepare("INSERT INTO " . $this->table . " (contenido,fecha,editado,participante,proyecto)
-                                        VALUES (:contenido,SYSDATE(),no,:participante,:proyecto)");
+                                        VALUES (:contenido,SYSDATE(),'no',:participante,:proyecto)");
         $save = $consulta->execute(array(
             "contenido" => $this->contenido,
             "participante" => $this->participante,

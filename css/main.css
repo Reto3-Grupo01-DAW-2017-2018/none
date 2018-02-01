@@ -402,11 +402,34 @@ aside > form{
 }
 .acciones-btns{
     margin-bottom: 10px !important;
-    align-self: stretch;
+    align-self: stretch !important;
 }
 .separadorAside{
     border:1px solid black;
 }
+.openAside{
+    width: 40px;
+    height: 40px;
+    display: none;
+    position: absolute;
+    top: 165px;
+    right: 0;
+    font-size:30px;
+    cursor:pointer;
+}
+.closeAside{
+    align-self: flex-start;
+    width: 35px;
+    height: 35px;
+    display: none;
+    position: relative;
+    top: 125px;
+    right:30px;
+    font-size:30px;
+    cursor:pointer;
+    z-index: 1;
+}
+
 #contenedorLogin{
     margin-top: 15%;
 }
@@ -432,28 +455,7 @@ aside > form{
     text-decoration: none;
     cursor: pointer;
 }
-.openAside{
-    width: 40px;
-    height: 40px;
-    display: none;
-    position: absolute;
-    top: 150px;
-    right: 0;
-    font-size:30px;
-    cursor:pointer;
-}
-.closeAside{
-    align-self: flex-start;
-    width: 40px;
-    height: 40px;
-    display: none;
-    position: relative;
-    top: 110px;
-    right:50px;
-    font-size:30px;
-    cursor:pointer;
-    z-index: 1;
-}
+
 
 @media (max-width: 775px) {
     #navPrincipal{
@@ -486,6 +488,7 @@ aside > form{
     aside{
         display: none;
     }
+
 }
 @media (max-width: 400px) {
     #divColor>div>div{

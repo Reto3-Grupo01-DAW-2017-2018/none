@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block container %}
-<div>
-    {% if nombreProyecto is defined %}
-        <h3>Archivos de {{nombreProyecto}}</h3>
+<div class="divContenido">
+    {% if proyecto is defined %}
+        <h3>Archivos de {{proyecto.nombre}}</h3>
     {% endif %}
     <hr/>
-    <section class="usuario">
+    <section id="archivosSection" class="usuario">
         {% if archivos is not null %}
         <a class="btn btn-info btn-sm" id="descargarArchivos" >Descargar archivos <span class="glyphicon glyphicon-download"></span></a>
         <!-- Tabla para mostrar los datos de cada archivo del proyecto -->
@@ -27,14 +27,16 @@
                     <td>{{archivo.nombreArchivo}}</td>
                     <td>{{archivo.username}}</td>
                     <td>
-                        <a href="index.php?controller=archivo&action=eliminar&idArchivo={{archivo.idArchivo}}&nombreArchivo={{archivo.nombreArchivo}}&proyecto={{idProyecto}}&nombreProyecto={{nombreProyecto}}">
-                            <button type="button" class="eliminarButton btn btn-danger btn-sm">Eliminar</button>
-                        </a>
+                        {% if proyecto.responsable == user.idUser or archivo.username == user.username %}
+                            <a href="index.php?controller=archivo&action=eliminar&idArchivo={{archivo.idArchivo}}&nombreArchivo={{archivo.nombreArchivo}}&proyecto={{proyecto.idProyecto}}&nombreProyecto={{proyecto.nombre}}&responsable={{proyecto.responsable}}">
+                                <button type="button" class="eliminarButton btn btn-danger btn-sm">Eliminar</button>
+                            </a>
+                        {% endif %}
                     </td>
                 </tr>
         {% else %}
                 <div class="mensajeProyecto">
-                    <h5>El proyecto {{nombreProyecto}} no tiene ningun archivo subido</h5>
+                    <h5>El proyecto {{proyecto.nombre}} no tiene ningun archivo subido</h5>
                 </div>
         {% endfor %}
         {% if archivos is not null %}
@@ -54,8 +56,8 @@
     </div>
     <form id="formArchivos" method="post" enctype="multipart/form-data">
         <input type="file" id="archivos" name="archivos[]" class="form-control" multiple/>
-        <input type="hidden" id="idProyecto" name="idProyecto" value="{{idProyecto}}">
-        <input type="hidden" id="nombreProyecto" name="nombreProyecto" value="{{nombreProyecto}}">
+        <input type="hidden" id="idProyecto" name="idProyecto" value="{{proyecto.idProyecto}}">
+        <input type="hidden" id="nombreProyecto" name="nombreProyecto" value="{{proyecto.nombre}}">
         <br>
         <a href="#" id="subirArchivos" class="btn btn-success btn-sm" title="Subir Archivo">Subir archivo</a>
     </form>
@@ -70,7 +72,7 @@
     </div>-->
     <hr class="separadorAside"/>
     <h4><strong>Acciones:</strong></h4>
-    <a href="index.php?controller=participante&action=listadoParticipantes&proyecto={{proyecto.idProyecto}}&idUsuario=<?php ?>" class="btn btn-info btn-sm acciones-btns" title="Ver Participantes">Ver Participantes</a>
+    <a href="index.php?controller=participante&action=listadoParticipantes&proyecto={{proyecto.idProyecto}}" class="btn btn-info btn-sm acciones-btns" title="Ver Participantes">Ver Participantes</a>
     <a href="" class="btn btn-info btn-sm col-xs-12 acciones-btns" title="Ver Comentarios" >Ver Comentarios</a>
     <a href="javascript: history.back()" class="btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
 </aside>

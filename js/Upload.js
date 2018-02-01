@@ -17,7 +17,6 @@ class Upload{
         var formData = new FormData();
         let modal = new Modal();
         formData.append("archivos", this.file);
-        //formData.append("upload_file", true);
         let idProyecto= $("#idProyecto").val();
         let nombreProyecto= $("#nombreProyecto").val();
         $.ajax({
@@ -29,6 +28,7 @@ class Upload{
             contentType: false,
             processData: false,
             timeout: 60000,
+            async: false,
             success: function (data) {
                 // your callback here
                 if(data == "false"){

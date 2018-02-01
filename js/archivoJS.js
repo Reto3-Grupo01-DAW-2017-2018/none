@@ -16,8 +16,8 @@ function comprobarArchivos(evt) {
         for(let x=0;x<files.length;x++){
             var upload=new Upload(files[x]);
             upload.doUpload();
-            cargarArchivos();
         }
+        cargarArchivos();
     }else{
         let text="No has seleccionado ningún archivo!";
         modal.setText(text);
@@ -59,25 +59,49 @@ function cargarArchivos(){
         type: "POST",
         url: "/../nonecollab/index.php?controller=archivo&action=cargarArchivos&idProyecto="+idProyecto,
         data: text,
-        dataType:"json",
+        dataType:"text",
         timeout: 60000,
         success: function (data) {
-            alert(data);
+            var jsonData=JSON.parse(data);
+            //alert(jsonData);
             //aqui se trata los datos
-            var listaArchivos=data;
-            $("#formListaArchivos>table>tbody").html("");
-            for(let x=0;x>listaArchivos.length;x++){
-                $("#formListaArchivos>table>tbody").append(""+
-                    "<tr>"+
-                        "<td>"+listaArchivos[x]["idArchivo"]+"</td>"+
-                        "<td>"+listaArchivos[x]["nombreArchivo"]+"</td>"+
-                        "<td>"+listaArchivos[x]["username"]+"</td>"+
-                        "<td>"+
-                            "<a href='index.php?controller=archivo&action=eliminar&idArchivo="+listaArchivos[x]["idArchivo"]+"&nombreArchivo="+listaArchivos[x]["nombreArchivo"]+"&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto+"'>"+
-                                "<button type='button' class='eliminarButton btn btn-danger btn-sm'>Eliminar</button>"+
-                            "</a>"+
-                        "</td>"+
-                    "</tr>");
+            if(Object.keys(jsonData).length<=0){
+                $("#archivosSection").html(''+
+                    '<div class="mensajeProyecto">'+
+                        '<h5>El proyecto '+nombreProyecto+' no tiene ningun archivo subido</h5>'+
+                    '</div>');
+            }else{
+                $("#archivosSection").html(''+
+                    '<a class="btn btn-info btn-sm" id="descargarArchivos" >Descargar archivos <span class="glyphicon glyphicon-download"></span></a>'+
+                    '<form id="formListaArchivos" method="post">'+
+                        '<table class="table col-lg-12">'+
+                            '<thead>'+
+                                '<tr>'+
+                                    '<th scope="col">ID</th>'+
+                                    '<th scope="col">Nombre</th>'+
+                                    '<th scope="col">Subido por</th>'+
+                                    '<th scope="col"></th>'+
+                                '</tr>'+
+                            '</thead>'+
+                            '<tbody>'+
+                            '</tbody>'+
+                        '</table>'+
+                    '</form>');
+                for(let x=0;x<Object.keys(jsonData).length;x++){
+                    $("#formListaArchivos>table>tbody").append(""+
+                        "<tr>"+
+                            "<td>"+jsonData[x]["idArchivo"]+"</td>"+
+                            "<td>"+jsonData[x]["nombreArchivo"]+"</td>"+
+                            "<td>"+jsonData[x]["username"]+"</td>"+
+                            "<td>"+
+                            if(){}
+                                "<a href='index.php?controller=archivo&action=eliminar&idArchivo="+jsonData[x]["idArchivo"]+"&nombreArchivo="+jsonData[x]["nombreArchivo"]+"&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto+"'>"+
+                                    "<button type='button' class='eliminarButton btn btn-danger btn-sm'>Eliminar</button>"+
+                                "</a>"+
+                            }
+                            "</td>"+
+                        "</tr>");
+                }
             }
 
         },
