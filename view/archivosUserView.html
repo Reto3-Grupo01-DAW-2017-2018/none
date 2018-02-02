@@ -10,50 +10,24 @@
                 <tr>
                     <th scope="col">Proyecto</th>
                     <th scope="col">Archivo</th>
-                    <th scope="col">Tipo de archivo</th>
-                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
-            {% endif %}
+            {% endif %}            
             {% for archivo in archivosUser %}
                 <tr>
                     <td>{{archivo.nombreProyecto}}</td>                        
                     <td>{{archivo.nombreArchivo}}</td>     
-                    <td>TIPO DE ARCHIVO??</td>
-                    <td>
-                        <!-- Enlace para el boton Eliminar para eliminar de BD el archivo seleccionado (se pasa como action -> eliminar) -->
-                        <a data-toggle="modal" data-target="#confirmarEliminacion<?php echo $i ?>" class="btn btn-danger btn-sm" style="text-decoration: none">
-                            Eliminar
-                        </a>
-                        <!-- Modal de bootstrap para confirmar la eliminación del proyecto -->
-                        <!-- <div class="modal fade" id="confirmarEliminacion<?php echo $i ?>" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminacion" aria-hidden="true"> -->
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel"><strong>Confirmar eliminación</strong></h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        Indique si desea eliminar el archivo:
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
-                                        <button type="button" class="btn btn-danger" onclick="location.replace('index.php?controller=archivo&action=eliminar&idArchivo={{archivo.idArchivo}}&origen=usuario')">ELIMINAR</button>
-                                    </div>
-                                </div>
-                            </div>
-                    </td>
                 </tr>
                 {% else %}
                 <div id="mensajeArchivosUser" style="border: 1px solid black; text-align: center;">
                     <h5>El usuario no ha subido ningún archivo</h5>
                 </div>
                 {% endfor %}
-            {% if archivos is not null %}
-                    </tbody>
-                </table>
+            {% if archivosUser is not null %}    
+            </tbody>
+        </table>
             {% endif %}
-
         <hr/>
     </div>
     <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">

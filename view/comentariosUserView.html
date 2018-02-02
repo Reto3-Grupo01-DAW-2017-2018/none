@@ -5,7 +5,7 @@
         <hr/>
         <!-- Tabla para mostrar los datos de cada comentario del usuario -->
         <table class="table col-lg-12">
-            {% if comentariosUser is null %}
+            {% if comentariosUser is not null %}
             <thead>
                 <tr>
                     <th scope="col">Proyecto</th>
@@ -15,8 +15,8 @@
                     <th scope="col"></th>
                 </tr>
             </thead>
-            {% endif %}
             <tbody>
+            {% endif %}            
             {% for comentario in comentariosUser %}
                 <tr>
                     <td>{{comentario.nombreProyecto}}</td>                        
@@ -51,9 +51,11 @@
                 <div id="mensajeComentariosUser" style="border: 1px solid black; text-align: center;">
                     <h5>El usuario no ha escrito ningún comentario</h5>
                 </div>
-            {% endfor %}     
+            {% endfor %}  
+            {% if comentariosUser is not null %}
             </tbody>
         </table>
+            {% endif %}
         <hr/>
     </div>
     <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">

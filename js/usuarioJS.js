@@ -7,8 +7,6 @@ $(document).ready(inicio);
 
 function inicio()
 {
-    modalDefault();
-
     correo();
     alias();
     comprobarContraseña();
@@ -47,7 +45,7 @@ function correo ()
                 $.ajax
                 ({
                     type: 'POST',
-                    url: '/../none/index.php?controller=Usuario&action=correo',
+                    url: '/../nonecollab/index.php?controller=Usuario&action=correo',
                     data: datos,
                     success: function (data)
                     {
@@ -64,7 +62,6 @@ function correo ()
                             $('#emailOK').val(resultado);
                             $('#feedEmilio').html('<div class="alert alert-danger" role="alert"> <strong>Warning!</strong>Correo en uso.</div>');
                         }
-
                     },
                     error: function (error)
                     {
@@ -109,7 +106,7 @@ function alias ()
                 $.ajax
                 ({
                     type: 'POST',
-                    url: '/../none/index.php?controller=Usuario&action=username',
+                    url: '/../nonecollab/index.php?controller=Usuario&action=username',
                     data: datos,
                     success: function (data)
                     {
@@ -193,143 +190,24 @@ function comprobarContraseña()
     );
 
 }
-/**
- *
- * @returns {undefined}
- * Funcion para crear la ventana modal
- *
- */
-function modalDefault()
-{
-    (function(a){a.createModal=function(b){defaults={title:"",message:"Your Message Goes Here!",closeButton:true,scrollable:false};var b=a.extend({},defaults,b);var c=(b.scrollable===true)?'style="max-height: 420px;overflow-y: auto;"':"";html='<div class="modal fade" id="myModal">';html+='<div class="modal-dialog">';html+='<div class="modal-content">';html+='<div class="modal-header">';html+='<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';if(b.title.length>0){html+='<h4 class="modal-title">'+b.title+"</h4>"}html+="</div>";html+='<div class="modal-body" '+c+">";html+=b.message;html+="</div>";html+='<div class="modal-footer">';if(b.closeButton===true){html+='<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>'}html+="</div>";html+="</div>";html+="</div>";html+="</div>";a("body").prepend(html);a("#myModal").modal().on("hidden.bs.modal",function(){a(this).remove()})}})(jQuery);
-}
+
+
 /**
  * Enviar
  */
 function enviar()
 {
-    $('#register').on('submit',function (e)
+    $('#userFormu').on('submit',function (e)
     {
         var correoOK=$('[name=emailOK]').val();
         var userOK=$('[name=usernameOK]').val();
         var passOK=$('[name=passwordOK]').val();
-        if(correoOK==1 && userOK==1 && passOK==1)
+        if(correoOK!=1 || userOK!=1 || passOK!=1)
         {
-            $.createModal({
-                title:'Aciertos',
-                closeButton:true,
-                message: 'Datos ok, ahora se te redireccionara a loggin.',
-                scrollable: false
-            });
-
-            return true;
-        }
-        else
-        {
-            $.createModal({
-                title:'Algo va mal',
-                closeButton:true,
-                message: 'Revisa datos',
-                scrollable: false
-            });
-            /**
-             *
-             * @type Number
-             * for los loles(var i=0;i<20;i++)
-             {
-                 $.createModal({
-                 title:'Algo va mal',
-                 closeButton:true,
-                 message: 'Revisa datos',
-                 scrollable: false
-             });
-             }
-             */
-
             e.preventDefault();
+            modalUsu = new Modal("Revisa datos");
+            modalUsu.getModal();
         }
-
-        //alert("elemento.name="+ elemento.name + ", elemento.value=" + elemento.value);
-
-
-
-
-
-
-
     });
 }
 
-
-/**
- * Variacion
- *
- *
- *
- *
- *
- * function enviar()
- {
-     $('#register').on('submit',function (e)
-     {
-         $.createModal({
-                     title:'Fallos',
-                     closeButton:true,
-                     message: 'mansa',
-                     scrollable: false
-                 });
-        $(this).find('input[type=hidden]').each(function() {
-          var elemento=this;
-          alert("elemento.name="+ elemento.name + ", elemento.value=" + elemento.value);
-
-             if(this.value!=1)
-             {
-
-
-
-                 $.createModal({
-                     title:'Fallos',
-                     closeButton:true,
-                     message: 'Revisa datos',
-                     scrollable: false
-                 });
-                 e.preventDefault();
-
-             }
-
-                 $.createModal({
-                     title:'Aciertos',
-                     closeButton:true,
-                     message: 'Datos ok, ahora se te redireccionara a loggin.',
-                     scrollable: false
-                 });
-             return true;
-
-
-         });
-     });
- }
- *
- *
- function enviar()
- {
-     $('#register').on('submit',function ()
-    {
-        $(this).find(':input').each(function() {
-          var elemento= this;
-          //alert("elemento.name="+ elemento.name + ", elemento.value=" + elemento.value);
-             if(elemento.name=='emailOK'.value==1 && elemento.value==1 && elemento.name=='usernameOK' && elemento.value==1 && elemento.name=='passwordOK' && elemento.value==1)
-             {
-                 alert('caca');
-
-             }
-             else
-             {
-                 alert('coco');
-                 alert("elemento.name="+ elemento.name + ", elemento.value=" + elemento.value);
-             }
-
-         });
-    });
- }
- */

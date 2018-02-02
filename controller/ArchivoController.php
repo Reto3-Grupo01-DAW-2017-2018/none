@@ -125,11 +125,8 @@ class ArchivoController extends BaseController {
             $nombreArchivoSubido = $archivos["name"];
             $archivoTmp = $archivos["tmp_name"];
             //CONFIRMAMOS QUE LA RUTA DE LA FOTO SUBIDA SE HA GUARDADO EN LA CARPETA DE DESTINO
-            if(file_exists($carpetaDestinoGuardarFoto.$nombreArchivoSubido) == true) {
+            if(file_exists($carpetaDestinoGuardarFoto.$nombreArchivoSubido) == true || move_uploaded_file($archivoTmp, $carpetaDestinoGuardarFoto.$nombreArchivoSubido) == false) {
                 //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET."&proyectoNombre=".$_GET['nombreProyecto']);
-                if(move_uploaded_file($archivoTmp, $carpetaDestinoGuardarFoto.$nombreArchivoSubido) == false){
-                    die("false");
-                }
                 echo "false";
             }
             else {
@@ -200,7 +197,7 @@ class ArchivoController extends BaseController {
     /*-------------------------------------------------------------------
     Función que manda a borrar el archivo seleccionado*/
     public function borrarArchivo() {
-        if(isset($_GET['idArchivo'])&&isset($_GET['proyecto'])&&isset($_GET['nombreArchivo'])){
+        if(isset($_GET['idArchivo'])&&isset($_GET['proyecto'])&&isset($_GET['nombreArchivo'])&&isset($_GET['responsable'])){
             $path=__DIR__."/../data/".$_GET['proyecto']."/".$_GET['nombreArchivo'];
             if(unlink($path)==true){
                 //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar

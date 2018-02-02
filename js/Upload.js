@@ -31,6 +31,7 @@ class Upload{
             async: false,
             success: function (data) {
                 // your callback here
+                alert(data);
                 if(data == "false"){
                     let texto="Error, no se ha podido completar la subida del archivo o ya existe un archivo con ese nombre en el servidor.";
                     modal.setText(texto);

@@ -11,9 +11,6 @@ class TareaController extends BaseController {
     Función que, según la acción pasada en la url, manda a cada función correspondiente*/
     public function run($accion){
         switch($accion) {
-            case "index" :
-                $this->index();
-                break;
             case "tareasUsuario" :
                 $this->buscarTareasUser();
                 break;
@@ -30,41 +27,9 @@ class TareaController extends BaseController {
                 $this->modificarDatosTarea();
                 break;
             default:
-                $this->index();
+                $this->buscarTareasUser();
                 break;
         }
-    }
-
-    /*-------------------------------------------------------------------
-    Función que carga la lista de tareas del proyecto indicado, conseguida del modelo (Tarea)*/
-    public function index() {
-        //DE MOMENTO NO SE USA, CREO
-
-        //Creamos el objeto 'Tarea'
-        /*$tarea = new Tarea($this->conexion);
-        $tarea->setProyecto($_GET['proyecto']);
-        $listaTareas = $tarea->getAll();
-        
-        //Ahora conseguiremos los datos del usuario que tiene asiganada cada tarea
-        $listaUsuariosTareas = array();
-        require_once __DIR__. '/../model/Usuario.php';
-        foreach ($listaTareas as $tarea) {
-            $usuarioTarea = new Usuario($this->conexion);
-            $usuarioTarea->setIdUser($tarea->usuario);
-            array_push($listaUsuariosTareas, $usuarioTarea->getUsuarioByParticipante());
-        }
-        
-        ///HACER LO DE ARRIBA PARA MOSTRAR EL NOMBRE DEL USUARIO QUEE TIENE ASIGNADA CADA TAREA
-        
-        //Retornamos la info necesaria para mostrarla en la vista 'proyectoView.php'
-        //return $listaTareas;
-        
-        //Cargamos la vista tareasView.php con la función 'view()' y le pasamos valores (usaremos 'tareas')
-        $this->view('tareas', array(
-            'tareas' => $listaTareas,
-            'usuarios' => $listaUsuariosTareas,
-            'titulo' => 'TAREAS'
-        ));*/
     }
 
     /*--------------------------------------------------------------
@@ -111,11 +76,6 @@ class TareaController extends BaseController {
         $tareaDetalle ->setIdTarea($_GET['idTarea']);
         $profile = $tareaDetalle->getTareaById();
 
-        //Mandamos a la función view() para crear la vista 'detalleTareaView'
-        /*$this->view('tarea',array(
-            "tarea"=>$profile,
-            "titulo" => "DETALLE TAREA"
-        ));*/
         echo $this->twig->render("tareasUserView.html",array(
             "user" => $_SESSION["user"],
             "tarea"=>$profile,

@@ -189,6 +189,19 @@ class Usuario {
         return $resultado;
     }
 
+    public function getNoInvitados($idProyecto) {
+        //die(var_dump($idUs));
+        $consulta = $this->conexion->prepare("SELECT idUser,username FROM " . $this->table . " WHERE idUser not in (SELECT usuario FROM participante WHERE proyecto = :proyecto)");
+        $consulta->execute(array(
+            "proyecto" => $idProyecto
+        ));
+        $resultados = $consulta->fetchAll();
+        //die(var_dump($consulta));
+        $this->conexion = null; //cierre de conexión
+        return $resultados;
+
+    }
+
     public function getUsuarioLogin(){
 
         $consulta = $this->conexion->prepare("SELECT idUser,username,password,email FROM " . $this->table . " WHERE (username = :username OR email = :username ) AND password = :password ");

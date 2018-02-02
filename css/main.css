@@ -336,7 +336,7 @@ section a{
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 20; /* Sit on top */
     padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
@@ -373,9 +373,17 @@ a{
 }
 
 .usuario{
-    height:300px;
+    height:80%;
     flex: 1;
     overflow-y:scroll;
+}
+.proyectos{
+    height:40%;
+    flex: 1;
+    overflow-y:scroll;
+}
+.tareas{
+    overflow-x:scroll ;
 }
 .container{
     display: flex;
@@ -387,7 +395,7 @@ a{
 aside{
     border-left: 1px solid black !important;
     margin-top: 30px;
-    height: 100%;
+    height: 80vh !important;
     flex: 1;
     padding:10px;
     display: flex;
@@ -455,7 +463,9 @@ aside > form{
     text-decoration: none;
     cursor: pointer;
 }
-
+btn-secondary{
+    background-color: lightgray !important;
+}
 
 @media (max-width: 775px) {
     #navPrincipal{

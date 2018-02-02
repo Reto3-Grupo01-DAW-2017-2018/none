@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+{% block container %}
+    <div class="col-lg-9">
+        {% if proyecto is defined %}
+        <h3>Comentarios en el Proyecto {{nombreProyecto}}</h3>
+        {% endif %}
+        <hr/>
+        <!-- Tabla para mostrar los datos de cada comentario del usuario -->
+        <table class="table col-lg-12">
+            {% if comentariosProyecto is not null %}
+            <thead>
+                <tr>
+                    <th scope="col">Autor</th>
+                    <th scope="col">Comentario</th>
+                    <th scope="col">Fecha y hora</th>
+                    <th scope="col">Editado</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% endif %}          
+            {% set contador = 0 %}
+            {% for comentario in comentariosProyecto %}
+            <input type="hidden" name="proyecto" value="{{idProyecto}}" />
+            <input type="hidden" name="nombreProyecto" value="{{nombreProyecto}}" />
+            <input type="hidden" name="responsable" value="{{responsable}}" />
+            <input type="hidden" name="participante" value="{{participante}}" />
+                
+                <tr>
+                    <td>{{comentario.username}}</td>                        
+                    <td id="contenidoViejoCom{{contador}}">{{comentario.contenido}}</td>     
+                    <td>{{comentario.fechaHora}}</td>
+                    <td>{{comentario.editado}}</td>
+                    
+                    {% if responsable == user.idUser and comentario.participante != participante %}
+                    <td></td>
+                    <td>
+                        
+                        <!-- Enlace para el boton Eliminar para eliminar de BD el comentario seleccionado (se pasa como action -> eliminar) -->
+                        <a href="index.php?controller=comentario&action=eliminar&comentario={{comentario.idComentario}}" style="text-decoration: none">
+                            <button type="button" class="btn btn-danger btn-sm eliminarButton">Eliminar</button>
+                        </a>
+                        
+                    </td>
+                         
+                    {% elseif comentario.participante == participante %}
+                    
+                    <td>
+
+                        <!-- Enlace para el boton Editar para modificar los datos del comentario si es el usuario que lo ha hecho -->
+                        <a href="#" style="text-decoration: none">
+                            <button type="button" class="btn btn-warning btn-sm editarButton" value="{{contador}}">Editar</button>
+                            <input type="hidden" name="hiddenIdComentario{{contador}}" value="{{comentario.idComentario}}" />
+                        </a>
+                        <!-- <button class="btn btn-warning btn-sm editarButton" title="Editar">Editar</button> -->
+
+                    </td>
+                    <td>
+                        <!-- Enlace para el boton Eliminar para eliminar de BD el comentario seleccionado (se pasa como action -> eliminar) -->
+                        <a href="index.php?controller=comentario&action=eliminar&comentario={{comentario.idComentario}}&proyecto={{idProyecto}}&nombreProyecto={{nombreProyecto}}&responsable={{responsable}}&participante={{participante}}" style="text-decoration: none">
+                            <button type="button" class="btn btn-danger btn-sm eliminarButton">Eliminar</button>
+                        </a>
+                    </td>
+                    
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                    {% endif %} 
+                </tr>
+                {% set contador = contador + 1 %}
+            {% else %}
+                <div id="mensajeComentariosProyecto" style="border: 1px solid black; text-align: center;">
+                    <h5>No hay ningún comentario en este proyecto</h5>
+                </div>            
+            {% endfor %}              
+            {% if comentariosProyecto is not null %}
+            </tbody>
+        </table>
+            {% endif %}
+        <hr/>
+    </div>
+    <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
+        <div id="formsComentario">
+            
+            <div id="nuevoComentario">
+                <h4 id="nue"><strong>Escribir Comentario:</strong></h4>
+                <form id="formNuevoComentario" method="post">
+                    Comentario:
+                    <textarea class="form-control" id="contenidoNuevoCom" name="contenidoNuevoComentario" rows="3" placeholder="(max. 300 caracteres)" required>{{comentario.contenido}}</textarea>
+                    <br>
+                    <input type="hidden" id="idParticipante" name="participante" value="{{participante}}" />
+                    <input type="hidden" id="idProyecto" name="proyecto" value="{{idProyecto}}" />
+                    <input type="hidden" id="n" class="tipoForm" name="tipo" value="nuevo" />
+                    <input type="submit" id="escribirComentario" class="col-xs-12 btn btn-success btn-sm" title="Nuevo Comentario" value="Nuevo Comentario"/>
+                </form>
+                <br>
+            </div>            
+        </div>
+        <hr style="border:1px solid black;"/>
+        <h4><strong>Acciones:</strong></h4>
+        <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{idProyecto}}&participante={{participante}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Tareas en el Proyecto">Tareas en el Proyecto</a>
+        <br><br>
+        <a href="index.php?controller=archivo&action=archivosProyecto&proyecto={{idProyecto}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Archivos en el Proyecto">Archivos en el Proyecto</a>
+        <br><br>
+        <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
+    </aside>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+    </div>    
+{% endblock %}
+{% block scripts %}
+    <script src="/../nonecollab/js/Modal.js"></script>
+    <script src="/../nonecollab/js/comentarioJS.js"></script>
+{% endblock %}

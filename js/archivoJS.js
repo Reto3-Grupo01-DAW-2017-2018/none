@@ -5,7 +5,8 @@ function eventos(){
     $("#subirArchivos").click(comprobarArchivos);
     $("#descargarArchivos").click(download);
     //$("#myModal>div>span,#myModal>div>div>a").click(esconderModal);
-    $(".eliminarButton").bind('click', { param: $(this) }, confirmModal);
+    //$(".eliminarButton").bind('click', { param: $(this) }, confirmModal);
+
     //$(".eliminarButton").click(confirmModal);
 }
 
@@ -38,23 +39,13 @@ function download(){
     $('#formListaArchivos').submit();
 }
 
-function esconderModal(){
-    $(".modal").css("display","none");
-    $(".modal").html('');
-}
-function confirmModal(event){
-    event.preventDefault();
-    var ruta=event.target.parentElement.href;
-    let text="El archivo se eliminara por completo,<br>¿Estas seguro?";
-    modal.setText(text);
-    modal.setPath(ruta);
-    modal.getModalConfirm();
-}
-
 function cargarArchivos(){
     let text="cargarArchivos";
     let idProyecto= $("#idProyecto").val();
     let nombreProyecto= $("#nombreProyecto").val();
+    let responsable = $("#responsable").val();
+    let idUser = $("#idUser").val();
+    let username = $("#username").val();
     $.ajax({
         type: "POST",
         url: "/../nonecollab/index.php?controller=archivo&action=cargarArchivos&idProyecto="+idProyecto,
@@ -93,14 +84,14 @@ function cargarArchivos(){
                             "<td>"+jsonData[x]["idArchivo"]+"</td>"+
                             "<td>"+jsonData[x]["nombreArchivo"]+"</td>"+
                             "<td>"+jsonData[x]["username"]+"</td>"+
-                            "<td>"+
-                            if(){}
-                                "<a href='index.php?controller=archivo&action=eliminar&idArchivo="+jsonData[x]["idArchivo"]+"&nombreArchivo="+jsonData[x]["nombreArchivo"]+"&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto+"'>"+
-                                    "<button type='button' class='eliminarButton btn btn-danger btn-sm'>Eliminar</button>"+
-                                "</a>"+
-                            }
-                            "</td>"+
+                            "<td>"+ "</td>"+
                         "</tr>");
+                    if(responsable==idUser || jsonData[x]["username"]==username){
+                        $("#formListaArchivos>table>tbody>tr:last>td:last").append(""+
+                            "<a href='index.php?controller=archivo&action=eliminar&idArchivo="+jsonData[x]["idArchivo"]+"&nombreArchivo="+jsonData[x]["nombreArchivo"]+"&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto+"&responsable="+responsable+"'>"+
+                                "<button type='button' class='eliminarButton btn btn-danger btn-sm'>Eliminar</button>"+
+                            "</a>");
+                    }
                 }
             }
 
