@@ -85,12 +85,27 @@ class Participante {
 
     }
 
-    public function getAll(){
-        /*Nota, este get all esta para coger todos las participaciones de un usuario (se filtra por el usuario)*/
+    /*public function getAll(){
         $consulta = $this->conexion->prepare("SELECT idParticipante,usuario,proyecto FROM " . $this->table . " WHERE usuario = :usuario");
         $consulta->execute(array(
                 "usuario" => $this->usuario
             ));
+
+        $resultados = $consulta->fetchAll();
+        $this->conexion = null; //cierre de conexión
+        return $resultados;
+
+    }*/
+    public function getAll(){
+        /*Nota, este get all esta para coger todos las participaciones de un usuario (se filtra por el usuario)*/
+        $consulta = $this->conexion->prepare("SELECT pa.idParticipante,pa.usuario,pa.proyecto,pr.idProyecto,pr.nombre,pr.descripcion,DATE_FORMAT(pr.fechaInicioProyecto,'%d/%m/%Y')AS fechaInicioProyecto,pr.responsable 
+                                            FROM " . $this->table . " pa 
+                                            INNER JOIN proyecto pr 
+                                            ON pa.proyecto = pr.idProyecto 
+                                            WHERE pa.usuario = :usuario");
+        $consulta->execute(array(
+                "usuario" => $this->usuario)
+        );
 
         $resultados = $consulta->fetchAll();
         $this->conexion = null; //cierre de conexión

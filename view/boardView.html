@@ -59,7 +59,7 @@
                 <div class="row">
                     <!-- desplegable para invitar gente -->
                     <div class="col-lg-3">
-                        <select class="chosen-select acciones-btns"  tabindex="4" name="invitados[]" multiple>
+                        <select class="chosen-select acciones-btns"  name="invitados[]" multiple>
                             {% for usuario in usuarios %}
                                 {% if usuario.idUser != user.idUser %}
                                     <option value="{{usuario.idUser}}" >{{usuario.username}}</option>

@@ -363,6 +363,12 @@ section a{
     text-align: center !important;
 }
 
+blockquote{
+    margin: 0px;
+}
+.checkboxFinalizada{
+    transform: scale(1.5);
+}
 a{
     text-decoration: none !important;
 }

@@ -42,7 +42,7 @@
         <div class="form-inline">
             <div class="form-group ">
                 <div>
-                    <select class="chosen-select"  tabindex="4" name="invitados[]" multiple>
+                    <select class="chosen-select" name="invitados[]" multiple>
                         {% for usuario in noInvitados %}
                             <option value="{{usuario.idUser}}" >{{usuario.username}}</option>
                         {% endfor %}

@@ -6,50 +6,116 @@
         {% endif %}
         <hr/>
         {% for tarea in tareas %}
-        <div class="panel panel-default" style="flex-basis: 45%;">
-            <div class="panel-heading">Tarea: <strong>{{tarea.nombreTarea}}</strong></div>
+        <div class="panel panel-default panelTarea">
+            <div class="panel-heading" id="nombreViejaTarea{{contador}}">Tarea: <strong>{{tarea.nombreTarea}}</strong></div>
             <ul class="list-group">
-                <li class="list-group-item">Inicio: <strong>{{tarea.fechaInicioTarea}}</strong></li>
-                <li class="list-group-item">Finalización: <strong>{{tarea.fechaFinTarea}}</strong></li>
-                <li class="list-group-item">Urgente: <strong>{{tarea.urgente}}</strong></li>
-                <li class="list-group-item">Asignada a: <strong>Falta por crear columna en la BD para asignar personas</strong>
+                <li class="list-group-item" id="fechaInicioViejaTarea{{contador}}">Inicio: <strong>{{tarea.fechaInicioTarea}}</strong></li>
+                <li class="list-group-item" id="fechaFinViejaTarea{{contador}}">Finalización: <strong>{{tarea.fechaFinTarea}}</strong></li>
+                <li class="list-group-item">
+                    <span id="urgenteViejaTarea{{contador}}">Urgente: <strong>{{tarea.urgente}}</strong></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </li>
                 <li class="list-group-item">
-                    <span>Finalizada:&nbsp;&nbsp;<input type="checkbox" name="finalizada" value="si" style="transform: scale(2)"></span>&nbsp;&nbsp;
-                    <a href="#" class="col-xs-4 col-xs-offset-8 btn btn-warning btn-sm" style="margin-top: -25px;"><span class="glyphicon glyphicon-edit"></span>&nbsp;Editar</a>
+                    <span id="editadaViejaTarea{{contador}}">Editada: <strong>{{tarea.editada}}</strong></span>
+                </li>
+                <li class="list-group-item">Asignado/a: <strong>{{tarea.username}}</strong></li>
+                <li class="list-group-item">Creador/a: <strong>{{tarea.creadorTarea}}</strong></li>
+                <li class="list-group-item">
+                    <span>Finalizada: <input class="checkboxFinalizada" type="checkbox" class="finalizada" value="si"></span>
+                </li>
+                <li class="list-group-item">
+                    <a href="#" >
+                        <button type="button" class="btn btn-warning btn-sm editarButton" value="{{contador}}">Editar</button>
+                        <input type="hidden" name="hiddenIdTarea{{contador}}" value="{{tarea.idTarea}}" />
+                    </a>
+                    <a href="index.php?controller=tarea&action=eliminar&tarea={{tarea.idTarea}}&proyecto={{proyecto.idProyecto}}&participante={{idParticipante}}">
+                        <button type="button" class="btn btn-danger btn-sm eliminarButton">Eliminar</button>
+                    </a>
                 </li>
             </ul>
         </div>
+        {% else %}
+            <div id="mensajeTareasUser" class="mensajeProyecto">
+                <h5>El usuario no tiene ninguna tarea asignada</h5>
+            </div>
         {% endfor %}
     </div>
 <aside>
-    <h4><strong>Crear nueva Tarea:</strong></h4>
-        <form id="formTarea" method="post" action="/../reto3/js/tareaJS.js">
-            Nombre Tarea:
-            <input type="text" id="nnt" name="nombreTarea" class="form-control" required />
-            Fecha Inicio:
-            <input type="date" id="fit" name="fechaInicioTarea" class="form-control" required />
-            Fecha Finalización:
-            <input type="date" id="fft" name="fechaFinTarea" class="form-control" required />
-            Urgente:&nbsp;&nbsp;
-            <span class="form-check form-check-inline">
-                <strong>Si</strong>&nbsp;<input class="form-check-input" type="radio" name="urgente" id="u1" value="si" checked>
-            </span>
-            <span class="form-check form-check-inline">
-                <strong>No</strong>&nbsp;<input class="form-check-input" type="radio" name="urgente" id="u2" value="no">
-            </span>
-            Asignar tarea a:&nbsp;&nbsp;
-            <select class="chosen-select" id="et" name="encargadoTarea" required>
-                <option></option>
-                {% for participante in participantes %}
+    <div id="formsTarea">
+        <div id="nueTarea">
+            <h4><strong>Crear nueva Tarea:</strong></h4>
+            <form id="formNuevaTarea" method="post">
+                Nombre Tarea:
+                <input type="text" id="nnt" name="nombreTarea" class="form-control" required />
+                <br>
+                Fecha Inicio:
+                <input type="date" name="fechaInicioTarea" class="form-control fit" required />
+                <br>
+                Fecha Finalización:
+                <input type="date" name="fechaFinTarea" class="form-control fft" required />
+                <br>
+                Urgente:&nbsp;&nbsp;
+                <span class="form-check form-check-inline">
+                        <strong>Si</strong>&nbsp;<input class="form-check-input" type="radio" name="urgente" id="u1" value="si" checked />
+                    </span>
+                &nbsp;&nbsp;&nbsp;
+                <span class="form-check form-check-inline">
+                        <strong>No</strong>&nbsp;<input class="form-check-input" type="radio" name="urgente" id="u2" value="no" />
+                    </span>
+                <br><br>
+                Asignar tarea a:&nbsp;&nbsp;
+                <select class="form-control-sm chosen-select" id="et" name="encargadoTarea" required>
+                    <option></option>
+                    {% for participante in participantes %}
                     <option value='{{participante.idParticipante}}'><strong>{{participante.username}}</strong></option>
-                {% endfor %}
-            </select>
-            <input type="hidden" id="ip" name="proyecto" value="{{proyecto.idProyecto}}" />
+                    {% endfor %}
+                </select>
+                <br><br>
+                <input type="hidden" id="ip" name="proyecto" value="{{proyecto.idProyecto}}" />
+                <input type="hidden" id="part" name="participantes[]" value="{{participantes}}" />
+                <input type="hidden" class="tipoForm" name="tipo" value="nuevo" />
+                <input type="submit" id="nuevaTarea" class="col-xs-12 btn btn-success btn-sm" title="Crear Tarea" value="Crear Tarea"/>
+            </form>
             <br>
-            <input type="submit" id="nuevaTarea" class="col-xs-12 btn btn-success btn-sm" title="Crear Tarea" value="Crear Tarea"/>
-        </form>
-        <hr style="border:1px solid black;"/>
+        </div>
+        <div id="ediTarea" hidden>
+            <h4><strong>Editar Tarea:</strong></h4>
+            <form id="formEditarTarea" method="post">
+                Nuevo Nombre Tarea:
+                <input type="text" id="ent" name="nombreTarea" class="form-control" value="" required />
+                <br>
+                Nueva Fecha Inicio:
+                <input type="date" id="efit" name="fechaInicioTarea" class="form-control fit" value="" required />
+                <br>
+                Nueva Fecha Finalización:
+                <input type="date" id="efft" name="fechaFinTarea" class="form-control fft" value="" required />
+                <br>
+                Urgente:&nbsp;&nbsp;
+                <span class="form-check form-check-inline">
+                        <strong>Si</strong>&nbsp;<input class="form-check-input" type="radio" name="urgente" id="eu1" value="si" checked />
+                    </span>
+                &nbsp;&nbsp;&nbsp;
+                <span class="form-check form-check-inline">
+                        <strong>No</strong>&nbsp;<input class="form-check-input" type="radio" name="urgente" id="eu2" value="no" />
+                    </span>
+                <br><br>
+                Reasignar tarea a:&nbsp;&nbsp;
+                <select class="form-control-sm" id="eet" name="encargadoTarea" required>
+                    <option></option>
+                    {% for participante in participantes %}
+                    <option value="{{participante.idParticipante}}"><strong>{{participante.username}}</strong></option>
+                    {% endfor %}
+                </select>
+                <br><br>
+                <input type="hidden" id="idTaEd" name="idTareaEditando" value="" />
+                <input type="hidden" id="eip" name="proyecto" value="{{proyecto.idProyecto}}" />
+                <input type="hidden" class="tipoForm" name="tipo" value="nuevo" />
+                <input type="submit" id="editarTarea" class="col-xs-12 btn btn-warning btn-sm" title="Modificar Tarea" value="Modificar"/>
+                <input type="submit" id="cancelarEditarTarea" class="col-xs-12 btn btn-secondary btn-sm" title="Cancelar Editar Tarea" value="Cancelar Editar Tarea"/>
+            </form>
+            <br>
+        </div>
+    </div>
+        <hr class="separadorAside"/>
         <h4><strong>Acciones:</strong></h4>
         <a href="index.php?controller=participante&action=listadoParticipantes&proyecto={{proyecto.idProyecto}}" class="btn btn-info btn-sm acciones-btns" title="Ver Participantes en el Proyecto">Participantes Proyecto</a>
         <a href="index.php?controller=archivo&action=archivosPorProyecto&proyecto={{proyecto.idProyecto}}&proyectoNombre={{proyecto.nombre}}&responsable={{proyecto.responsable}}" class="btn btn-info btn-sm acciones-btns" title="Ver Archivos del Proyecto">Archivos Proyecto</a>

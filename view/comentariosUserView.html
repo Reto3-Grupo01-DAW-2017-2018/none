@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block container %}
-    <div class="col-lg-9">
+    <div class="usuario">
         <h3>Comentarios del Usuario</h3>
         <hr/>
         <!-- Tabla para mostrar los datos de cada comentario del usuario -->
@@ -58,7 +58,7 @@
             {% endif %}
         <hr/>
     </div>
-    <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
+    <aside>
         <h4><strong>Acciones:</strong></h4>
         <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Tareas del Usuario">Tareas del Usuario</a>
         <br><br>

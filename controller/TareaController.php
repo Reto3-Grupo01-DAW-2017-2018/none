@@ -39,6 +39,9 @@ class TareaController extends BaseController {
         if(isset($_SESSION["user"])){
             $tareaUser = new Tarea($this->conexion);
             $listaTareasUser=$tareaUser->getAllByUser($_SESSION["user"]->idUser);
+            if(count($listaTareasUser)<1){
+                $listaTareasUser=null;
+            }
 
             echo $this->twig->render("tareasUserView.html",array(
                 "user" => $_SESSION["user"],
@@ -52,20 +55,26 @@ class TareaController extends BaseController {
     Función para crear la nueva tarea (objeto 'Tarea') y mandarlo a su clase ('Tarea.php')*/
     public function guardarTarea() {
 
+        //Primero buscamos la participación del usuario en sesión en esta tarea
+        $participacion = new Participante($this->conexion);
+        $participacion->setUsuario($_SESSION['user']->idUser);
+        $participacion->setProyecto($_POST['proyecto']);
+        $idParticipacion = $participacion->getParticipanteByUsuarioAndProyecto();
+
         //Construimos un nuevo objeto 'tarea' completo para mandar a BD
         $tarea = new Tarea($this->conexion);
         $tarea->setNombreTarea($_POST['nombreTarea']);
         $tarea->setFechaInicioTarea($_POST['fechaInicioTarea']);
         $tarea->setFechaFinTarea($_POST['fechaFinTarea']);
         $tarea->setUrgente($_POST['urgente']);
-        $tarea->setParticipante($_POST['encargadoTarea']);
+        $tarea->setEditada('no');
+        $tarea->setParticipanteAsignado($_POST['encargadoTarea']);
+        $tarea->setParticipante($idParticipacion->idParticipante);
         $tarea->setProyecto($_POST['proyecto']);
         $insercion = $tarea->save();
 
-        //AQUI, SI QUEREMOS, SE PUEDE PONER UN MODAL AVISANDO DE QUE SE HA GUARDADO O PASAR DIRECTAMENTE A LA VISTA DEL PROYECTO
-
         //Recargamos la vista proyectoView.hml de nuevo
-        header('Location: index.php?controller=proyecto&action=verDetalle&proyecto='. $_POST['proyecto']);
+        header('Location: index.php?controller=proyecto&action=verDetalle&proyecto='. $_POST['proyecto']. '&participante='. $_POST['encargadoTarea']. '&origen=proyecto');
     }
 
     /*--------------------------------------------------------------
@@ -86,6 +95,13 @@ class TareaController extends BaseController {
     /*-------------------------------------------------------------------
     Función que manda a modificar los datos de la tarea seleccionada*/
     public function modificarDatosTarea() {
+
+        //Primero buscamos la participación del usuario en sesión en esta tarea
+        $participacion = new Participante($this->conexion);
+        $participacion->setUsuario($_SESSION['user']->idUser);
+        $participacion->setProyecto($_POST['proyecto']);
+        $idParticipacion = $participacion->getParticipanteByUsuarioAndProyecto();
+
         //Creamos el objeto completo y lo mandamos a actualizar al modelo
         $tareaModificar = new Tarea($this->conexion);
         $tareaModificar->setIdTarea($_POST['idTarea']);
@@ -93,12 +109,15 @@ class TareaController extends BaseController {
         $tareaModificar->setFechaInicioTarea($_POST['fechaInicioTarea']);
         $tareaModificar->setFechaFinTarea($_POST['fechaFinTarea']);
         $tareaModificar->setUrgente($_POST['urgente']);
-        $tareaModificar->setParticipante($_POST['participante']);
+        $tareaModificar->setEditada('si');
+        $tareaModificar->setParticipanteAsignado($_POST['encargadoTarea']);
+        $tareaModificar->setParticipante($idParticipacion->idParticipante);
         $tareaModificar->setProyecto($_POST['proyecto']);
         $update = $tareaModificar->update();
 
-        //Volvemos a cargar index.php pasándole los datos del 'controller', 'action' y el id de la tarea para cargar de nuevo 'detalleTareaView.php' 
-        header('Location: index.php?controller=tareas&action=verDetalle&idTarea='. $tareaModificar->getIdTarea());
+        //Volvemos a cargar index.php pasándole los datos del 'controller', 'action' y el id de la tarea para cargar de nuevo 'detalleTareaView.php'
+        header('Location: index.php?controller=tareas&action=verDetalle&idTarea='. $_POST['idTarea']);
+
     }
 
     /*-------------------------------------------------------------------
@@ -111,6 +130,6 @@ class TareaController extends BaseController {
 
         //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
         //Volvemos a cargar index.php
-        header('Location: index.php');
+        header('Location: index.php?controller=proyecto&action=verDetalle&proyecto='. $_GET['proyecto']. '&participante='. $_GET['participante']. '&origen=proyecto');
     }
 }

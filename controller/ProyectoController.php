@@ -56,7 +56,7 @@ class ProyectoController extends BaseController {
         //Filtramos para que solo muestre los proyectos de los que el usuario no es responsable (solo colabora)
         $listaProyectosSoloParticipando = array();
         for ($y = 0; $y < count($listaProyectosParticipados); $y++){
-            die(var_dump($listaProyectosParticipados[$y]));
+            //die(var_dump($listaProyectosParticipados[$y]));
             if($listaProyectosParticipados[$y]['responsable'] != $listaProyectosParticipados[$y]['usuario']){
                 array_push($listaProyectosSoloParticipando, $listaProyectosParticipados[$y]);
             }

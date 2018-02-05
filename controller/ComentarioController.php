@@ -45,7 +45,9 @@ class ComentarioController extends BaseController {
 
         //Conseguimos todas los comentarios (lista de los comentarios en BD)
         $listaComentarios = $comentario->getAll();
-
+        if(count($listaComentarios)<1){
+            $listaComentarios=null;
+        }
         //Cargamos la vista comentariosView.php con la función 'view()' y le pasamos valores (usaremos 'comentarios')
         echo $this->twig->render("comentariosProyectoView.html",array(
             "user" => $_SESSION["user"],
@@ -66,7 +68,9 @@ class ComentarioController extends BaseController {
             //Creamos el objeto 'Comentario'
             $comentarioUser = new Comentario($this->conexion);
             $listaComentariosUser = $comentarioUser->getAllByUser($_SESSION['user']->idUser);
-
+            if(count($listaComentariosUser)<1){
+                $listaComentariosUser=null;
+            }
             //Mandamos crear la vista 'comentariosUserView' usando twig
             echo $this->twig->render("comentariosUserView.html",array(
                 "user" => $_SESSION["user"],

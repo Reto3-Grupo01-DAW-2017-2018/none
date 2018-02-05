@@ -6,6 +6,7 @@ class Comentario {
     private $idComentario;
     private $contenido;
     private $fecha;
+    private $editado;
     private $participante;
     private $proyecto;
 
@@ -64,6 +65,20 @@ class Comentario {
     /**
      * @return mixed
      */
+    function getEditado() {
+        return $this->editado;
+    }
+
+    /**
+     * @param mixed $editado
+     */
+    function setEditado($editado) {
+        $this->editado = $editado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getParticipante()
     {
         return $this->participante;
@@ -96,9 +111,11 @@ class Comentario {
     public function save(){
 
         $consulta = $this->conexion->prepare("INSERT INTO " . $this->table . " (contenido,fecha,editado,participante,proyecto)
-                                        VALUES (:contenido,SYSDATE(),'no',:participante,:proyecto)");
+                                        VALUES (:contenido,:fecha,:editado,:participante,:proyecto)");
         $save = $consulta->execute(array(
             "contenido" => $this->contenido,
+            "fecha" => $this-> fecha,
+            "editado" => $this->editado,
             "participante" => $this->participante,
             "proyecto" => $this->proyecto
         ));
@@ -108,8 +125,15 @@ class Comentario {
     }
 
     public function getAll(){
-        /*Nota, este get all esta para coger todos los comentarios de un proyecto (se filtra por el proyecto)*/
-        $consulta = $this->conexion->prepare("SELECT idComentario,contenido,DATE_FORMAT(fecha,'%d/%m/%Y')AS fecha,editado,participante,proyecto FROM " . $this->table . " WHERE proyecto = :proyecto ORDER BY fecha");
+        /*Nota, este get all esta para coger todos los comentarios de un proyecto, tambien sacaremos datos del participante y del usuario (se filtra por el proyecto)*/
+        $consulta = $this->conexion->prepare("SELECT c.idComentario,c.contenido,DATE_FORMAT(c.fecha,'%d/%m/%Y %H:%i')AS fechaHora,c.editado,c.participante,c.proyecto,p.usuario,p.proyecto,u.idUser,u.username
+                                            FROM " . $this->table . " c 
+                                            INNER JOIN participante p  
+                                            ON c.participante = p.idParticipante 
+                                            INNER JOIN usuario u 
+                                            ON p.usuario = u.idUser 
+                                            WHERE c.proyecto = :proyecto 
+                                            ORDER BY fecha");
         $consulta->execute(array(
                 "proyecto" => $this->proyecto)
         );
@@ -152,13 +176,14 @@ class Comentario {
     /**/
 
     public function update(){
-        $consulta = $this->conexion->prepare("UPDATE " . $this->table . " SET contenido = :contenido, fecha = :fecha, editado = si, participante = :participante, proyecto = :proyecto WHERE idComentario = :idComentario");
+        $consulta = $this->conexion->prepare("UPDATE " . $this->table . " SET contenido = :contenido, fecha = :fecha, editado = :editado, participante = :participante, proyecto = :proyecto WHERE idComentario = :idComentario");
         $update = $consulta->execute(array(
+            "idComentario" => $this->idComentario,
             "contenido" => $this->contenido,
             "fecha" => $this->fecha,
+            "editado" => $this->editado,
             "participante" => $this->participante,
-            "proyecto" => $this->proyecto,
-            "idProyecto" => $this->idProyecto
+            "proyecto" => $this->proyecto
         ));
         $this->conexion = null;
         return $update;
