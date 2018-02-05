@@ -57,6 +57,8 @@ function LightenDarkenColor(col, amt) {
     return (usePound ? "#" : "") + String("000000" + (g | (b << 8) | (r << 16)).toString(16)).slice(-6);
 }
 
+/*El codigo de arriba es de una paleta de codepen, editado y modificado para el uso en nuestro página*/
+
 $(document).ready(eventos);
 
 function eventos(){
@@ -64,12 +66,22 @@ function eventos(){
     cookieColorFontPrincipal();
     $("#divColor>div>div>a").bind('click', { param: $(this) }, cambiarColorPicked);
     $("#botonAceptarColor").click(comprobarColor);
+    $(".toggle input").click(cambiarFontColor);
 }
 
 function cambiarColorPicked(event){
     var colorPicked=$(event.target).text();
     $("#colorSelected").css({"background-color":colorPicked})
     $("#colorSelected > p").text(colorPicked);
+}
+
+function cambiarFontColor(event){
+    if($(".toggle input:checked").length>0){
+        $("#colorSelected > p").css("color","black");
+    }else{
+        $("#colorSelected > p").css("color","white");
+    }
+
 }
 
 function comprobarColor (){

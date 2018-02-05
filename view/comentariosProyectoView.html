@@ -18,10 +18,11 @@
             <blockquote>
                 <p id="contenidoViejoCom{{contador}}" class="pull-left">{{comentario.contenido}}</p>
 
+
                 {% if comentario.editado == "si" %}
-                <br>
-                <p class="text-muted pull-right">editado</p>
-                <br>
+                    <br><br><small class="text-muted">editado</small>
+                {% else %}
+                    <br><br>
                 {% endif %}
                 <small>{{comentario.fechaHora}}<cite title="usuario"><strong> {{comentario.username}}</strong></cite></small>
                 <hr>
@@ -72,7 +73,7 @@
         <h4><strong>Acciones:</strong></h4>
         <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{idProyecto}}&participante={{participante}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Tareas en el Proyecto">Tareas en el Proyecto</a>
         <br><br>
-        <a href="index.php?controller=archivo&action=archivosProyecto&proyecto={{idProyecto}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Archivos en el Proyecto">Archivos en el Proyecto</a>
+        <a href="index.php?controller=archivo&action=archivosPorProyecto&proyecto={{idProyecto}}&proyectoNombre={{nombreProyecto}}&responsable={{responsable}}" class="btn btn-info btn-sm acciones-btns" title="Ver Archivos del Proyecto">Archivos Proyecto</a>
         <br><br>
         <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
     </aside>

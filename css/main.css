@@ -68,7 +68,6 @@ html{
     -ms-flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
-@include justify-content (space-between);
     display: none;
 }
 .container .out-wrap .tab-container .tab-panes > div:before {
@@ -313,7 +312,7 @@ header{
     box-shadow: inset 0 0 0 2px rgba(0,0,0,.05);
     border-radius: 40px;
 }
-p{
+.pCenter{
     text-align: center;
 }
 
@@ -471,6 +470,10 @@ aside > form{
 }
 btn-secondary{
     background-color: lightgray !important;
+}
+
+small::before{
+    content: "" !important;
 }
 
 @media (max-width: 775px) {

@@ -3,7 +3,7 @@ $(document).load(cargarArchivos);
 function eventos(){
     modal = new Modal("");
     $("#subirArchivos").click(comprobarArchivos);
-    $("#descargarArchivos").click(download);
+    $("#archivosSection").on('click','#descargarArchivos',download);
     //$("#myModal>div>span,#myModal>div>div>a").click(esconderModal);
     //$(".eliminarButton").bind('click', { param: $(this) }, confirmModal);
 
@@ -81,7 +81,7 @@ function cargarArchivos(){
                 for(let x=0;x<Object.keys(jsonData).length;x++){
                     $("#formListaArchivos>table>tbody").append(""+
                         "<tr>"+
-                            "<td>"+jsonData[x]["idArchivo"]+"</td>"+
+                            "<td><input type='checkbox' name='archivosSeleccionados[]' value='"+jsonData[x]["idArchivo"]+"'></td>"+
                             "<td>"+jsonData[x]["nombreArchivo"]+"</td>"+
                             "<td>"+jsonData[x]["username"]+"</td>"+
                             "<td>"+ "</td>"+
