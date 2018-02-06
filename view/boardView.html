@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block container %}
-<div>
+<div class="contenido">
     <h3>Proyectos del usuario</h3>
     <hr/>
     <section class="proyectos">
@@ -31,7 +31,7 @@
             <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{participacion.idProyecto}}&participante={{participacion.idParticipante}}&origen=participando">
                 <button type="button" class="btn btn-info btn-sm">Entrar</button>
             </a>
-            <a href="index.php?controller=participante&action=eliminar&participante={{participacion.idParticipante}}">
+            <a href="index.php?controller=participante&action=eliminar&participante={{participacion.idParticipante}}&realizar=abandonar">
                 <button type="button" class="btn btn-danger btn-sm eliminarButton" value="dejar">Dejar Proyecto</button>
             </a>
             <hr/>
@@ -39,38 +39,32 @@
         {% endfor %}
     </section>
 </div>
+<div class="openAside" >
+    <span class="glyphicon glyphicon-chevron-left" onclick="openNav()"></span>
+</div>
 <aside>
+    <div class="closeAside" >
+        <span class="glyphicon glyphicon-chevron-right" onclick="closeNav()"></span>
+    </div>
     <form id="cproyFormu" method="GET" action="index.php">
         <h4><strong>CREAR PROYECTO:</strong></h4>
-        Proyecto:
         <br>
+        Proyecto:
         <input type="hidden" name="controller" value="proyecto">
         <input type="hidden" name="action" value="nuevoProyecto">
         <input type="text" name="nombreProy" id="nombreProy" class="form-control" required/>
-        <br>
         Descripcion:
-        <br>
         <input type="text" name="descProy" id="descProy" class="form-control" required/>
-        <br>
         Añadir Participante:
         <br>
-        <div class="form-inline">
-            <div class="form-group ">
-                <div class="row">
                     <!-- desplegable para invitar gente -->
-                    <div class="col-lg-3">
-                        <select class="chosen-select acciones-btns"  name="invitados[]" multiple>
+                        <select class="chosen-select acciones-btns" name="invitados[]" multiple>
                             {% for usuario in usuarios %}
                                 {% if usuario.idUser != user.idUser %}
                                     <option value="{{usuario.idUser}}" >{{usuario.username}}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
         <br>
         <input type="submit" class="btn btn-sm btn-success acciones-btns" name="enviar" value="Crear proyecto"/> <!-- antes era 180px -->
     </form>
@@ -81,6 +75,10 @@
     <a href="index.php?controller=comentario&action=comentariosUsuario&usuario={{user.idUser}}" class=" btn btn-info btn-sm acciones-btns" title="Ver Comentarios del Usuario">Comentarios del Usuario</a>
     <a href="javascript: history.back()" class=" btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
 </aside>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+</div>
 {% endblock %}
 {% block scripts %}
     <script src="/../nonecollab/js/chosen.jquery.js" type="text/javascript"></script>

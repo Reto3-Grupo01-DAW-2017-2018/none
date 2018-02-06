@@ -64,12 +64,21 @@ function eventos(){
     cookieColorFontPrincipal();
     $("#divColor>div>div>a").bind('click', { param: $(this) }, cambiarColorPicked);
     $("#botonAceptarColor").click(comprobarColor);
+    $(".toggle input").click(cambiarFontColor);
 }
 
 function cambiarColorPicked(event){
     var colorPicked=$(event.target).text();
     $("#colorSelected").css({"background-color":colorPicked})
     $("#colorSelected > p").text(colorPicked);
+}
+
+function cambiarFontColor(){
+    if($(".toggle input:checked").length>0){
+        $("#colorSelected > p").css("color","black");
+    }else{
+        $("#colorSelected > p").css("color","white");
+    }
 }
 
 function comprobarColor (){
@@ -93,14 +102,14 @@ function comprobarColor (){
 function cookieColorPrincipal(){
     var color=readCookie('colorNav');
     if(color!=null){
-        $("#navPrincipal,footer>div,.dropdown-menu>li>a,.dropdown-menu,aside").css("background-color",color);
+        $("#navPrincipal,footer>div,.dropdown-menu>li>a,.dropdown-menu").css("background-color",color);
     }
 }
 
 function cookieColorFontPrincipal(){
     var color=readCookie('colorNavFont');
     if(color!=null){
-        $("#navPrincipal>li>a,footer>div,.dropdown-menu>li>a,aside").css("color",color);
+        $("#navPrincipal>li>a,footer>div,.dropdown-menu>li>a").css("color",color);
     }
 }
 

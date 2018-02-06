@@ -58,12 +58,16 @@
             {% endif %}
         <hr/>
     </div>
+    <div class="openAside" >
+        <span class="glyphicon glyphicon-chevron-left" onclick="openNav()"></span>
+    </div>
     <aside>
+        <div class="closeAside" >
+            <span class="glyphicon glyphicon-chevron-right" onclick="closeNav()"></span>
+        </div>
         <h4><strong>Acciones:</strong></h4>
         <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Tareas del Usuario">Tareas del Usuario</a>
-        <br><br>
         <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Archivos del Usuario">Archivos del Usuario</a>
-        <br><br>
         <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
     </aside>
 {% endblock %}

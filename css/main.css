@@ -313,7 +313,7 @@ header{
     box-shadow: inset 0 0 0 2px rgba(0,0,0,.05);
     border-radius: 40px;
 }
-p{
+.pCenter{
     text-align: center;
 }
 
@@ -401,7 +401,7 @@ a{
 aside{
     border-left: 1px solid black !important;
     margin-top: 30px;
-    height: 80vh !important;
+    height: 90% !important;
     flex: 1;
     padding:10px;
     display: flex;
@@ -410,13 +410,14 @@ aside{
     border-bottom-left-radius:10px;
 
 }
-aside > form{
+aside form,#formsComentario form{
     display: flex;
     flex-direction: column;
 }
 .acciones-btns{
     margin-bottom: 10px !important;
     align-self: stretch !important;
+    min-height: 28px;
 }
 .separadorAside{
     border:1px solid black;
@@ -473,6 +474,26 @@ btn-secondary{
     background-color: lightgray !important;
 }
 
+small::before{
+    content: "";
+}
+.wrap{
+    height:80%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.wrap .panel{
+    flex: 1 1 400px;
+    align-self: flex-start;
+}
+textarea {
+    resize: none;
+}
+.panel{
+    margin-right: 20px;
+}
+
 @media (max-width: 775px) {
     #navPrincipal{
         flex-wrap: wrap;
@@ -495,7 +516,7 @@ btn-secondary{
     #divColor>div>div>a{
         font-size: 10px;
     }
-    .container>div:first-child{
+    .contenido,.usuario{
         margin-right: 40px;
     }
     .openAside{
@@ -503,6 +524,9 @@ btn-secondary{
     }
     aside{
         display: none;
+    }
+    .acciones-btns{
+        font-size: 10px;
     }
 
 }

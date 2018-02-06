@@ -1,9 +1,8 @@
 {% extends "layout.html" %}
 {% block container %}
-<div>
-    <h3>Proyecto <strong>{{proyecto.nombre}}</strong></h3>
-    <hr/>
     <section class="usuario">
+        <h3>Proyecto <strong>{{proyecto.nombre}}</strong></h3>
+        <hr/>
         <table class="table">
             <thead>
                 <tr>
@@ -20,8 +19,8 @@
                     <td>
                         {% if proyecto.responsable == user.idUser and proyecto.responsable != usuario.usuario %}
 
-                            <a href="index.php?controller=participante&action=eliminar&idParticipante={{usuario.idParticipante}}&proyecto={{proyecto.idProyecto}}" style="text-decoration: none">
-                                    <button type="button" class="btn btn-danger btn-sm">Expulsar</button>
+                            <a href="index.php?controller=participante&action=eliminar&participante={{usuario.idParticipante}}&proyecto={{proyecto.idProyecto}}&realizar=expulsar">
+                                <button type="button" class="btn btn-danger btn-sm">Expulsar</button>
                             </a>
 
                         {% endif %}
@@ -31,25 +30,26 @@
             </tbody>
         </table>
     </section>
+
+<div class="openAside" >
+    <span class="glyphicon glyphicon-chevron-left" onclick="openNav()"></span>
 </div>
 <aside>
+    <div class="closeAside" >
+        <span class="glyphicon glyphicon-chevron-right" onclick="closeNav()"></span>
+    </div>
     <form id="cproyFormu" name="guardar" method="POST" action="index.php?controller=participante&action=nuevoParticipante">
         <h4><strong>Invitar gente: </strong></h4>
         <br>
        <!--<input type="hidden" name="controller" value="participante">       <input type="hidden" name="action" value="nuevoParticipante">-->
-       <input type="hidden" name="proyecto" value="{{proyecto.idProyecto}}">
+        <input type="hidden" name="proyecto" value="{{proyecto.idProyecto}}">
 
-        <div class="form-inline">
-            <div class="form-group ">
-                <div>
-                    <select class="chosen-select" name="invitados[]" multiple>
-                        {% for usuario in noInvitados %}
-                            <option value="{{usuario.idUser}}" >{{usuario.username}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </div>
+        <select class="chosen-select" name="invitados[]" multiple>
+            {% for usuario in noInvitados %}
+                <option value="{{usuario.idUser}}" >{{usuario.username}}</option>
+            {% endfor %}
+        </select>
+
         <br>
        <input type="submit" class="btn btn-info btn-sm acciones-btns" name="enviar" value="Invitar"/> <!-- antes era 180px -->
     </form>

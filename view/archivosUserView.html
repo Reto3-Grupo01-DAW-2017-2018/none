@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 {% block container %}
-    <div class="col-lg-9">
+    <div class="usuario">
         <h3>Archivos del Usuario</h3>
         <hr/>
         <!-- Tabla para mostrar los datos de cada archivo del usuario -->
-        <table class="table col-lg-12">
+        <table class="table">
             {% if archivosUser is not null %}
             <thead>
                 <tr>
@@ -20,7 +20,7 @@
                     <td>{{archivo.nombreArchivo}}</td>     
                 </tr>
                 {% else %}
-                <div id="mensajeArchivosUser" style="border: 1px solid black; text-align: center;">
+                <div id="mensajeArchivosUser" class="mensajeProyecto">
                     <h5>El usuario no ha subido ningún archivo</h5>
                 </div>
                 {% endfor %}
@@ -30,12 +30,16 @@
             {% endif %}
         <hr/>
     </div>
-    <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
+    <div class="openAside" >
+        <span class="glyphicon glyphicon-chevron-left" onclick="openNav()"></span>
+    </div>
+    <aside>
+        <div class="closeAside" >
+            <span class="glyphicon glyphicon-chevron-right" onclick="closeNav()"></span>
+        </div>
         <h4><strong>Acciones:</strong></h4>
-        <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Tareas del Usuario">Tareas del Usuario</a>
-        <br><br>
-        <a href="index.php?controller=comentario&action=comentariosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Comentarios del Usuario">Comentarios del Usuario</a>
-        <br><br>
-        <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
+        <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm acciones-btns" title="Tareas del Usuario">Tareas del Usuario</a>
+        <a href="index.php?controller=comentario&action=comentariosUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm acciones-btns" title="Comentarios del Usuario">Comentarios del Usuario</a>
+        <a href="javascript: history.back()" class="btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
     </aside>
 {% endblock %}

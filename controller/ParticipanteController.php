@@ -150,19 +150,15 @@ class ParticipanteController extends BaseController {
     public function borrarParticipante() {
         //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
         $participanteBorrar = new Participante($this->conexion);
-        $participanteBorrar ->setIdParticipante($_GET['idParticipante']);
+        $participanteBorrar ->setIdParticipante($_GET['participante']);
         $delete = $participanteBorrar->remove();
         
         //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
         //Volvemos a cargar index.php
-        header('Location: index.php?controller=participante&action=listadoParticipantes&proyecto='.$_GET['proyecto']);
-    }
-    
-    /*------------------------------------------------------------------
-    Función para crear la vista con el nombre que le pasemos y con los datos que le indiquemos*/
-    public function view($vista, $datos) {
-        $data = $datos;
-        
-        require_once __DIR__. '/../views/'. $vista. 'View.php';        
+        if($_GET['realizar']=="expulsar"){
+            header('Location: index.php?controller=participante&action=listadoParticipantes&proyecto='.$_GET['proyecto']);
+        }elseif ($_GET['realizar']=="abandonar"){
+            header('Location: index.php');
+        }
     }
 }

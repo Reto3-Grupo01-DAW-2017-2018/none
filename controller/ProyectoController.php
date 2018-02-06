@@ -161,7 +161,7 @@ class ProyectoController extends BaseController {
     public function borrarProyecto() {
         //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
         $proyectoBorrar = new Proyecto($this->conexion);
-        $proyectoBorrar ->setIdProyecto($_GET['idProyecto']);
+        $proyectoBorrar ->setIdProyecto($_GET['proyecto']);
         $delete = $proyectoBorrar->remove();
 
         $this->proyectosUsuario();
