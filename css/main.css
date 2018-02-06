@@ -68,7 +68,6 @@ html{
     -ms-flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
-@include justify-content (space-between);
     display: none;
 }
 .container .out-wrap .tab-container .tab-panes > div:before {

@@ -57,6 +57,8 @@ function LightenDarkenColor(col, amt) {
     return (usePound ? "#" : "") + String("000000" + (g | (b << 8) | (r << 16)).toString(16)).slice(-6);
 }
 
+/*El codigo de arriba es de una paleta de codepen, editado y modificado para el uso en nuestro página*/
+
 $(document).ready(eventos);
 
 function eventos(){
@@ -73,12 +75,20 @@ function cambiarColorPicked(event){
     $("#colorSelected > p").text(colorPicked);
 }
 
+<<<<<<< HEAD
 function cambiarFontColor(){
+=======
+function cambiarFontColor(event){
+>>>>>>> master
     if($(".toggle input:checked").length>0){
         $("#colorSelected > p").css("color","black");
     }else{
         $("#colorSelected > p").css("color","white");
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 }
 
 function comprobarColor (){
