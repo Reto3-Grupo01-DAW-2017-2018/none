@@ -334,11 +334,11 @@
             </div>
             <div id="contenedorColorSelected" style="background-color:white;">
                 <div><br>
-                    <p>Color seleccionado</p>
+                    <p class="pCenter">Color seleccionado</p>
                     <div id="colorSelected"><p></p></div>
                 </div><br><br>
-                <p>color letra:</p>
-                <p>blanco/negro</p>
+                <p class="pCenter">color letra:</p>
+                <p class="pCenter">blanco/negro</p>
                 <div class="toggle">
                     <input type="checkbox" class="check">
                     <b class="b switch"></b>
@@ -348,10 +348,12 @@
             </div>
         </div>
     </div>
-
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<script src="https://use.fontawesome.com/aa95071b26.js"></script>
-<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/TweenLite.min.js"></script>
-<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/EasePack.min.js"></script>
-<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/demo.js"></script>
 {% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://use.fontawesome.com/aa95071b26.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/TweenLite.min.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/EasePack.min.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/demo.js"></script>
+{% endblock %}
+

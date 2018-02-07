@@ -47,6 +47,9 @@ class UsuarioController extends BaseController{
             case "logout" :
                 $this->logout();
                 break;
+            case "quienesSomos":
+                $this->abrirQuienesSomos();
+                break;
             default:
                 $this->index();
                 break;
@@ -185,7 +188,8 @@ class UsuarioController extends BaseController{
     public function crearCustomView(){
         if(isset($_SESSION["user"])){
             echo $this->twig->render("personalizarView.html",array(
-                "user"=>$_SESSION["user"]
+                "user"=>$_SESSION["user"],
+                "titulo"=>"Custom - Nonecollab"
             ));
         }
     }
@@ -203,13 +207,18 @@ class UsuarioController extends BaseController{
         header('Location: index.php');
     }
 
-    /**
-     * Crea la vista que le pasemos con los datos indicados.
-     */
-    public function view($vista,$datos){
-        $data = $datos;
+    public function abrirQuienesSomos(){
 
-        require_once  __DIR__ . "/../view/" . $vista . "View.php";
+        if(isset($_SESSION["user"])){
+            echo $this->twig->render("quienesSomosView.html",array(
+                "user"=>$_SESSION["user"],
+                "titulo"=>"Login - Nonecollab"
+            ));
+        }else{
+            echo $this->twig->render("quienesSomosView.html",array(
+                "titulo"=>"Quienes somos - Nonecollab"
+            ));
+        }
     }
 }
 ?>

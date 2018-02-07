@@ -189,6 +189,19 @@ class Usuario {
         return $resultado;
     }
 
+    public function getNoInvitados($idProyecto) {
+        //die(var_dump($idUs));
+        $consulta = $this->conexion->prepare("SELECT idUser,username FROM " . $this->table . " WHERE idUser not in (SELECT usuario FROM participante WHERE proyecto = :proyecto)");
+        $consulta->execute(array(
+            "proyecto" => $idProyecto
+        ));
+        $resultados = $consulta->fetchAll();
+        //die(var_dump($consulta));
+        $this->conexion = null; //cierre de conexión
+        return $resultados;
+
+    }
+
     public function getUsuarioLogin(){
 
         $consulta = $this->conexion->prepare("SELECT idUser,username,password,email FROM " . $this->table . " WHERE (username = :username OR email = :username ) AND password = :password ");
@@ -225,6 +238,17 @@ class Usuario {
         $resultado = $consulta->rowCount();
         $this->conexion = null; //cierre de conexión
         return $resultado;
+    }
+    public function getUsuarioByParticipante($participante){
+
+        $consulta = $this->conexion->prepare("SELECT idUser,username,email FROM " . $this->table . " WHERE idUser IN (Select distinct usuario from participante where idParticipante = :idParticipante)" );
+        $consulta->execute(array(
+            "idParticipante" => $participante
+        ));
+        /* Fetch all of the remaining rows in the result set */
+        $resultados = $consulta->fetchAll();
+        $this->conexion = null; //cierre de conexión
+        return $resultados;
     }
 }
 ?>

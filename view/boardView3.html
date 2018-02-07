@@ -2,33 +2,33 @@
 {% block container %}
             <div class="col-lg-9">
                 <h3>Proyectos del usuario</h3>
-                <hr/>            
-                <section class="col-lg-12 usuario" style="height:300px;overflow-y:scroll;">                    
-                    <?php foreach($data["proyectos"] as $proyecto) {?>  
+                <hr/>
+                <section class="col-lg-12 usuario" style="height:300px;overflow-y:scroll;">
+                    <?php foreach($data["proyectos"] as $proyecto) {?>
                     <div class="col-lg-9" style="margin-top: 10px;">
                         <?php echo $proyecto["idProyecto"]; ?> -
                         <?php echo $proyecto["nombre"]; ?> -
-                        <?php echo $proyecto["fechaInicioProyecto"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;   
+                        <?php echo $proyecto["fechaInicioProyecto"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;
                         <hr class="col-lg-12"/>
                     </div>
-                    <div class="col-lg-3">                        
+                    <div class="col-lg-3">
                             <!-- Enlace para el boton Gestionar para mostrar los datos del proyecto (se pasa como action -> verDetalle) -->
                             <a href="index.php?controller=proyectos&action=verDetalle&proyecto=<?php echo $proyecto['idProyecto'] ?>" title="Gestionar" style="text-decoration: none">
                                 <button type="button" class="btn btn-info btn-sm">Gestionar</button>
                             </a>
                             <!-- Enlace para el boton borrar para eliminar el proyecto -->
-                            <a href="index.php?controller=proyectos&action=eliminar&idProyecto=<?php echo $proyecto['idProyecto'] ?>" title="Eliminar" style="text-decoration: none">   
+                            <a href="index.php?controller=proyectos&action=eliminar&idProyecto=<?php echo $proyecto['idProyecto'] ?>" title="Eliminar" style="text-decoration: none">
                                 <button type="button" class="btn btn-danger btn-sm">Eliminar</button>
                             </a>
                             <hr/>
                     </div>
-                        <?php } ?>                    
+                        <?php } ?>
                 </section>
                 <hr style="border: 1px solid black !important"/>
                 <h3>Participando en proyectos</h3>
-                <hr/>            
+                <hr/>
                 <section class="col-lg-12 usuario" style="height:300px;overflow-y:scroll;">
-                    <?php foreach($data["participando"] as $proyectoParticipado => $participacion) { ?>  
+                    <?php foreach($data["participando"] as $proyectoParticipado => $participacion) { ?>
                         <div class="col-lg-9" style="margin-top: 10px;">
                             <?php echo $participacion->idProyecto; ?> -
                             <?php echo $participacion->nombre; ?> -
@@ -41,7 +41,7 @@
                                 <button type="button" class="btn btn-info btn-sm">Entrar</button>
                             </a>
                             <!-- Enlace para el boton borrar para eliminar el proyecto -->
-                            <a href="index.php?controller=proyectos&action=eliminar&idProyecto=<?php echo $participado->idProyecto ?>" title="Dejar Proyecto" style="text-decoration: none">   
+                            <a href="index.php?controller=proyectos&action=eliminar&idProyecto=<?php echo $participado->idProyecto ?>" title="Dejar Proyecto" style="text-decoration: none">
                                 <button type="button" class="btn btn-danger btn-sm">Dejar Proyecto</button>
                             </a>
                             <hr/>
@@ -51,7 +51,7 @@
             </div>
             <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px; height: 750px">
                 <h4><strong>Usuario:</strong></h4>
-                Username: 
+                Username:
                 <br>
                 <input type="text" name="nombreUsuario" class="form-control" value="<?php  ?>" disabled />
                 <br>

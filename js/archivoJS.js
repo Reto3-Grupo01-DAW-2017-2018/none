@@ -1,49 +1,105 @@
 $(document).ready(eventos);
-
+$(document).load(cargarArchivos);
 function eventos(){
+    modal = new Modal("");
     $("#subirArchivos").click(comprobarArchivos);
-    $(".close").click(ocultarModal);
-}
+    $("#archivosSection").on('click','#descargarArchivos',download);
+    //$("#myModal>div>span,#myModal>div>div>a").click(esconderModal);
+    //$(".eliminarButton").bind('click', { param: $(this) }, confirmModal);
 
-function modalDefault()
-{
-    (function(a){a.createModal=function(b){defaults={title:"",message:"Your Message Goes Here!",closeButton:true,scrollable:false};var b=a.extend({},defaults,b);var c=(b.scrollable===true)?'style="max-height: 420px;overflow-y: auto;"':"";html='<div class="modal fade" id="myModal">';html+='<div class="modal-dialog">';html+='<div class="modal-content">';html+='<div class="modal-header">';html+='<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';if(b.title.length>0){html+='<h4 class="modal-title">'+b.title+"</h4>"}html+="</div>";html+='<div class="modal-body" '+c+">";html+=b.message;html+="</div>";html+='<div class="modal-footer">';if(b.closeButton===true){html+='<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>'}html+="</div>";html+="</div>";html+="</div>";html+="</div>";a("body").prepend(html);a("#myModal").modal().on("hidden.bs.modal",function(){a(this).remove()})}})(jQuery);
-}
-
-function ocultarModal(){
-    $("#myModal").css("display","none");
+    //$(".eliminarButton").click(confirmModal);
 }
 
 function comprobarArchivos(evt) {
     var files = document.getElementById('archivos').files;
     // comprobamos si hay archivos seleccionados
     if(files.length>0) {
-        $("#formArchivos").attr("action","index.php?controller=archivo&action=subir");
-        $("#formArchivos").submit();
-        /* Hacer ajax una vez probado el post tradicional
-        $.ajax
-        ({
-            type: 'POST',
-            url: '/../nonecollab/index.php?controller=archivo&action=subir',
-            data: files,
-            success: function (data)
-            {
-                resultado=data;
-                if(resultado==true) {
-
-                }
-                else {
-
-                }
-
-            },
-            error: function (error)
-            {
-                alert("Error del servidor, vuelve a intentarlo mas tarde o contacte con nuestro soporte: nonesoporte@viweb.corp");
-                console.log('Error: '+error);
-            }
-        });*/
+        for(let x=0;x<files.length;x++){
+            var upload=new Upload(files[x]);
+            upload.doUpload();
+        }
+        cargarArchivos();
     }else{
-        $("#myModal").css("display","block");
+        let text="No has seleccionado ningún archivo!";
+        modal.setText(text);
+        modal.getModal();
     }
+}
+
+function download(){
+    let idProyecto= $("#idProyecto").val();
+    let nombreProyecto= $("#nombreProyecto").val();
+    let form = document.getElementById('formListaArchivos');
+    if($('#formListaArchivos input').is(':checked'))
+    {
+        form.setAttribute("action", "index.php?controller=archivo&action=descargarArchivosSelect&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto);
+    }else {
+        form.setAttribute("action", "index.php?controller=archivo&action=descargarArchivos&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto);
+    }
+    $('#formListaArchivos').submit();
+}
+
+function cargarArchivos(){
+    let text="cargarArchivos";
+    let idProyecto= $("#idProyecto").val();
+    let nombreProyecto= $("#nombreProyecto").val();
+    let responsable = $("#responsable").val();
+    let idUser = $("#idUser").val();
+    let username = $("#username").val();
+    $.ajax({
+        type: "POST",
+        url: "/../nonecollab/index.php?controller=archivo&action=cargarArchivos&idProyecto="+idProyecto,
+        data: text,
+        dataType:"text",
+        timeout: 60000,
+        success: function (data) {
+            var jsonData=JSON.parse(data);
+            //alert(jsonData);
+            //aqui se trata los datos
+            if(Object.keys(jsonData).length<=0){
+                $("#archivosSection").html(''+
+                    '<div class="mensajeProyecto">'+
+                        '<h5>El proyecto '+nombreProyecto+' no tiene ningun archivo subido</h5>'+
+                    '</div>');
+            }else{
+                $("#archivosSection").html(''+
+                    '<a class="btn btn-info btn-sm" id="descargarArchivos" >Descargar archivos <span class="glyphicon glyphicon-download"></span></a>'+
+                    '<form id="formListaArchivos" method="post">'+
+                        '<table class="table col-lg-12">'+
+                            '<thead>'+
+                                '<tr>'+
+                                    '<th scope="col">ID</th>'+
+                                    '<th scope="col">Nombre</th>'+
+                                    '<th scope="col">Subido por</th>'+
+                                    '<th scope="col"></th>'+
+                                '</tr>'+
+                            '</thead>'+
+                            '<tbody>'+
+                            '</tbody>'+
+                        '</table>'+
+                    '</form>');
+                for(let x=0;x<Object.keys(jsonData).length;x++){
+                    $("#formListaArchivos>table>tbody").append(""+
+                        "<tr>"+
+                            "<td><input type='checkbox' name='archivosSeleccionados[]' value='"+jsonData[x]["idArchivo"]+"'></td>"+
+                            "<td>"+jsonData[x]["nombreArchivo"]+"</td>"+
+                            "<td>"+jsonData[x]["username"]+"</td>"+
+                            "<td>"+ "</td>"+
+                        "</tr>");
+                    if(responsable==idUser || jsonData[x]["username"]==username){
+                        $("#formListaArchivos>table>tbody>tr:last>td:last").append(""+
+                            "<a href='index.php?controller=archivo&action=eliminar&idArchivo="+jsonData[x]["idArchivo"]+"&nombreArchivo="+jsonData[x]["nombreArchivo"]+"&proyecto="+idProyecto+"&nombreProyecto="+nombreProyecto+"&responsable="+responsable+"'>"+
+                                "<button type='button' class='eliminarButton btn btn-danger btn-sm'>Eliminar</button>"+
+                            "</a>");
+                    }
+                }
+            }
+
+        },
+        error: function (error) {
+            let texto="Error, no se ha podido conectar con el servidor "+error;
+            modal.setText(texto);
+            modal.getModal();
+        }
+    });
 }

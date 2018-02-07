@@ -109,7 +109,12 @@ class Proyecto {
 
     public function getAll(){
 
-        $consulta = $this->conexion->prepare("SELECT idProyecto,nombre,descripcion,DATE_FORMAT(fechaInicioProyecto,'%d/%m/%Y')AS fechaInicioProyecto,responsable FROM " . $this->table . " WHERE responsable = :responsable ORDER BY fechaInicioProyecto");
+        $consulta = $this->conexion->prepare("SELECT pr.idProyecto,pr.nombre,pr.descripcion,DATE_FORMAT(pr.fechaInicioProyecto,'%d/%m/%Y')AS fechaInicioProyecto,pr.responsable,pa.idParticipante 
+                                            FROM " . $this->table . " pr
+                                            INNER JOIN participante pa
+                                            ON pr.responsable = pa.usuario
+                                            WHERE pr.responsable = :responsable and pr.idProyecto = pa.proyecto 
+                                            ORDER BY pr.fechaInicioProyecto");
         $consulta->execute(array(
                 "responsable" => $this->responsable)
         );
@@ -125,6 +130,21 @@ class Proyecto {
         $consulta = $this->conexion->prepare("SELECT idProyecto,nombre,descripcion,DATE_FORMAT(fechaInicioProyecto,'%d/%m/%Y')AS fechaInicioProyecto,responsable FROM " . $this->table . " WHERE idProyecto = :idProyecto");
         $consulta->execute(array(
                 "idProyecto" => $this->idProyecto)
+        );
+        /* Fetch all of the remaining rows in the result set */
+        $resultado=$consulta->fetchObject();
+        $this->conexion = null; //cierre de conexión
+        return $resultado;
+    }
+    /**
+     *
+     * @return type
+     * funcion para coger ultimo proyecto insertado
+     */
+    public function getProyectoUltimo(){
+
+        $consulta = $this->conexion->prepare("SELECT idProyecto,nombre,descripcion,DATE_FORMAT(fechaInicioProyecto,'%d/%m/%Y')AS fechaInicioProyecto,responsable FROM " . $this->table . " WHERE idProyecto = (SELECT max(idProyecto) from proyecto)");
+        $consulta->execute(
         );
         /* Fetch all of the remaining rows in the result set */
         $resultado=$consulta->fetchObject();

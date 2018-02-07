@@ -1,57 +1,60 @@
 {% extends "layout.html" %}
 {% block container%}
     <div class="row center-block">
-            <div class="col-xs-offset-3 col-xs-6">
-                <div class="thumbnail" id="thub1">
-                    <div class="caption">
-                        <form id="userFormu" method="post" action="/../nonecollab/index.php?controller=usuario&action=update">
-                            <h2>Modifica tus datos aqui</h2>
-                        
-                            
-                                <input type="hidden" name="idUser" id="idUser" value="{{user.idUser}}"/>
-                                <div class="form-row col-sm-12 col-md-12 col-lg-12">
-                                    <div class="form-group  ">
-                                        <label  for="email">Email</label>
-                                        <div class="input-group mb-2 mb-sm-0">
-                                            <div class="input-group-addon">@</div>
-                                            <input type="text" class="form-control"  id="email" name="email"  pattern="^[_a-zA-Z0-9-]+(.[_a-z0-9-]+)*@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*.[a-z]{2,4}$" value="{{user.email}}" required>
-                                            <input type="hidden" name="emailOK" id="emailOK"/>
-                                        </div>
-                                        <div class="invalid-feedback"  id="feedEmilio">
-                                        </div>
+        <div class="col-xs-offset-3 col-xs-6">
+            <div class="thumbnail" id="thub1">
+                <div class="caption">
+                    <form id="userFormu" method="post" action="/../nonecollab/index.php?controller=usuario&action=update">
+                        <h2>Modifica tus datos aqui</h2>
+
+
+                            <input type="hidden" name="idUser" id="idUser" value="{{user.idUser}}"/>
+                            <div class="form-row col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group  ">
+                                    <label  for="email">Email</label>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-addon">@</div>
+                                        <input type="text" class="form-control"  id="email" name="email" value="{{user.email}}" required>
+                                        <input type="hidden" name="emailOK" id="emailOK"/>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="username">Usuario</label>
-                                        <input type="text" class="form-control is-valid" id="username" name="username" value="{{user.username}}" required>
-                                        <input type="hidden" name="usernameOK" id="usernameOK"/>
-                                        <div class="invalid-feedback"  id="feedAlias">
-                                        </div>
+                                    <div class="invalid-feedback"  id="feedEmilio">
                                     </div>
-
-                                    <div class="form-group ">
-                                        <label for="password">Contraseña</label>
-                                        <input type="password" class="form-control is-valid" id="password" name="password"  autofocus ="autofocus" value="{{user.password}}" required>
-                                        <input type="hidden" name="passwordOK" id="passwordOK"/>
-                                        <div class="invalid-feedback"  id="feedContras">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="password">Repite Contraseña</label>
-                                        <input type="password" class="form-control is-valid" id="password2" name="password2"  required>
-                                    </div>
-
-
                                 </div>
 
-                    <button type="submit" class="btn btn-primary" name="submito">sign up</button>
-                    </form>
-                    </div>
+                                <div class="form-group">
+                                    <label for="username">Usuario</label>
+                                    <input type="text" class="form-control is-valid" id="username" name="username" value="{{user.username}}" required>
+                                    <input type="hidden" name="usernameOK" id="usernameOK"/>
+                                    <div class="invalid-feedback"  id="feedAlias">
+                                    </div>
+                                </div>
+
+                                <div class="form-group ">
+                                    <label for="password">Contraseña</label>
+                                    <input type="password" class="form-control is-valid" id="password" name="password"  autofocus ="autofocus" value="{{user.password}}" required>
+                                    <input type="hidden" name="passwordOK" id="passwordOK"/>
+                                    <div class="invalid-feedback"  id="feedContras">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Repite Contraseña</label>
+                                    <input type="password" class="form-control is-valid" id="password2" name="password2"  required>
+                                </div>
+                            </div>
+                <button type="submit" class="btn btn-primary" name="submito">sign up</button>
+                </form>
                 </div>
             </div>
         </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-            <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    </div>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="/../nonecollab/js/genericoJS.js"></script>
+    <script src="/../nonecollab/js/Modal.js"></script>
     <script src="/../nonecollab/js/usuarioJS.js"></script>
 {% endblock %}

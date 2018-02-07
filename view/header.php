@@ -18,7 +18,7 @@
         <li class="menu"><a href="#"><span class="glyphicon glyphicon-user"></span> Registro</a></li>
     <?php
     }else{
-        $usuario=unserialize($_SESSION['user']);
+        $usuario=$_SESSION['user'];
     ?>
         <li class="menu dropdown" id="dropdownPerfil">
             <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

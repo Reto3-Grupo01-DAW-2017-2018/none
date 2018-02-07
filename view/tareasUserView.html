@@ -1,11 +1,13 @@
 {% extends "layout.html" %}
 {% block container %}
     <div class="col-lg-9">
-        <h3>Tareas del Usuario</h3>
+        {% if tareasUser is defined %}
+        <h3>Tareas del Usuario <strong>{{user.username}}</strong></h3>
+        {% endif %}
         <hr/>
         <table class="table col-lg-12">
             <!-- Tabla para mostrar los datos de cada tarea del usuario -->
-            {% if tareasUser is null %}
+            {% if tareasUser is not null %}
                 <thead>
                     <tr>
                         <th scope="col">Proyecto</th>
@@ -16,18 +18,24 @@
                         <th scope="col"></th>
                     </tr>
                 </thead>
+                <tbody>
             {% endif %}
-            <tbody>
+            
             {% for tarea in tareasUser %}
                 <tr>
-                    <td>{{tarea.nombre}}</td>
+                    <td>{{tarea.nombreProyecto}}</td>
                     <td>{{tarea.nombreTarea}}</td>
-                    <td>{{tarea.fechaInicioTarea}}</td>
-                    <td>{{tarea.fechaFinTarea}}</td>
+                    <td>{{tarea.proyecto}}</td>
+                    <td>{{tarea.responsable}}</td>
                     <td>{{tarea.urgente}}</td>
                     <td>
+                        {% if user.idUser == tarea.responsable %}
+                        {% set origen = 'gestionando' %}
+                        {% elseif user.idUser != tarea.responsable %}
+                        {% set origen = 'participando' %}
+                        {% endif %}
                         <!-- Enlace para el boton Gestionar para mostrar los datos del proyecto en el que está la tarea (se pasa como action -> verDetalle) -->
-                        <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{tarea.idProyecto}}&tarea={{tarea.idTarea}}" class="btn btn-info btn-sm" style="text-decoration: none">
+                        <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{tarea.proyecto}}&tarea={{tarea.idTarea}}&participante={{tarea.participante}}&origen={{origen}}" class="btn btn-info btn-sm" style="text-decoration: none">
                             Entrar
                         </a>
                     </td>
@@ -37,28 +45,18 @@
                     <h5>El usuario no tiene ninguna tarea asignada</h5>
                 </div>
             {% endfor %}
+            {% if tareasUser is not null %}
             </tbody>
         </table>
+            {% endif %}
         <hr/>
     </div>
     <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
-        <h4><strong>Proyecto:</strong></h4>
-        Nombre:
-        <br>
-        <input type="text" name="nombreProyecto" class="form-control" value="{{user.username}}" disabled />
-        <br>
-        Descripción:
-        <br>
-        <input type="text" name="descripcionProyecto" class="form-control" value="{{user.email}}" disabled />
-        <br>
-        <a href="" class="btn btn-warning btn-sm" title="Modificar Datos" style="width: 252px !important">Modificar Datos</a> <!-- antes era 180px -->
-        <br>
-        <hr style="border:1px solid black"/>
         <h4><strong>Acciones:</strong></h4>
-        <a href="" class="btn btn-info btn-sm" title="Ver Archivos" style="width: 252px !important">Ver Archivos</a>
+        <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Archivos del Usuario">Archivos del Usuario</a>
         <br><br>
-        <a href="" class="btn btn-info btn-sm" title="Ver Comentarios" style="width: 252px !important">Ver Comentarios</a>
+        <a href="index.php?controller=comentario&action=comentariosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Comentarios del Usuario">Comentarios del Usuario</a>
         <br><br>
-        <a href="javascript:history.back()" class="btn btn-primary btn-sm" title="Volver" style="width: 252px !important">Volver</a>
+        <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
     </aside>
 {% endblock %}

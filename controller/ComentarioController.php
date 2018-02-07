@@ -6,19 +6,16 @@ class ComentarioController extends BaseController {
         parent::__construct();
         require_once __DIR__. "/../model/Comentario.php";
     }
-    
+
     /*-------------------------------------------------------------------
     Función que, según la acción pasada en la url, manda a cada función correspondiente*/
     public function run($accion){
-        switch($accion) { 
-            case "index" :
-                $this->index();
+        switch($accion) {
+            case "comentariosPorProyecto" :
+                $this->listarComentariosProyecto();
                 break;
             case "comentariosUsuario" :
                 $this->buscarComentariosUser();
-                break;
-            case "aniadirComentario" :
-                $this->view('aniadirComentario', "");
                 break;
             case "nuevoComentario" :
                 $this->guardarComentario();
@@ -33,79 +30,73 @@ class ComentarioController extends BaseController {
                 $this->modificarDatosComentario();
                 break;
             default:
-                $this->index();
+                $this->listarComentariosProyecto();
                 break;
         }
     }
-    
+
     /*-------------------------------------------------------------------
     Función que carga la lista de comentarios del proyecto indicado, conseguida del modelo (Archivo)*/
-    public function index() {
+    public function listarComentariosProyecto() {
+
         //Creamos el objeto 'Comentario'
         $comentario = new Comentario($this->conexion);
         $comentario->setProyecto($_GET['proyecto']);
-        
+
         //Conseguimos todas los comentarios (lista de los comentarios en BD)
         $listaComentarios = $comentario->getAll();
-        
+        if(count($listaComentarios)<1){
+            $listaComentarios=null;
+        }
         //Cargamos la vista comentariosView.php con la función 'view()' y le pasamos valores (usaremos 'comentarios')
-        $this->view('comentarios', array(
-            'comentarios' => $listaComentarios,
-            'titulo' => 'COMENTARIOS'
+        echo $this->twig->render("comentariosProyectoView.html",array(
+            "user" => $_SESSION["user"],
+            "comentariosProyecto" => $listaComentarios,
+            "idProyecto" => $_GET['proyecto'],
+            "nombreProyecto" => $_GET['nombreProyecto'],
+            "responsable" => $_GET['responsable'],
+            "participante" => $_GET['participante'],
+            "titulo" => "Comentarios en el Proyecto - Nonecollab"
         ));
     }
-    
+
     /*--------------------------------------------------------------
-    Función que carga la lista de todos los comentarios del usuario indicado, conseguida del modelo (Comentario)*/
+    Función que carga la lista de todos los comentarios del usuario logueado */
     public function buscarComentariosUser() {
-        //Creamos el objeto 'Coementario'
-        $comentarioUser = new Comentario($this->conexion);
-        $listaComentariosUser = $comentarioUser->getAllByUser(1 /*luego sera: S_SESSION['user']*/);
-        
-        $listaProyectosPorComentario = array();
-        //Comprobamos si hay algún comentario o no
-        if($listaComentariosUser != null){
-            //Si hay comentario o comentarios, buscamos el id y el nombre del proyecto de cada comentario, conseguido del modelo 'Proyecto'
-            require_once __DIR__. '/../model/Proyecto.php';
-            //Este array será coincidente con el de '$listaComentariosUser'            
-            foreach ($listaComentariosUser as $comentario) {
-                $proyectoComentario = new Proyecto($this->conexion);
-                $proyectoComentario->setIdProyecto($comentario['proyecto']);
-                array_push($listaProyectosPorComentario, $proyectoComentario->getProyectoById());
+
+        if(isset($_SESSION['user'])) {
+            //Creamos el objeto 'Comentario'
+            $comentarioUser = new Comentario($this->conexion);
+            $listaComentariosUser = $comentarioUser->getAllByUser($_SESSION['user']->idUser);
+            if(count($listaComentariosUser)<1){
+                $listaComentariosUser=null;
             }
+            //Mandamos crear la vista 'comentariosUserView' usando twig
+            echo $this->twig->render("comentariosUserView.html",array(
+                "user" => $_SESSION["user"],
+                "comentariosUser" => $listaComentariosUser,
+                "titulo" => "Comentarios del Usuario - Nonecollab"
+            ));
         }
-        else {
-            array_push($listaProyectosPorComentario, 'sin comentarios');
-        }
-        
-        //Mandamos a la función view() para crear la vista 'tareasUserView'
-        $this->view('comentariosUser', array(
-            'comentariosUsuario' => $listaComentariosUser,
-            'comentariosEnProyectos' => $listaProyectosPorComentario,
-            'titulo' => "COMENTARIOS DEL USUARIO"
-        ));
     }
-    
+
     /*--------------------------------------------------------------
     Función para crear el nuevo comentario (objeto 'Comentario') y mandarlo a su clase ('Comentario.php')*/
     public function guardarComentario() {
-        if(isset($_POST['guardar'])) {
-            //Construimos un nuevo objeto 'comentario' completo para mandar a BD            
-            $comentario = new Comentario($this->conexion);           
-            $comentario->setContenido($_POST['contenido']);
-            $comentario->setFecha($_POST['fecha']);
-            $comentario->setEditado($_POST['editado']);
-            $comentario->setParticipante($_POST['participante']);
-            $comentario->setProyecto($_POST['proyecto']);
 
-            $insercion = $comentario->save();
-        }
-        
-        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
-        //Mandamos a la vista principal
-        header('Location: index.php');
+        //Construimos un nuevo objeto 'comentario' completo para mandar a BD
+        $comentario = new Comentario($this->conexion);
+        $comentario->setContenido($_POST['contenidoNuevoComentario']);
+        $comentario->setFecha(date('Y-m-d H:i:s'));
+        $comentario->setEditado('no');
+        $comentario->setParticipante($_POST['participante']);
+        $comentario->setProyecto($_POST['proyecto']);
+        $insercion = $comentario->save();
+
+        //Mandamos a la función que carga la vista comentariosProyectoView.html
+        $this->listarComentariosProyecto();
     }
-    
+
     /*--------------------------------------------------------------
     Función manda al modelo para buscar los datos del comentario seleccionado en el boton 'Ver Comentario' */
     public function mostrarDatosComentario() {
@@ -113,49 +104,42 @@ class ComentarioController extends BaseController {
         $comentarioDetalle = new Comentario($this->conexion);
         $comentarioDetalle ->setIdComentario($_GET['idComentario']);
         $profile = $comentarioDetalle->getComentarioById();
-        
+
         //Mandamos a la función view() para crear la vista 'detalleComentarioView'
         $this->view('detalleComentario',array(
             "comentario"=>$profile,
             "titulo" => "DETALLE COMENTARIO"
         ));
-    }    
-    
+    }
+
     /*-------------------------------------------------------------------
     Función que manda a modificar los datos del comentario seleccionado*/
-    public function modificarDatosComentario() {        
+    public function modificarDatosComentario() {
         //Creamos el objeto completo y lo mandamos a actualizar al modelo
         $comentarioModificar = new Comentario($this->conexion);
         $comentarioModificar->setIdComentario($_POST['idComentario']);
         $comentarioModificar->setContenido($_POST['nuevoContenido']);
-        $comentarioModificar->setFecha($_POST['nuevoFecha']);
-        $comentarioModificar->setEditado($_POST['nuevoEditado']);
-        $comentarioModificar->setParticipante($_POST['nuevoParticipante']);
-        $comentarioModificar->setProyecto($_POST['nuevoProyecto']);
+        $comentarioModificar->setFecha(date('Y-m-d H:i:s'));
+        $comentarioModificar->setEditado('si');
+        $comentarioModificar->setParticipante($_POST['participante']);
+        $comentarioModificar->setProyecto($_POST['proyecto']);
         $update = $comentarioModificar->update();
-        
-        //Volvemos a cargar index.php pasándole los datos del 'controller', 'action' y el id del comentario para cargar de nuevo 'detalleComentarioView.php' 
-        header('Location: index.php?controller=comentarios&action=verDetalle&idComentario='. $comentarioModificar->getIdComentario());
+
+        //Mandamos a la función que carga la vista comentariosProyectoView.html
+        $this->listarComentariosProyecto();
     }
-    
+
     /*-------------------------------------------------------------------
     Función que manda a borrar el comentario seleccionado*/
     public function borrarComentario() {
         //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
         $comentarioBorrar = new Comentario($this->conexion);
-        $comentarioBorrar ->setIdComentario($_GET['idComentario']);
+        $comentarioBorrar ->setIdComentario($_GET['comentario']);
+        //echo 'a ver esta mierda---> '. $comentarioBorrar->getIdComentario();
         $delete = $comentarioBorrar->remove();
-        
-        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
+
         //Volvemos a cargar index.php
-        header('Location: index.php');
+        $this->listarComentariosProyecto();
     }
-    
-    /*------------------------------------------------------------------
-    Función para crear la vista con el nombre que le pasemos y con los datos que le indiquemos*/
-    public function view($vista, $datos) {
-        $data = $datos;
-        
-        require_once __DIR__. '/../views/'. $vista. 'View.php';        
-    }
+
 }

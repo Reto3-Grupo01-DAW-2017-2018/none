@@ -1,10 +1,11 @@
-.container {
-
+html{
     font-family: 'Josefin Sans', sans-serif;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     letter-spacing: 2px;
+}
+.container {
     width: 100%;
-    min-height: 85vh;
+    min-height: 80vh;
 }
 .container .out-wrap {
     position: relative;
@@ -67,7 +68,6 @@
     -ms-flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
-@include justify-content (space-between);
     display: none;
 }
 .container .out-wrap .tab-container .tab-panes > div:before {
@@ -145,10 +145,11 @@
 }
 /*Footer*/
 footer{
+    display: none;
     padding:15px 15px 0px 15px;
     width:100%;
     margin-top: auto;
-    min-height: 15vh;
+    min-height: 10vh;
     max-height: 15vh;
 }
 footer>div{
@@ -212,7 +213,7 @@ header{
     border-bottom-right-radius: 10px;
     box-shadow: inset 0px 0px 30px 5px rgba(0,0,0,0.20);
 }
-.dropdown-menu>li, .dropdown-menu>li:hover{
+.dropdown-menu>li>a:hover{
     box-shadow: inset 0px 0px 30px 5px rgba(0,0,0,0.20);
 }
 
@@ -311,7 +312,7 @@ header{
     box-shadow: inset 0 0 0 2px rgba(0,0,0,.05);
     border-radius: 40px;
 }
-p{
+.pCenter{
     text-align: center;
 }
 
@@ -334,7 +335,7 @@ section a{
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 20; /* Sit on top */
     padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
@@ -352,13 +353,114 @@ section a{
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    text-align: center;
+}
+.modal-content p{
+    display: inline-block;
+}
+.modal-content modal-footer{
+    text-align: center !important;
+}
+
+blockquote{
+    margin: 0px;
+}
+.checkboxFinalizada{
+    transform: scale(1.5);
+}
+a{
+    text-decoration: none !important;
+}
+
+.mensajeProyecto{
+    border: 1px solid black;
+    text-align: center;
+}
+
+.usuario{
+    height:80%;
+    flex: 1;
+    overflow-y:scroll;
+}
+.proyectos{
+    height:40%;
+    flex: 1;
+    overflow-y:scroll;
+}
+.tareas{
+    overflow-y:scroll;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.container{
+    display: flex;
+    flex-direction: row;
+}
+.container>div{
+    flex: 4;
+}
+aside{
+    border-left: 1px solid black !important;
+    margin-top: 30px;
+    height: 90% !important;
+    flex: 1;
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius:10px;
+
+}
+aside form,#formsComentario form{
+    display: flex;
+    flex-direction: column;
+}
+.acciones-btns{
+    margin-bottom: 10px !important;
+    align-self: stretch !important;
+    min-height: 28px;
+}
+.separadorAside{
+    border:1px solid black;
+}
+.openAside{
+    width: 40px;
+    height: 40px;
+    display: none;
+    position: absolute;
+    top: 165px;
+    right: 0;
+    font-size:30px;
+    cursor:pointer;
+}
+.closeAside{
+    align-self: flex-start;
+    width: 35px;
+    height: 35px;
+    display: none;
+    position: relative;
+    top: 125px;
+    right:30px;
+    font-size:30px;
+    cursor:pointer;
+    z-index: 1;
+}
+
+#contenedorLogin>form{
+    display: flex;
+    flex-direction: column;
+}
+#contenedorLogin>form>button{
+    align-self: stretch;
 }
 
 /* The Close Button */
 .close {
-    color: #aaaaaa;
-    float: right;
+    width: 28px;
+    heigth:28px;
     font-size: 28px;
+    float: right;
     font-weight: bold;
 }
 
@@ -367,8 +469,54 @@ section a{
     text-decoration: none;
     cursor: pointer;
 }
+btn-secondary{
+    background-color: lightgray !important;
+}
 
-/*Media*/
+small::before{
+    content: "";
+}
+.wrap{
+    height:80%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.wrap .panel{
+    flex: 1 1 400px;
+    align-self: flex-start;
+}
+textarea {
+    resize: none;
+}
+.panel{
+    margin-right: 20px;
+}
+.firstLetter{
+    font-size: 3em;
+    font-weight: bold;
+}
+.restLetters{
+    font-size: 1.5em;
+}
+.listaLogin{
+    list-style: none;
+}
+.loginDiv{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.loginDiv>div:first-child{
+    flex-basis:100% ;
+}
+.loginDiv>div:nth-child(2),.loginDiv>div:nth-child(3){
+    flex:1 ;
+}
+.loginDiv>div:last-child{
+    flex:3 ;
+    align-self: flex-start;
+}
 
 @media (max-width: 775px) {
     #navPrincipal{
@@ -379,9 +527,6 @@ section a{
     }
     .out-wrap{
         width:95% !important;
-    }
-    .container{
-        padding: 0px;
     }
     #titulo{
         font-size: 30px;
@@ -395,6 +540,19 @@ section a{
     #divColor>div>div>a{
         font-size: 10px;
     }
+    .contenido,.usuario{
+        margin-right: 40px;
+    }
+    .openAside{
+        display: inline-block;
+    }
+    aside{
+        display: none;
+    }
+    .acciones-btns{
+        font-size: 10px;
+    }
+
 }
 @media (max-width: 400px) {
     #divColor>div>div{

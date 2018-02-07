@@ -122,8 +122,13 @@ class Archivo {
     }
 
     public function getAllByUser($iduser){
-        /*Nota, este get all esta para coger todos los archivos de un usuario (se filtra por el usuario)*/
-        $consulta = $this->conexion->prepare("SELECT idArchivo,nombreArchivo,rutaArchivo,participante,proyecto FROM " . $this->table . " WHERE participante IN (Select distinct idParticipante from participante where usuario = :iduser)");
+        /*Nota, este get all esta para coger todos los archivos de un usuario (se filtra por el usuario) y con un JOIN a Proyecto para sacar el nombre del proyecto */
+        $consulta = $this->conexion->prepare("SELECT a.idArchivo,a.nombreArchivo,a.rutaArchivo,a.participante,a.proyecto,p.nombre AS nombreProyecto
+                                            FROM " . $this->table . " a 
+                                            JOIN proyecto p 
+                                            ON a.proyecto = p.idProyecto 
+                                            WHERE participante 
+                                            IN (SELECT DISTINCT idParticipante FROM participante WHERE usuario = :iduser)");
         $consulta->execute(array(
                 "iduser" => $iduser)
         );

@@ -1,14 +1,16 @@
 {% extends "layout.html" %}
 {% block container %}
-<div class="col-lg-9">
-    {% if nombreProyecto is defined %}
-        <h3>Archivos de {{nombreProyecto}}</h3>
+<div class="divContenido">
+    {% if proyecto is defined %}
+        <h3>Archivos de {{proyecto.nombre}}</h3>
     {% endif %}
     <hr/>
-    <section class="col-lg-12 usuario" style="height:300px;overflow-y:scroll;">
-        <table class="table col-lg-12">
-            <!-- Tabla para mostrar los datos de cada tarea del usuario -->
-            {% if archivos is null %}
+    <section id="archivosSection" class="usuario">
+        {% if archivos is not null %}
+        <a class="btn btn-info btn-sm" id="descargarArchivos" >Descargar archivos <span class="glyphicon glyphicon-download"></span></a>
+        <!-- Tabla para mostrar los datos de cada archivo del proyecto -->
+        <form id="formListaArchivos" method="post">
+            <table class="table col-lg-12">
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
@@ -17,65 +19,74 @@
                         <th scope="col"></th>
                     </tr>
                 </thead>
-            {% endif %}
-            <tbody>
-            {% for archivo in archivos %}
-                <div class="col-lg-9" style="margin-top: 10px;">
-                    <td>{{archivo.idArchivo}}</td>
+                <tbody>
+        {% endif %}
+        {% for archivo in archivos %}
+                <tr>
+                    <td><input type="checkbox" name="archivosSeleccionados[]" value="{{archivo.idArchivo}}"></td>
                     <td>{{archivo.nombreArchivo}}</td>
-                    <td><a href="index.php?action=buscar&username={{archivo.username}}">{{archivo.username}}</a></td>
-                    <td><a href="index.php?controller=archivo&action=delete&idArchivo={{archivo.idArchivo}}" style="text-decoration: none">
-                            <button type="button" class="btn btn-danger btn-sm">Borrar</button>
-                        </a>
+                    <td>{{archivo.username}}</td>
+                    <td>
+                        {% if proyecto.responsable == user.idUser or archivo.username == user.username %}
+                            <a href="index.php?controller=archivo&action=eliminar&idArchivo={{archivo.idArchivo}}&nombreArchivo={{archivo.nombreArchivo}}&proyecto={{proyecto.idProyecto}}&nombreProyecto={{proyecto.nombre}}&responsable={{proyecto.responsable}}">
+                                <button type="button" class="eliminarButton btn btn-danger btn-sm">Eliminar</button>
+                            </a>
+                        {% endif %}
                     </td>
+                </tr>
+        {% else %}
+                <div class="mensajeProyecto">
+                    <h5>El proyecto {{proyecto.nombre}} no tiene ningun archivo subido</h5>
                 </div>
-            {% else %}
-                <div id="mensajeProyecto" style="border: 1px solid black; text-align: center;">
-                    <h5>El proyecto {{nombreProyecto}} no tiene ningun archivo subido</h5>
-                </div>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% endfor %}
+        {% if archivos is not null %}
+                </tbody>
+            </table>
+        </form>
+        {% endif %}
         <hr>
     </section>
 </div>
-<aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px; height: 750px">
-    <h4><strong>Usuario:</strong></h4>
-    Username:
-    <br>
-    <input type="text" name="nombreUsuario" class="form-control" value="{{user.username}}" disabled />
-    <br>
-    Email:
-    <br>
-    <input type="text" name="emailUsuario" class="form-control" value="{{user.email}}" disabled />
-    <br>
-    <a href="" class="btn btn-info btn-sm col-xs-12" title="Ver perfil" style="width: 252px !important">Ver Perfil</a> <!-- antes era 180px -->
-    <br>
-    <hr style="border:1px solid black;"/>
-    <h4><strong>Acciones:</strong></h4>
+<div class="openAside" >
+    <span class="glyphicon glyphicon-chevron-left" onclick="openNav()"></span>
+</div>
+<aside>
+    <div class="closeAside" >
+        <span class="glyphicon glyphicon-chevron-right" onclick="closeNav()"></span>
+    </div>
     <form id="formArchivos" method="post" enctype="multipart/form-data">
-        <input type="file" id="archivos" name="archivos[]" class="form-control" />
-        <a href="#" id="subirArchivos" class="btn btn-success btn-sm" title="Subir Archivo" style="width: 252px !important">Subir archivo</a>
+        <input type="file" id="archivos" name="archivos[]" class="form-control" multiple/>
+        <input type="hidden" id="idProyecto" name="idProyecto" value="{{proyecto.idProyecto}}">
+        <input type="hidden" id="nombreProyecto" name="nombreProyecto" value="{{proyecto.nombre}}">
+        <input type="hidden" id="responsable" name="responsable" value="{{proyecto.responsable}}">
+        <input type="hidden" id="idUser" name="idUser" value="{{user.idUser}}">
+        <input type="hidden" id="username" name="username" value="{{user.username}}">
+        <br>
+        <a href="#" id="subirArchivos" class="btn btn-success btn-sm" title="Subir Archivo">Subir archivo</a>
     </form>
     <br>
-    <a href="index.php?controller=participante&action=listadoParticipantes&proyecto={{proyecto.idProyecto}}&idUsuario=<?php ?>" class="btn btn-info btn-sm" title="Ver Participantes" style="width: 252px !important">Ver Participantes</a>
-    <br><br>
-    <a href="" class="btn btn-info btn-sm col-xs-12" title="Ver Comentarios" style="width: 252px !important">Ver Comentarios</a>
-    <br><br>
-    <a href="index.php?controller=proyectos&action=index&idUsuario={{user.idUser}}" class="btn btn-primary btn-sm" title="Volver" style="width: 252px !important">Volver</a>
-
+    <!--
+    Este codigo es para sacar una barra de progreso, quitado por razones de usabilidad
+    <div id="#progress-bar" class="progress">
+        <div class="progress-bar  progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow=""
+             aria-valuemin="0" aria-valuemax="100">
+            <span class="status"></span>
+        </div>
+    </div>-->
+    <hr class="separadorAside"/>
+    <h4><strong>Acciones:</strong></h4>
+    <a href="index.php?controller=participante&action=listadoParticipantes&proyecto={{proyecto.idProyecto}}" class="btn btn-info btn-sm acciones-btns" title="Ver Participantes">Ver Participantes</a>
+    <a href="" class="btn btn-info btn-sm col-xs-12 acciones-btns" title="Ver Comentarios" >Ver Comentarios</a>
+    <a href="javascript: history.back()" class="btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
 </aside>
 <!-- The Modal -->
 <div id="myModal" class="modal">
-
     <!-- Modal content -->
-    <div class="modal-content">
-        <span class="close glyphicon glyphicon-remove"></span>
-        <p>No has seleccionado ningun archivo</p>
-    </div>
-
 </div>
 {% endblock %}
 {% block scripts %}
+    <script src="/../nonecollab/js/genericoJS.js"></script>
+    <script src="/../nonecollab/js/Upload.js"></script>
+    <script src="/../nonecollab/js/Modal.js"></script>
     <script src="/../nonecollab/js/archivoJS.js"></script>
 {% endblock %}

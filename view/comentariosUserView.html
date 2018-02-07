@@ -1,121 +1,73 @@
-<!DOCTYPE html>
-
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>COMENTARIOS DEL USUARIO</title>
-        <link href="/../reto3/css/main.css" rel="stylesheet" type="text/css" />
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    </head>
-    <body>
-        <?php include_once "head.php";?>
-        <div class="container">
-            <?php include_once "header.php"; ?>
-            <div class="col-lg-9">
-                <h3>Comentarios del Usuario</h3>
-                <hr/>
-                <?php 
-                    if($data['comentariosEnProyectos'][0] == 'sin comentarios') {
-                ?>
-                    <div id="mensajeComentariosUser" style="border: 1px solid black; text-align: center;">
-                        <h5>
-                            El usuario no ha escrito ningún comentario.
-                        </h5>
-                    </div>
-                <?php
-                    }
-                    else {
-                ?>
-                <!-- Tabla para mostrar los datos de cada comentario del usuario -->
-                <table class="table col-lg-12">
-                    <thead>
-                        <tr>
-                            <th scope="col">Proyecto</th>
-                            <th scope="col">Comentario</th>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Editado</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>                        
-                        <?php 
-                        
-                            for($i = 0; $i < count($data['comentariosEnProyectos']); $i++) {
-                            ?>
-                            <tr>
-                                <td><?php echo $data['comentariosEnProyectos'][$i]->nombre; ?></td>                        
-                                <td><?php echo $data['comentariosUsuario'][$i]['contenido']; ?></td>     
-                                <td><?php echo $data['comentariosUsuario'][$i]['fecha']; ?></td>
-                                <td><?php echo $data['comentariosUsuario'][$i]['editado']; ?></td>
-                                <td>
-
-                                    <!-- Enlace para el boton Eliminar para eliminar de BD el archivo seleccionado (se pasa como action -> eliminar) -->
-                                    <a href="index.php?controller=comentario&action=eliminar&comentario=<?php echo $data['comentariosUsuario'][$i]->idComentario; ?>" class="btn btn-danger btn-sm" style="text-decoration: none">
-                                        Eliminar
-                                    </a>
-
-                                </td>
-                            </tr>
-
-                            <?php
-                            } 
-                        }
-                        ?>                            
-                    </tbody>
-                </table>
-                <hr/>
-            </div>
-            <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
-                <h4><strong>Proyecto:</strong></h4>
-                Nombre: 
-                <br>
-                <input type="text" name="nombreProyecto" class="form-control" value="<?php echo $data['proyecto']->nombre ?>" disabled />
-                <br>
-                Descripción:
-                <br>
-                <input type="text" name="descripcionProyecto" class="form-control" value="<?php echo $data['proyecto']->descripcion ?>" disabled />
-                <br>
-                <a href="" class="btn btn-warning btn-sm" title="Modificar Datos" style="width: 252px !important">Modificar Datos</a> <!-- antes era 180px -->
-                <br>
-                <hr style="border:1px solid black"/>
-                <h4><strong>Acciones:</strong></h4>
-                <a href="" class="btn btn-success btn-sm" title="Nueva Tarea" style="width: 252px !important">Nueva Tarea</a>
-                <br><br>
-                <a href="index.php?controller=participante&action=listadoParticipantes&proyecto=<?php echo $data['proyecto']->idProyecto; ?>&idUsuario=<?php ?>" class="btn btn-info btn-sm" title="Ver Participantes" style="width: 252px !important">Ver Participantes</a>
-                <br><br>
-                <a href="" class="btn btn-info btn-sm" title="Ver Archivos" style="width: 252px !important">Ver Archivos</a>
-                <br><br>
-                <a href="" class="btn btn-info btn-sm" title="Ver Comentarios" style="width: 252px !important">Ver Comentarios</a>
-                <br><br>
-                <a class="btn btn-danger btn-sm" title="Eliminar Proyecto" data-toggle="modal" data-target="#confirmarEliminacion" style="width: 252px !important">Eliminar Proyecto</a>
-                <br><br>
-                <a href="index.php?controller=proyectos&action=index&idUsuario=<?php ?>" class="btn btn-primary btn-sm" title="Volver" style="width: 252px !important">Volver</a>
-                
-                <!-- Modal de bootstrap para confirmar la eliminación del proyecto -->
-                <div class="modal fade" id="confirmarEliminacion" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminacion" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminación del proyecto</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            </div>
-                            <div class="modal-body">
-                            Indique si realmente desea eliminar el proyecto:
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
-                                <button type="button" class="btn btn-danger" onclick="location.replace('index.php?controller=proyectos&action=eliminar&idProyecto=<?php echo $data['proyecto']->idProyecto; ?>')">ELIMINAR</button>
+{% extends "layout.html" %}
+{% block container %}
+    <div class="usuario">
+        <h3>Comentarios del Usuario</h3>
+        <hr/>
+        <!-- Tabla para mostrar los datos de cada comentario del usuario -->
+        <table class="table col-lg-12">
+            {% if comentariosUser is not null %}
+            <thead>
+                <tr>
+                    <th scope="col">Proyecto</th>
+                    <th scope="col">Comentario</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Editado</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% endif %}            
+            {% for comentario in comentariosUser %}
+                <tr>
+                    <td>{{comentario.nombreProyecto}}</td>                        
+                    <td>{{comentario.contenido}}</td>     
+                    <td>{{comentario.fecha}}</td>
+                    <td>{{comentario.editado}}</td>
+                    <td>
+                        <!-- Enlace para el boton Eliminar para eliminar de BD el archivo seleccionado (se pasa como action -> eliminar) -->
+                        <a data-toggle="modal" data-target="#confirmarEliminacion<?php echo $i ?>" class="btn btn-danger btn-sm" style="text-decoration: none">
+                            Eliminar
+                        </a>
+                        <!-- Modal de bootstrap para confirmar la eliminación del proyecto -->
+                        <div class="modal fade" id="confirmarEliminacion<?//php echo $i ?>" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminacion" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel"><strong>Confirmar eliminación</strong></h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        Indique si desea eliminar el comentario:
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                                        <button type="button" class="btn btn-danger" onclick="location.replace('index.php?controller=comentario&action=eliminar&idComentario={{comentario.idProyecto}}&origen=usuario')">ELIMINAR</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </td>
+                </tr>
+                {% else %}
+                <div id="mensajeComentariosUser" style="border: 1px solid black; text-align: center;">
+                    <h5>El usuario no ha escrito ningún comentario</h5>
                 </div>
-                <br><br>
-            </aside>
+            {% endfor %}  
+            {% if comentariosUser is not null %}
+            </tbody>
+        </table>
+            {% endif %}
+        <hr/>
+    </div>
+    <div class="openAside" >
+        <span class="glyphicon glyphicon-chevron-left" onclick="openNav()"></span>
+    </div>
+    <aside>
+        <div class="closeAside" >
+            <span class="glyphicon glyphicon-chevron-right" onclick="closeNav()"></span>
         </div>
-        <?php include_once "footer.php"?>       
-    </body>
-</html>
+        <h4><strong>Acciones:</strong></h4>
+        <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Tareas del Usuario">Tareas del Usuario</a>
+        <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Archivos del Usuario">Archivos del Usuario</a>
+        <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
+    </aside>
+{% endblock %}
