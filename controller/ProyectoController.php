@@ -8,6 +8,7 @@ class ProyectoController extends BaseController {
         parent::__construct();
         require_once __DIR__. "/../model/Proyecto.php";
         require_once __DIR__. "/../model/Participante.php";
+        require_once __DIR__ . "/../model/Tarea.php";
     }
     
     /*-------------------------------------------------------------------

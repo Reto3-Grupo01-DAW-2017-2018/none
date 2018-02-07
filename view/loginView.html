@@ -1,16 +1,34 @@
 {% extends "layout.html" %}
 {% block container%}
-<div class="row center-block">
-    <div class="col-xs-offset-3 col-xs-6">
-        <div id="contenedorLogin" class="thumbnail caption">
-            <form id="formLogin" class="" method="post" action="/../nonecollab/index.php?controller=Usuario&action=login">
-                <label for="usernameInput">Usuario: </label>
-                <input type="text" id="usernameInput" class="form-control" name="username">
-                <label for="passwordInput">Contraseña: </label>
-                <input type="password" id="passwordInput" class="form-control" name="password">
-                <input type="submit" value="Log-in" class="btn btn-lg btn-primary"/>
-            </form>
-        </div>
+<div class="loginDiv">
+    <div class="jumbotron">
+        <h1>NoneCollab</h1>
+        <p>Herramienta colaborativa para el desarrollo de proyectos</p>
+        <p><a href="index.php?controller=usuario&action=quienesSomos" class="btn btn-primary btn-lg" href="#" role="button">Quienes somos</a></p>
+    </div>
+
+    <div id="contenido">
+        <ul class="listaLogin">
+            <li><span class="firstLetter" >T</span><span class="restLetters">ogether</span></li>
+            <li><span class="firstLetter" >E</span><span class="restLetters">veryone</span></li>
+            <li><span class="firstLetter" >A</span><span class="restLetters">chieves</span></li>
+            <li><span class="firstLetter" >M</span><span class="restLetters">ore</span></li>
+        </ul>
+    </div>
+
+    <div id="imagenEntrada">
+        <img src="img/trabajo-equipo-flechas.jpg" alt="Teamwork - Trabajo en Equipo" title="Teamwork - Trabajo en Equipo" height="250" width="250" />
+    </div>
+
+
+    <div id="contenedorLogin" class="thumbnail caption">
+        <form id="formLogin" class="" method="post" action="/../nonecollab/index.php?controller=Usuario&action=login">
+            <label for="usernameInput">Usuario: </label>
+            <input type="text" id="usernameInput" class="form-control" name="username">
+            <label for="passwordInput">Contraseña: </label>
+            <input type="password" id="passwordInput" class="form-control" name="password">
+            <input type="submit" value="Log-in" class="btn btn-lg btn-primary"/>
+        </form>
     </div>
 </div>
 {% endblock %}

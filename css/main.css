@@ -388,7 +388,10 @@ a{
     overflow-y:scroll;
 }
 .tareas{
-    overflow-x:scroll ;
+    overflow-y:scroll;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 .container{
     display: flex;
@@ -444,9 +447,6 @@ aside form,#formsComentario form{
     z-index: 1;
 }
 
-#contenedorLogin{
-    margin-top: 15%;
-}
 #contenedorLogin>form{
     display: flex;
     flex-direction: column;
@@ -491,6 +491,31 @@ textarea {
 }
 .panel{
     margin-right: 20px;
+}
+.firstLetter{
+    font-size: 3em;
+    font-weight: bold;
+}
+.restLetters{
+    font-size: 1.5em;
+}
+.listaLogin{
+    list-style: none;
+}
+.loginDiv{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.loginDiv>div:first-child{
+    flex-basis:100% ;
+}
+.loginDiv>div:nth-child(2),.loginDiv>div:nth-child(3){
+    flex:1 ;
+}
+.loginDiv>div:last-child{
+    flex:3 ;
+    align-self: flex-start;
 }
 
 @media (max-width: 775px) {

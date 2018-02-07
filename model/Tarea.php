@@ -9,6 +9,7 @@ class Tarea {
     private $fechaFinTarea;
     private $urgente;
     private $editada;
+    private $finalizada;
     private $participanteAsignado;
     private $participante;
     private $proyecto;
@@ -110,7 +111,21 @@ class Tarea {
     function setEditada($editada) {
         $this->editada = $editada;
     }
-
+    
+    /**
+     * @return mixed
+     */
+    function getFinalizada() {
+        return $this->finalizada;
+    }
+    
+    /**
+     * @param mixed $finalizada
+     */
+    function setFinalizada($finalizada) {
+        $this->finalizada = $finalizada;
+    }
+    
     /**
      * @return mixed
      */
@@ -160,14 +175,15 @@ class Tarea {
 
     public function save(){
 
-        $consulta = $this->conexion->prepare("INSERT INTO " . $this->table . " (nombreTarea,fechaInicioTarea,fechaFinTarea,urgente,editada,participanteAsignado,participante,proyecto)
-                                        VALUES (:nombreTarea,:fechaInicioTarea,:fechaFinTarea,:urgente,:editada,:participanteAsignado,:participante,:proyecto)");
+        $consulta = $this->conexion->prepare("INSERT INTO " . $this->table . " (nombreTarea,fechaInicioTarea,fechaFinTarea,urgente,editada,finalizada,participanteAsignado,participante,proyecto)
+                                        VALUES (:nombreTarea,:fechaInicioTarea,:fechaFinTarea,:urgente,:editada,:finalizada,:participanteAsignado,:participante,:proyecto)");
         $save = $consulta->execute(array(
             "nombreTarea" => $this->nombreTarea,
             "fechaInicioTarea" => $this->fechaInicioTarea,
             "fechaFinTarea" => $this->fechaFinTarea,
             "urgente" => $this->urgente,
             "editada" => $this->editada,
+            "finalizada" => $this->finalizada,
             "participanteAsignado" => $this->participanteAsignado,
             "participante" => $this->participante,
             "proyecto" => $this->proyecto
@@ -179,7 +195,7 @@ class Tarea {
 
     public function getAll(){
         /*Nota, este get all esta para coger todos las tareas de un proyecto (se filtra por el proyecto)*/
-        $consulta = $this->conexion->prepare("SELECT t.idTarea,t.nombreTarea,DATE_FORMAT(t.fechaInicioTarea,'%d/%m/%Y')AS fechaInicioTarea,DATE_FORMAT(t.fechaFinTarea,'%d/%m/%Y')AS fechaFinTarea,t.urgente,t.editada,t.participanteAsignado,t.participante,t.proyecto,u.idUser,u.username,v.idUser AS idCreadorTarea,v.username AS creadorTarea
+        $consulta = $this->conexion->prepare("SELECT t.idTarea,t.nombreTarea,DATE_FORMAT(t.fechaInicioTarea,'%d/%m/%Y')AS fechaInicioTarea,DATE_FORMAT(t.fechaFinTarea,'%d/%m/%Y')AS fechaFinTarea,t.urgente,t.editada,t.finalizada,t.participanteAsignado,t.participante,t.proyecto,u.idUser,u.username,v.idUser AS idCreadorTarea,v.username AS creadorTarea
                                             FROM " . $this->table . " t 
                                             JOIN participante p 
                                             ON t.participanteAsignado = p.idParticipante 
@@ -203,7 +219,7 @@ class Tarea {
 
     public function getAllByUser($iduser){
         /*Nota, este get all esta para coger todas las tareas de un usuario (se filtra por el usuario)*/
-        $consulta = $this->conexion->prepare("SELECT t.idTarea, t.nombreTarea, t.fechaInicioTarea, t.fechaFinTarea, t.urgente, t.editada, t.participanteAsignado, t.participante, t.proyecto, p.nombre AS nombreProyecto, p.responsable
+        $consulta = $this->conexion->prepare("SELECT t.idTarea, t.nombreTarea, t.fechaInicioTarea, t.fechaFinTarea, t.urgente, t.editada, t.finalizada, t.participanteAsignado, t.participante, t.proyecto, p.nombre AS nombreProyecto, p.responsable
                                             FROM ". $this->table. " t  
                                             JOIN proyecto p 
                                             ON t.proyecto = p.idProyecto 
@@ -221,7 +237,7 @@ class Tarea {
 
     public function getTareaById(){
 
-        $consulta = $this->conexion->prepare("SELECT idTarea,nombreTarea,DATE_FORMAT(fechaInicioTarea,'%d/%m/%Y')AS fechaInicioTarea,DATE_FORMAT(fechaFinTarea,'%d/%m/%Y')AS fechaFinTarea,urgente,editada,participanteAsignado,participante,proyecto FROM " . $this->table . " WHERE idTarea = :idTarea");
+        $consulta = $this->conexion->prepare("SELECT idTarea,nombreTarea,DATE_FORMAT(fechaInicioTarea,'%d/%m/%Y')AS fechaInicioTarea,DATE_FORMAT(fechaFinTarea,'%d/%m/%Y')AS fechaFinTarea,urgente,editada,finalizada,participanteAsignado,participante,proyecto FROM " . $this->table . " WHERE idTarea = :idTarea");
         $consulta->execute(array(
                 "idTarea" => $this->idTarea)
         );
@@ -234,18 +250,29 @@ class Tarea {
     /**/
 
     public function update(){
-        $consulta = $this->conexion->prepare("UPDATE " . $this->table . " SET nombreTarea = :nombreTarea, fechaInicioTarea = :fechaInicioTarea, fechaFinTarea = :fechaFinTarea, urgente = :urgente, editada = :editada, participanteAsignado = :participanteAsignado, participante = :participante, proyecto = :proyecto WHERE idTarea = :idTarea");
+        $consulta = $this->conexion->prepare("UPDATE " . $this->table . " SET nombreTarea = :nombreTarea, fechaInicioTarea = :fechaInicioTarea, fechaFinTarea = :fechaFinTarea, urgente = :urgente, editada = :editada, finalizada = :finalizada, participanteAsignado = :participanteAsignado, proyecto = :proyecto WHERE idTarea = :idTarea");
         $update = $consulta->execute(array(
             "nombreTarea" => $this->nombreTarea,
             "fechaInicioTarea" => $this->fechaInicioTarea,
             "fechaFinTarea" => $this->fechaFinTarea,
             "urgente" => $this->urgente,
             "editada" => $this->editada,
+            "finalizada" => $this->finalizada,
             "participanteAsignado" => $this->participanteAsignado,
-            "participante" => $this->participante,
             "proyecto" => $this->proyecto,
             "idTarea" => $this->idTarea
         ));
+        $this->conexion = null;
+        return $update;
+    }
+    
+    public function updateFinalizada(){
+        $consulta = $this->conexion->prepare("UPDATE " . $this->table . " SET finalizada = :finalizada WHERE idTarea = :idTarea");
+        $update = $consulta->execute(array(
+            "finalizada" => $this->finalizada,
+            "idTarea" => $this->idTarea
+        ));
+        $resultado = $consulta->rowCount();
         $this->conexion = null;
         return $update;
     }

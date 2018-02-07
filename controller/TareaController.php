@@ -5,7 +5,7 @@ class TareaController extends BaseController {
     public function __construct() {
         parent::__construct();
         require_once __DIR__. "/../model/Tarea.php";
-        require_once __DIR__. "/../model/Participante.php";
+		require_once __DIR__. "/../model/Participante.php";
     }
 
     /*-------------------------------------------------------------------
@@ -20,6 +20,9 @@ class TareaController extends BaseController {
                 break;
             case "verDetalle" :
                 $this->mostrarDatosTarea();
+                break;
+            case "guardarFinalizada" :
+                $this->guardarFinalizada();
                 break;
             case "eliminar" :
                 $this->borrarTarea();
@@ -69,6 +72,7 @@ class TareaController extends BaseController {
         $tarea->setFechaFinTarea($_POST['fechaFinTarea']);
         $tarea->setUrgente($_POST['urgente']);
         $tarea->setEditada('no');
+        $tarea->setFinalizada('no');
         $tarea->setParticipanteAsignado($_POST['encargadoTarea']);
         $tarea->setParticipante($idParticipacion->idParticipante);
         $tarea->setProyecto($_POST['proyecto']);
@@ -97,36 +101,52 @@ class TareaController extends BaseController {
     Función que manda a modificar los datos de la tarea seleccionada*/
     public function modificarDatosTarea() {
 
-        //Primero buscamos la participación del usuario en sesión en esta tarea
-        $participacion = new Participante($this->conexion);
-        $participacion->setUsuario($_SESSION['user']->idUser);
-        $participacion->setProyecto($_POST['proyecto']);
-        $idParticipacion = $participacion->getParticipanteByUsuarioAndProyecto();
-
         //Creamos el objeto completo y lo mandamos a actualizar al modelo
         $tareaModificar = new Tarea($this->conexion);
-        $tareaModificar->setIdTarea($_POST['idTarea']);
-        $tareaModificar->setNombreTarea($_POST['nombreTarea']);
-        $tareaModificar->setFechaInicioTarea($_POST['fechaInicioTarea']);
-        $tareaModificar->setFechaFinTarea($_POST['fechaFinTarea']);
-        $tareaModificar->setUrgente($_POST['urgente']);
+        $tareaModificar->setIdTarea($_POST['editandoIdTarea']);
+        $tareaModificar->setNombreTarea($_POST['editandoNombreTarea']);
+        $tareaModificar->setFechaInicioTarea($_POST['editandoFechaInicioTarea']);
+        $tareaModificar->setFechaFinTarea($_POST['editandoFechaFinTarea']);
+        $tareaModificar->setUrgente($_POST['editandoUrgente']);        
         $tareaModificar->setEditada('si');
-        $tareaModificar->setParticipanteAsignado($_POST['encargadoTarea']);
-        $tareaModificar->setParticipante($idParticipacion->idParticipante);
+        $tareaModificar->setFinalizada($_POST['editandoFinalizarTarea']);        
+        $tareaModificar->setParticipanteAsignado($_POST['editandoEncargadoTarea']);
+        $tareaModificar->setParticipante($_POST['creadorTarea']);
         $tareaModificar->setProyecto($_POST['proyecto']);
         $update = $tareaModificar->update();
 
         //Volvemos a cargar index.php pasándole los datos del 'controller', 'action' y el id de la tarea para cargar de nuevo 'detalleTareaView.php'
-        header('Location: index.php?controller=tareas&action=verDetalle&idTarea='. $_POST['idTarea']);
+        header('Location: index.php?controller=proyecto&action=verDetalle&proyecto='. $_POST['proyecto']. '&participante='. $_POST['creadorTarea'] .'&origen=proyecto');
 
     }
 
     /*-------------------------------------------------------------------
     Función que manda a borrar la tarea seleccionada*/
+    public function guardarFinalizada() {
+        //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
+        if(isset($_POST['idTarea'])&&isset($_POST['finalizada'])){
+            $tarea=new Tarea($this->conexion);
+            $tarea->setFinalizada($_POST['finalizada']);
+            $tarea->setIdTarea($_POST['idTarea']);
+            $resultado=$tarea->updateFinalizada();
+            if($resultado<1){
+                echo "0";
+            }else{
+                echo "1";
+            }
+        }
+
+        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
+        //Volvemos a cargar index.php
+        //header('Location: index.php?controller=proyecto&action=verDetalle&proyecto='. $_GET['proyecto']. '&participante='. $_GET['participante']. '&origen=proyecto');
+    }
+    
+    /*-------------------------------------------------------------------
+    Función que manda a borrar la tarea seleccionada*/
     public function borrarTarea() {
         //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
         $tareaBorrar = new Tarea($this->conexion);
-        $tareaBorrar ->setIdTarea($_GET['idTarea']);
+        $tareaBorrar ->setIdTarea($_GET['tarea']);
         $delete = $tareaBorrar->remove();
 
         //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)

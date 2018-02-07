@@ -6,155 +6,201 @@ function eventos() {
     $(".eliminarButton").bind('click', { param: $(this) }, confirmModal);
     $("#myModal>div>span").click(esconderModal,modal.ocultarModal);
     $(".editarButton").bind('click', { param: $(this) }, mostrarFormEditar);
-    $('#nuevaTarea').click(validarTarea);
-    $("#editarTarea").click(validarTarea);
+    $('#nuevaTarea').bind('click', { param: $(this) }, validarTarea);
+    $("#editarTarea").bind('click', { param: $(this) }, validarTarea);
     $("#cancelarEditarTarea").click(cancelarEdicion); 
+    $(".finalizadaViejaTarea").bind('click', { param: $(this) }, guardarFinalizada);
+    /*$("#formNuevaTarea").submit(function(event){
+        event.preventDefault()
+        validarTarea();
+    });*/
     
     //finalizarTarea();
     /*$('.finalizada').prop('checked')(finalizarTarea);
     $('.finalizada').click(finalizarTarea);*/
 }
 
-function validarTarea() {
-    
+function validarTarea(param) {
+    var tipoForm = param.target.value;
     var fechaActual = new Date();
     var ayer = fechaActual.getDate() - 1;
     var fechaAyer = fechaActual.setDate(ayer);
-    var recogerFechaInicio = $('.fit').val();
-    var fechaInicioTarea = new Date(recogerFechaInicio);
-    var recogerFechaFin = $('.fft').val();
-    var fechaFinTarea = new Date(recogerFechaFin);
-    
-    if(fechaInicioTarea < fechaAyer) {
-        alert('fecha inicio menor que la actual');
-        //PONER UN MODAL
-    }
-    else {
-        if(fechaFinTarea < fechaInicioTarea) {
-            alert('fecha fin menor que la de inicio');
-            //PONER UN MODAL
-        }
-        else {
-            if(($(".tipoForm").attr("value") == 'nuevo')) {
-                $("#formNuevaTarea").attr("action","/../nonecollab/index.php?controller=tarea&action=nuevaTarea");
-                $("#formNuevaTarea").submit();
+
+    if(tipoForm == 'Crear Tarea') {
+
+        var recogerFechaInicio = $('#fit').text();
+        var fechaInicioTarea = new Date(recogerFechaInicio);
+        var recogerFechaFin = $('#fft').text();
+        var fechaFinTarea = new Date(recogerFechaFin);
+        var nombreTarea= $('#nnt').val();
+        var asignado=$('#et option:selected').val();
+        if(fechaInicioTarea==null||fechaFinTarea==null||nombreTarea==null||asignado==""){
+            modal = new Modal("Campos vacios");
+            modal.getModal();
+        }else {
+            if (fechaInicioTarea < fechaAyer) {
+                modal = new Modal("Error: Fecha inicio menor que la actual");
+                modal.getModal();
             }
             else {
-                if($(".tipoForm").attr("value") == 'editando') {
-                    $("#formTarea").attr("action","index.php?controller=tarea&action=modificarTarea");
-                    $("#formTarea").submit();
+                if (fechaFinTarea < fechaInicioTarea) {
+                    modal = new Modal("Error: Fecha fin menor que la de inicio");
+                    modal.getModal();
+                }
+                else {
+                    $("#formNuevaTarea").attr("action", "/../nonecollab/index.php?controller=tarea&action=nuevaTarea");
+                    $("#formNuevaTarea").submit();
                 }
             }
-            
+        }
+    }
+    else {
+        if(tipoForm == 'Modificar') {
+            var recogerEditandoFechaInicio = $('#efit').text();
+            var fechaInicioTareaEdit = new Date(recogerEditandoFechaInicio);
+            var recogerEditandoFechaFin = $('#efft').text();
+            var fechaFinTareaEdit = new Date(recogerEditandoFechaFin);
+            var nombreTarea= $('#ent').val();
+            var asignado=$('#eet option:selected').val();
+
+            if(fechaInicioTareaEdit==null||fechaFinTareaEdit==null||nombreTarea==null||asignado==null){
+                modal = new Modal("Campos vacios");
+                modal.getModal();
+            }else {
+                if (fechaInicioTarea < fechaAyer) {
+                    modal = new Modal("Error: Fecha inicio menor que la actual");
+                    modal.getModal();
+                }
+                else {
+                    if (fechaFinTarea < fechaInicioTarea) {
+                        modal = new Modal("Error: Fecha fin menor que la de inicio");
+                        modal.getModal();
+                    }
+                    else {
+                        $("#formEditarTarea").attr("action", "index.php?controller=tarea&action=modificarTarea");
+                        $("#formEditarTarea").submit();
+                    }
+                }
+            }
         }
     }
 }
 
-function mostrarFormEditar() {
+function mostrarFormEditar(event) {
     $("#nueTarea").hide();
     $("#ediTarea").show();
-    var contadorComentario=event.target.value;
-    var idTarea = $("input[name=hiddenIdTarea"+contadorComentario).val();
+    var contadorTarea=event.target.value;
+    var idTarea = $("input[name=hiddenIdTarea"+contadorTarea).val();
     var proyecto = $("#ip").val();
-    var nombreTarea = $("#nombreViejaTarea"+contadorComentario+" > strong").text();    
-    var fechaInicioTarea = $("#fechaInicioViejaTarea"+contadorComentario+" > strong").text();
-    var fechaFinTarea = $("#fechaFinViejaTarea"+contadorComentario+" > strong").text();
-    var urgente = $("#urgenteViejaTarea"+contadorComentario+" > strong").text();
-    //var nombreTarea = $("#editadaViejaTarea"+contadorComentario).text();
+    var nombreTarea = $("#nombreViejaTarea"+contadorTarea+" > strong").text();  
     
-    //var participantes = $("input[name=participantes]");
+    var fechaInicioTarea = $("#fechaInicioViejaTarea"+contadorTarea+" > strong").text();
+    var fechaInicioTareaFormateada = cambiarFormatoFechas(fechaInicioTarea);    
     
-    $("#ent").attr("value", nombreTarea);
-    $("#efit").attr("value", fechaInicioTarea);
-    $("#efft").attr("value", fechaFinTarea);
+    var fechaFinTarea = $("#fechaFinViejaTarea"+contadorTarea+" > strong").text();
+    var fechaFinTareaFormateada = cambiarFormatoFechas(fechaFinTarea);
+    
+    //AKI COMPROBAR LOS QUE ESTAN SELECCIONADOS DE URGENTE Y ASIGNADA A
+    
+    var urgente = $("#urgenteViejaTarea"+contadorTarea+" > strong").text();    
+    
+    //var editada = $("#editadaViejaTarea"+contadorTarea+" > strong").text();
+    //EDITADA, AL MODIFICAR, SIEMPRE VA A SER SI (donde modificamos esto, aki o en controller??)
+   //var editada = 'si';
+    
+    var asignada = $("#idUsuarioAsignado"+contadorTarea).val();
+    var creador = $("#idUsuarioCreador"+contadorTarea).val();
+    
+
+    //Asignamos los valores a los campos del formulario 'editar'
     $("#idTaEd").attr("value", idTarea);
+    $("#ent").attr("value", nombreTarea);
+    $("#efit").attr("value", fechaInicioTareaFormateada);
+    $("#efft").attr("value", fechaFinTareaFormateada);
+
+    if(urgente == 'si') {        
+        $('input:radio[name="editandoUrgente"][value="no"]').prop('checked', false);
+        $('input:radio[name="editandoUrgente"][value="si"]').prop('checked', true);
+       
+    }
+    else {        
+        $('input:radio[name="editandoUrgente"][value="si"]').prop('checked', false);
+        $('input:radio[name="editandoUrgente"][value="no"]').prop('checked', true);
+    }
     
-    /*alert('idTarea--> ' + idTarea + '\n' +
-            'proyecto--> ' + proyecto + '\n' +
-            'nombreTarea--> ' + nombreTarea + '\n' +
-            'fechaInicioTarea--> ' + fechaInicioTarea + '\n' +
-            'fechaFinTarea--> ' + fechaFinTarea + '\n' +
-            'urgente--> ' + urgente) + '\n' +
-            'participante--> ' + participantes;*/
-    
-    //asignada a
-    //var nombreTarea = $("#nombreViejaTarea"+contadorComentario).text();
-    
-    /*$("#formsTarea").html('\
-        <div id="ediTarea">\n\
-            <h4><strong>Editar Tarea:</strong></h4>\n\
-            <form id="formEditarTarea" method="post"\n\
-                Nuevo nombre Tarea:\n\
-                <input type="text" id="ent" name="editandoNombreTarea" class="form-control" value="'+nombreTarea+'" required />\n\
-                <br>\n\
-                Nueva Fecha Inicio:\n\
-                <input type="date" name="editandoFechaInicioTarea" class="form-control fit" required />\n\
-                <br>\n\
-                Nueva Fecha Finalización:\n\
-                <input type="date" name="editandoFechaFinTarea" class="form-control fft" required />\n\
-                <br>\n\
-                Urgente:\n\
-                <span class="form-check form-check-inline">\n\
-                    <strong>Si</strong>&nbsp;<input class="form-check-input" type="radio" name="editandoUrgente" id="eu1" value="si" checked />\n\
-                </span>\n\
-                &nbsp;&nbsp;&nbsp;\n\
-                <span class="form-check form-check-inline">\n\
-                    <strong>No</strong>&nbsp;<input class="form-check-input" type="radio" name="editandoUrgente" id="eu2" value="no" />\n\
-                </span>\n\
-                <br><br>\n\
-                Reasignar tarea a:&nbsp;&nbsp;\n\
-                <select class="form-control-sm" id="et" name="encargadoTarea" required>\n\
-                    <option></option>\n\
-                    {% for participante in participantes %}\n\
-                        <option value="{{participante.idParticipante}}"><strong>{{participante.username}}</strong></option>\n\
-                    {% endfor %}\n\
-                </select> \n\
-                <br><br>\n\
-                <input type="hidden" id="eip" name="proyecto" value="' + proyecto + '" />\n\
-                <input type="hidden" id="e" class="tipoForm" name="tipo" value="editando" />\n\
-                <input type="submit" id="editarTarea" class="col-xs-12 btn btn-warning btn-sm" title="Modificar Tarea" value="Modificar"/>\n\
-                <input type="submit" id="cancelarEditarTarea" class="col-xs-12 btn btn-secondary btn-sm" title="Cancelar Editar Tarea" value="Cancelar Editar Tarea"/>\n\
-            </form>\n\
-            <br>\n\
-        </div>');*/
-    //$("#ent").val(nombreTarea);
+    var arrayParticipantes = $("option[name=opcionesSelect]");
+    for(var i = 0; i < arrayParticipantes.length; i++) {
+        if(arrayParticipantes[i].value == asignada) {
+            arrayParticipantes[i].selected='selected';
+        }
+    }
+    $("#ect").attr("value", creador); // creadortarea = participante que creó la tarea
 }
 
+function cambiarFormatoFechas(fecha) {
+    //var fechaFormateada = fecha.replace(/\//g, "-").split("-").reverse().join("-");
+    var fechaFormateada = fecha.split("/").reverse().join("-");
+    /*var fechaFormateada2 = fechaFormateada.split("-");
+    var fechaFormateada3 = fechaFormateada2.reverse();
+    var fechaFormateadaFinal = fechaFormateada3.join('-');*/
+    
+    //return fechaFormateadaFinal;
+    return fechaFormateada;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function guardarFinalizada(event)
+{
+    var finalizada;
+    var idTarea=event.target.value;
+    var contadorTareaPinchada = event.target.id.substring(5);
+    if(event.target.checked){
+        finalizada = "si";
+    }else{
+        finalizada = "no";
+    }
+    
+   
+    var datos= JSON.parse('{ "idTarea":'+idTarea+', "finalizada":'+'"'+finalizada+'"'+'}');
+    
+    $.ajax
+    ({
+        type: 'POST',
+        url: '/../nonecollab/index.php?controller=tarea&action=guardarFinalizada',
+        data: datos,
+        dataType: 'text',
+        success: function (data)
+        {
+            resultado=data;
+            if(resultado==1)
+            {
+                finalizarTarea(contadorTareaPinchada);
+            }
+            else
+            {
+                //modal error
+            }
+        },
+        error: function (error)
+        {
+            alert("error del servidor");
+            console.log('Llamada Oo--> '+error);
+        }
+    });
+}
 
 function cancelarEdicion() {
     $("#ediTarea").hide();
     $("#nueTarea").show();
 }
 
-function finalizarTarea() {
-    /*$('.finalizada').click(function(){
-        $(".btnEditarTarea").disabled = true;
-    });*/
-    $(".btnEditarTarea").disabled = true;
+function finalizarTarea(contadorParaFinalizada) {
+
+    if($("#final"+contadorParaFinalizada).is(':checked')){
+        $("#btnedi"+contadorParaFinalizada).prop( "disabled", true);
+    }
+    else{
+        $("#btnedi"+contadorParaFinalizada).prop( "disabled", false);
+    }
 }
 
 function esconderModal(){
@@ -165,7 +211,7 @@ function esconderModal(){
 function confirmModal(event){
     event.preventDefault();
     var ruta=event.target.parentElement.href;
-    let text="El comentario se eliminara por completo,<br>¿Estas seguro?";
+    let text="La Tarea se eliminará por completo,<br>¿Estas seguro?";
     modal.setText(text);
     modal.setPath(ruta);
     modal.getModalConfirm();

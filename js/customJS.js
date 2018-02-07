@@ -75,20 +75,13 @@ function cambiarColorPicked(event){
     $("#colorSelected > p").text(colorPicked);
 }
 
-<<<<<<< HEAD
-function cambiarFontColor(){
-=======
+
 function cambiarFontColor(event){
->>>>>>> master
     if($(".toggle input:checked").length>0){
         $("#colorSelected > p").css("color","black");
     }else{
         $("#colorSelected > p").css("color","white");
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 }
 
 function comprobarColor (){
