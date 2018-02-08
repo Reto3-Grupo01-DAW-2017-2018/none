@@ -11,7 +11,17 @@ function inicio()
     alias();
     comprobarContraseña();
     enviar();
+    cookies();
 }
+
+function cookies(){
+    if($.cookie('not_existing')==null){
+        modal = new Modal("Esta página usa cookies, navegando en ella estas aceptando su uso");
+        modal.getModal();
+        $.cookie('not_existing', 'true', { expires: 7 });
+    }
+}
+
 /**
  *
  * @returns {undefined}

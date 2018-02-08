@@ -55,29 +55,10 @@ class ParticipanteController extends BaseController {
         
         //Conseguimos todos los participantes en el proyecto indicado
         $listaParticipantesProyecto = $participanteProyecto->getAllParticipantes();
-        
-//        foreach ($listaParticipantesProyecto as $value)
-//        {
-//            $usuario= new Usuario ($this->conexion);
-//            /*
-//            if($idUs!=$value["usuario"])
-//            {
-//                $idUs=$idUs.", "."'".$value["usuario"]."'";
-//            }
-//            */
-//            $usuario->setIdUser($value["usuario"]);
-//            
-//            $usuario=$usuario->getUsuarioById();
-//            array_push($usuarios, $usuario);
-//        }
-        //lista de no invitados
-        
-        //die(var_dump($idUs));*/
+
         $noInvitados2=$noInvitados->getNoInvitados($_GET['proyecto']);
         
-        //die(var_dump($noInvitados2));
-        
-        //Cargamos la vista participantesEnProyectoView.php con la función 'view()' y le pasamos valores (usaremos 'participantesProyecto')
+        //Cargamos la vista participantesProyectoView.php
         echo $this->twig->render('paticipantesProyectoView.html', array(
             'user' => $_SESSION['user'],
             'proyecto' => $save,
@@ -87,32 +68,12 @@ class ParticipanteController extends BaseController {
         ));
     }
     
-    /*-------------------------------------------------------------------
-    Función que carga la lista de proyectos en los que está trabajando el participante indicado, conseguida del modelo (Participante)*/
-    public function listadoProyectosParticipante() {
-        //Creamos el objeto 'Participante'
-        $proyectoParticipando = new Participante($this->conexion);
-        $proyectoParticipando->setUsuario($_GET['usuario']);
-        
-        //Conseguimos todos los proyectos en los que está trabajando el participante indicado
-        $listaProyectosParticipante = $proyectoParticipando->getAllProyectos();
-        
-        //Cargamos la vista proyectosParticipanteView.php con la función 'view()' y le pasamos valores (usaremos 'proyectosParticipante')
-        $this->view('participantesProyecto', array(
-            'proyectosParticipante' => $listaProyectosParticipante,
-            'titulo' => 'PROYECTOS DEL PARTICIPANTE'
-        ));
-    }    
-    
     /*--------------------------------------------------------------
     Función para crear el nuevo participante (objeto 'Participante') y mandarlo a su clase ('Participante.php')*/
     public function guardarParticipante() {
-     
-       
-            //Construimos un nuevo objeto 'participante' completo para mandar a BD            
-            //die(var_dump($invitados));
+            //Construimos un nuevo objeto 'participante' completo para mandar a BD
             $invitados=$_POST['invitados'];  
-            //die(var_dump($invitados));
+
             foreach ($invitados as $invitado)
             {
                 $participante = new Participante($this->conexion); 
@@ -120,29 +81,9 @@ class ParticipanteController extends BaseController {
                 $participante->setProyecto($_POST['proyecto']);
                 $insercion = $participante->save();
             }
-                //PASAR LA VAR PROYECTO.RESPONSABLE A BOTN VER PARTICIPANTES, Y CON ESE DATO, SI EL USUARIO EN SESSION ES RESPONSABLE, LE QUITAS LOS BOTONES
-            
-            
-        
-        
-        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
-        //Mandamos a la vista principal
+
+        //Mandamos cargar la vista participantesProyectoView
         header('Location: index.php?controller=participante&action=listadoParticipantes&proyecto='.$_POST['proyecto']);
-    }
-    
-    /*--------------------------------------------------------------
-    Función manda al modelo para buscar los datos del participante seleccionado en el boton 'Ver Participante' */
-    public function mostrarDatosParticipante() {
-        //Creamos el objeto solo con el Id y con esto sacaremos todos sus datos de BD
-        $participanteDetalle = new Participante($this->conexion);
-        $participanteDetalle ->setIdParticipante($_GET['idParticipante']);
-        $profile = $participanteDetalle->getParticipanteById();
-        
-        //Mandamos a la función view() para crear la vista 'detalleParticipanteView'
-        $this->view('detalleParticipante',array(
-            "participante"=>$profile,
-            "titulo" => "DETALLE PARTICIPANTE"
-        ));
     }
     
     /*-------------------------------------------------------------------
@@ -152,12 +93,13 @@ class ParticipanteController extends BaseController {
         $participanteBorrar = new Participante($this->conexion);
         $participanteBorrar ->setIdParticipante($_GET['participante']);
         $delete = $participanteBorrar->remove();
-        
-        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
-        //Volvemos a cargar index.php
+
+        //Volvemos a cargar participantesProyectoView.php
         if($_GET['realizar']=="expulsar"){
             header('Location: index.php?controller=participante&action=listadoParticipantes&proyecto='.$_GET['proyecto']);
-        }elseif ($_GET['realizar']=="abandonar"){
+        }
+        //Si no cargamos index.php
+        elseif ($_GET['realizar']=="abandonar"){
             header('Location: index.php');
         }
     }

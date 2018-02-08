@@ -120,7 +120,6 @@ class ArchivoController extends BaseController {
             }
             //RECOGEMOS LOS DATOS DEL ARCHIVO SUBIDO EN EL INPUT FILE DEL FORMULARIO
             $archivos= $_FILES['archivos'];
-            //for($x=0;$x<count($archivos);$x++){
 
             $nombreArchivoSubido = $archivos["name"];
             $archivoTmp = $archivos["tmp_name"];
@@ -146,37 +145,14 @@ class ArchivoController extends BaseController {
                 $insercion = $archivo->save();
                 //COMPROBAMOS QUE SE HA HECHO EL INSERT
                 if($insercion < 1) {
-                    //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
                     echo "false";
                 }
                 else {
-                    //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
                     echo "true";
                 }
             }
-            //}
-
         }
-
-        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
-        //Mandamos a la vista principal
-        //header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['idProyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
     }
-    
-    /*--------------------------------------------------------------
-    Función manda al modelo para buscar los datos del archivo seleccionado en el boton 'Ver Archivo' */
-    public function mostrarDatosArchivo() {
-        //Creamos el objeto solo con el Id y con esto sacaremos todos sus datos de BD
-        $archivoDetalle = new Archivo($this->conexion);
-        $archivoDetalle ->setIdArchivo($_GET['idArchivo']);
-        $profile = $archivoDetalle->getArchivoById();
-        
-        //Mandamos a la función view() para crear la vista 'detalleArchivoView'
-        $this->view('detalleArchivo',array(
-            "archivo"=>$profile,
-            "titulo" => "DETALLE ARCHIVO"
-        ));
-    }   
     
     /*-------------------------------------------------------------------
     Función que manda a modificar los datos del archivo seleccionado*/
@@ -190,7 +166,7 @@ class ArchivoController extends BaseController {
         $archivoModificar->setProyecto($_POST['nuevoProyecto']);
         $update = $archivoModificar->update();
         
-        //Volvemos a cargar index.php pasándole los datos del 'controller', 'action' y el id del archivo para cargar de nuevo 'detalleArchivoView.php' 
+        //Volvemos a cargar archivosProyectoView
         header('Location: index.php?controller=archivos&action=verDetalle&idArchivo='. $archivoModificar->getIdArchivo());
     }
     
@@ -206,6 +182,7 @@ class ArchivoController extends BaseController {
                 $delete = $archivoBorrar->remove();
             }
         }
+        //Cargamos la vista archivosPorProyecto
         header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['proyecto']."&proyectoNombre=".$_GET['nombreProyecto']."&responsable=".$_GET['responsable']);
     }
 
@@ -246,8 +223,8 @@ class ArchivoController extends BaseController {
             header('Accept-Ranges: bytes');
             header('Content-Length: ' . filesize($file));
             @readfile($file);
-            //die(var_dump($file));
         }
+        //Cargamos la vista archivosPorProyecto
         header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['proyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
     }
 
@@ -283,8 +260,8 @@ class ArchivoController extends BaseController {
                 header('Accept-Ranges: bytes');
                 header('Content-Length: ' . filesize($file));
                 @readfile($file);
-                //die(var_dump($file));
             }
+            //Cargamos la vista archivosPorProyecto
             header("Location: index.php?controller=archivo&action=archivosPorProyecto&proyecto=".$_GET['proyecto']."&proyectoNombre=".$_GET['nombreProyecto']);
         }
     }

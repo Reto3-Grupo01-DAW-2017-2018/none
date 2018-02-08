@@ -4,7 +4,7 @@
         <h3>Comentarios del Usuario</h3>
         <hr/>
         <!-- Tabla para mostrar los datos de cada comentario del usuario -->
-        <table class="table col-lg-12">
+        <table>
             {% if comentariosUser is not null %}
             <thead>
                 <tr>
@@ -48,7 +48,7 @@
                     </td>
                 </tr>
                 {% else %}
-                <div id="mensajeComentariosUser" style="border: 1px solid black; text-align: center;">
+                <div id="mensajeComentariosUser" class="mensajeProyecto">
                     <h5>El usuario no ha escrito ningún comentario</h5>
                 </div>
             {% endfor %}  
@@ -66,8 +66,8 @@
             <span class="glyphicon glyphicon-chevron-right" onclick="closeNav()"></span>
         </div>
         <h4><strong>Acciones:</strong></h4>
-        <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Tareas del Usuario">Tareas del Usuario</a>
-        <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Archivos del Usuario">Archivos del Usuario</a>
+        <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm acciones-btns" title="Tareas del Usuario">Tareas del Usuario</a>
+        <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm acciones-btns" title="Archivos del Usuario">Archivos del Usuario</a>
         <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
     </aside>
 {% endblock %}

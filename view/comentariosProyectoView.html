@@ -2,7 +2,7 @@
 {% block container %}
     <div class="usuario">
         {% if nombreProyecto is defined %}
-            <h3>Comentarios en el Proyecto {{nombreProyecto}}</h3>
+            <h3>Comentarios en el Proyecto <strong>{{nombreProyecto}}</strong></h3>
         {% endif %}
         <hr/>
         <!-- Tabla para mostrar los datos de cada comentario del usuario -->
@@ -17,31 +17,6 @@
             <div class="panel panel-default">
                 <blockquote>
                     <p id="contenidoViejoCom{{contador}}" class="pull-left">{{comentario.contenido}}</p>
-                    {% if comentario.editado == "si" %}
-                        <br><br>
-                        <small class="text-muted pull-right">editado</small>
-                    {% else %}
-                        <br><br>
-                    {% endif %}
-                    <small>{{comentario.fechaHora}}<cite title="usuario"><strong> {{comentario.username}}</strong></cite></small>
-                    <hr>
-                    {% if responsable == user.idUser and comentario.participante != participante %}
-                        <!-- Enlace para el boton Eliminar para eliminar de BD el comentario seleccionado (se pasa como action -> eliminar) -->
-                        <a href="index.php?controller=comentario&action=eliminar&comentario={{comentario.idComentario}}">
-                            <button type="button" class="btn btn-danger btn-sm eliminarButton">Eliminar</button>
-                        </a>
-                    {% elseif comentario.participante == participante %}
-                        <!-- Enlace para el boton Editar para modificar los datos del comentario si es el usuario que lo ha hecho -->
-                        <a href="#">
-                            <button type="button" class="btn btn-warning btn-sm editarButton" value="{{contador}}">Editar</button>
-                            <input type="hidden" name="hiddenIdComentario{{contador}}" value="{{comentario.idComentario}}" />
-                        </a>
-                        <!-- Enlace para el boton Eliminar para eliminar de BD el comentario seleccionado (se pasa como action -> eliminar) -->
-                        <a href="index.php?controller=comentario&action=eliminar&comentario={{comentario.idComentario}}&proyecto={{idProyecto}}&nombreProyecto={{nombreProyecto}}&responsable={{responsable}}&participante={{participante}}">
-                            <button type="button" class="btn btn-danger btn-sm eliminarButton">Eliminar</button>
-                        </a>
-                    {% endif %}
-
                 {% if comentario.editado == "si" %}
                     <br><br><small class="text-muted">editado</small>
                 {% else %}
@@ -99,14 +74,10 @@
         </div>
         <hr class="separadorAside"/>
         <h4><strong>Acciones:</strong></h4>
-        <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{idProyecto}}&participante={{participante}}" class="btn btn-info btn-sm acciones-btns" title="Tareas en el Proyecto">Tareas en el Proyecto</a>
-        <a href="index.php?controller=archivo&action=archivosProyecto&proyecto={{idProyecto}}" class="btn btn-info btn-sm acciones-btns" title="Archivos en el Proyecto">Archivos en el Proyecto</a>
-        <a href="javascript: history.back()" class="btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
-        <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{idProyecto}}&participante={{participante}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Tareas en el Proyecto">Tareas en el Proyecto</a>
-        <br><br>
+        <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{idProyecto}}&participante={{participante}}&origen=proyecto" class="btn btn-info btn-sm acciones-btns" title="Tareas en el Proyecto">Tareas Proyecto</a>
+        <a href="index.php?controller=participante&action=listadoParticipantes&proyecto={{idProyecto}}" class="btn btn-info btn-sm acciones-btns" title="Ver Participantes en el Proyecto">Participantes Proyecto</a>
         <a href="index.php?controller=archivo&action=archivosPorProyecto&proyecto={{idProyecto}}&proyectoNombre={{nombreProyecto}}&responsable={{responsable}}" class="btn btn-info btn-sm acciones-btns" title="Ver Archivos del Proyecto">Archivos Proyecto</a>
-        <br><br>
-        <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
+        <a href="javascript: history.back()" class="btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
     </aside>
     <!-- The Modal -->
     <div id="myModal" class="modal">

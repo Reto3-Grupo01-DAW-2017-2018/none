@@ -5,6 +5,7 @@ class ComentarioController extends BaseController {
     public function __construct() {
         parent::__construct();
         require_once __DIR__. "/../model/Comentario.php";
+        require_once __DIR__. "/../model/Participante.php";
     }
 
     /*-------------------------------------------------------------------
@@ -42,7 +43,12 @@ class ComentarioController extends BaseController {
         //Creamos el objeto 'Comentario'
         $comentario = new Comentario($this->conexion);
         $comentario->setProyecto($_GET['proyecto']);
-
+        //Sacamos la participación del usuario mediante el proyecto y el usuario
+        $participante=new Participante($this->conexion);
+        $participante->setUsuario($_SESSION["user"]->idUser);
+        $participante->setProyecto($_GET['proyecto']);
+        $participante=$participante->getParticipanteByUsuarioAndProyecto();
+        $idParticipante=$participante->idParticipante;
         //Conseguimos todas los comentarios (lista de los comentarios en BD)
         $listaComentarios = $comentario->getAll();
         if(count($listaComentarios)<1){
@@ -55,7 +61,7 @@ class ComentarioController extends BaseController {
             "idProyecto" => $_GET['proyecto'],
             "nombreProyecto" => $_GET['nombreProyecto'],
             "responsable" => $_GET['responsable'],
-            "participante" => $_GET['participante'],
+            "participante" => $idParticipante,
             "titulo" => "Comentarios en el Proyecto - Nonecollab"
         ));
     }
@@ -135,10 +141,9 @@ class ComentarioController extends BaseController {
         //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
         $comentarioBorrar = new Comentario($this->conexion);
         $comentarioBorrar ->setIdComentario($_GET['comentario']);
-        //echo 'a ver esta mierda---> '. $comentarioBorrar->getIdComentario();
         $delete = $comentarioBorrar->remove();
 
-        //Volvemos a cargar index.php
+        //Mandamos a la función listarComentariosProyecto para recargar la página comentariosProyectoView
         $this->listarComentariosProyecto();
     }
 

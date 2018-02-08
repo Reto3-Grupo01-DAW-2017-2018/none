@@ -48,7 +48,6 @@ class ProyectoController extends BaseController {
         $listaProyectosUsuario = $proyecto->getAll();
 
         //Ahora conseguimos la lista de los proyectos en los que participa el usuario a través del modelo 'Participante.php'
-        require_once __DIR__. "/../model/Participante.php";
         //Creamos el objeto Participante
         $participanteEnProyectos = new Participante($this->conexion);
         $participanteEnProyectos->setUsuario($_SESSION['user']->idUser);
@@ -57,7 +56,6 @@ class ProyectoController extends BaseController {
         //Filtramos para que solo muestre los proyectos de los que el usuario no es responsable (solo colabora)
         $listaProyectosSoloParticipando = array();
         for ($y = 0; $y < count($listaProyectosParticipados); $y++){
-            //die(var_dump($listaProyectosParticipados[$y]));
             if($listaProyectosParticipados[$y]['responsable'] != $listaProyectosParticipados[$y]['usuario']){
                 array_push($listaProyectosSoloParticipando, $listaProyectosParticipados[$y]);
             }
@@ -65,7 +63,7 @@ class ProyectoController extends BaseController {
         //cargamos la lista de nombres de usuario para hacer la busqueda de usuarios para cuando añadamos proyectos nuevos
         $usuarios= new Usuario($this->conexion);
         $listaUsuarios=$usuarios->getAll();
-        //Cargamos la vista proyectosView.php con la función 'view()' y le pasamos valores (usaremos 'proyectos' para los proyectos del usuario y 'participando' para los proyectos en los que participa)
+        //Cargamos la vista boardView.php
         echo $this->twig->render("boardView.html",array(
             "user" => $_SESSION["user"],
             "proyectos" => $listaProyectosUsuario,
@@ -113,14 +111,12 @@ class ProyectoController extends BaseController {
             $proyectoDetalle->setIdProyecto($_GET['proyecto']);
             $profile = $proyectoDetalle->getProyectoById();
 
-            //Para conseguir todas las tareas en este proyecto, las conseguimos del modelo 'Tarea.php'
-            include_once __DIR__ . "/../model/Tarea.php";
             //Creamos el objeto Tarea con el id del proyecto seleccionado
             $tareaProyecto = new Tarea($this->conexion);
             $tareaProyecto->setProyecto($proyectoDetalle->getIdProyecto());
             $listadoTareasProyecto = $tareaProyecto->getAll();
 
-            include_once __DIR__. '/../model/Participante.php';
+            //Buscamos los participantes en cada proyecto
             $participanteProyecto = new Participante($this->conexion);
             $participanteProyecto->setProyecto($proyectoDetalle->getIdProyecto());
             $listaParticipantesEnProyecto = $participanteProyecto->getAllParticipantes();
@@ -128,7 +124,7 @@ class ProyectoController extends BaseController {
             $participante = $_GET['participante'];
             $origen = $_GET['origen'];
 
-            //Mandamos a la función view() para crear la vista 'proyectoView'
+            //Mandamos a la vista 'proyectoView'
             echo $this->twig->render("proyectoView.html", array(
                 "user" => $_SESSION["user"],
                 "proyecto" => $profile,
@@ -152,8 +148,8 @@ class ProyectoController extends BaseController {
         $proyectoModificar->setFechaInicioProyecto($_POST['nuevoFechaInicioProyecto']);
         $proyectoModificar->setResponsable($_POST['nuevoResponsable']);
         $update = $proyectoModificar->update();
-        
-        //Volvemos a cargar index.php pasándole los datos del 'controller', 'action' y el id del proyecto para cargar de nuevo 'detalleProyectoView.php' 
+
+        //Volvemos a cargar proyectoView
         header('Location: index.php?controller=proyectos&action=verDetalle&idProyecto='. $proyectoModificar->getIdProyecto());
     }
     

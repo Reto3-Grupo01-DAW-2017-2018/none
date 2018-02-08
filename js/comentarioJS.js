@@ -9,13 +9,12 @@ function eventos(){
     $("#cancelarEditarComentario").click(cancelarEdicion);    
     $("#myModal>div>span").click(esconderModal,modal.ocultarModal);
     $(".eliminarButton").bind('click', { param: $(this) }, confirmModal);
-    //$("#myModal>div>span").bind('click', modal.ocultarModal);
 }
 
+//Funcion que hace las validaciones necesarias de los formularios en comentariosProyectoView
 function comprobarComentario() {
     let idComentario = $("input[name=idComentario]").attr("value");
-    
-    //alert("idComentario--> " + idComentario);
+
     
     let proyecto = $("input[name=proyecto]").val();
     let nombreProyecto = $("input[name=nombreProyecto]").val();
@@ -23,10 +22,11 @@ function comprobarComentario() {
     let participante = $("input[name=participante]").val();
 
     event.preventDefault();
+    //Si el formulario es el de 'nuevo comentario'
     if(($(".tipoForm").attr("value") == 'nuevo')) {
         if($("#contenidoNuevoCom").val().length > 300) {
-            alert("El texto del comentario es demasiado largo");
-            //HACER ESTO CON UN MODAL, NO CON UN ALERT
+            modal = new Modal("El texto del comentario es demasiado largo");
+            modal.getModal();
         }
         else {
             $("#formNuevoComentario").attr("action","index.php?controller=comentario&action=nuevoComentario&proyecto="+proyecto+"&nombreProyecto="+nombreProyecto+"&responsable="+responsable+"&participante="+participante);
@@ -34,10 +34,11 @@ function comprobarComentario() {
         }            
     }
     else {
+        //Si el formulario es el de editar comentario
         if($(".tipoForm").attr("value") == 'editando') {
             if($("#contenidoEditandoCom").val().length > 300) {
-                alert("El texto del comentario es demasiado largo");
-                //HACER ESTO CON UN MODAL, NO CON UN ALERT
+                modal = new Modal("El texto del comentario es demasiado largo");
+                modal.getModal();
             }
             else {
                 if($("#contenidoViejoCom"+$("#comentarioHidden").val()).text().localeCompare($("#contenidoEditandoCom").val()) != 0) {
@@ -45,23 +46,20 @@ function comprobarComentario() {
                     $("#formEditarComentario").submit();
                 }
                 else {
-                    alert("no se ha modificado el texto del comentario");                
-                    //HACER ESTO CON UN MODAL, NO CON UN ALERT
+                    modal = new Modal("No se ha modificado el texto del comentario");
+                    modal.getModal();
                 }
             }
         }
     }
 }
 
+//Función que carga el formulario para editar el comentario
 function mostrarFormEditar(event) {  
     $("#nuevoComentario").hide();
     $("#editarComentario").show();
     var contadorComentario=event.target.value;
     var idComentario = $("input[name=hiddenIdComentario"+contadorComentario).val();
-    
-    //alert("id comentario hidden--> " + idComentario);
-    
-    
     var contenido = $("#contenidoViejoCom"+contadorComentario).text();
     var participante = $("#idParticipante").val();;
     var proyecto = $("#idProyecto").val();
@@ -85,21 +83,8 @@ function mostrarFormEditar(event) {
         </div>');
 }
 
+//Funcion para el boton de cancelar la edición del comentario
 function cancelarEdicion() {
     $("#editarComentario").hide();
     $("#nuevoComentario").show();    
-}
-
-function esconderModal(){
-    $(".modal").css("display","none");
-    $(".modal").html('');
-}
-
-function confirmModal(event){
-    event.preventDefault();
-    var ruta=event.target.parentElement.href;
-    let text="El comentario se eliminara por completo,<br>¿Estas seguro?";
-    modal.setText(text);
-    modal.setPath(ruta);
-    modal.getModalConfirm();
 }
