@@ -375,12 +375,17 @@ a{
 .mensajeProyecto{
     border: 1px solid black;
     text-align: center;
+    flex: 1;
 }
 
 .usuario{
     height:80%;
-    flex: 1;
+    flex: 3;
     overflow-y:scroll;
+}
+.tareasMain{
+    height:80%;
+    flex: 3;
 }
 .proyectos{
     height:40%;
@@ -474,7 +479,7 @@ btn-secondary{
 }
 
 small::before{
-    content: "";
+    content: ""!important;
 }
 .wrap{
     height:80%;

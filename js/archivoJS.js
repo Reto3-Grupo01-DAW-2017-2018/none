@@ -4,12 +4,9 @@ function eventos(){
     modal = new Modal("");
     $("#subirArchivos").click(comprobarArchivos);
     $("#archivosSection").on('click','#descargarArchivos',download);
-    //$("#myModal>div>span,#myModal>div>div>a").click(esconderModal);
-    //$(".eliminarButton").bind('click', { param: $(this) }, confirmModal);
-
-    //$(".eliminarButton").click(confirmModal);
 }
 
+//Función para validar el formulario de 'subir archivo'
 function comprobarArchivos(evt) {
     var files = document.getElementById('archivos').files;
     // comprobamos si hay archivos seleccionados
@@ -26,6 +23,7 @@ function comprobarArchivos(evt) {
     }
 }
 
+//Función para descargar el archivo
 function download(){
     let idProyecto= $("#idProyecto").val();
     let nombreProyecto= $("#nombreProyecto").val();
@@ -39,6 +37,7 @@ function download(){
     $('#formListaArchivos').submit();
 }
 
+//Función para cargar el archivo
 function cargarArchivos(){
     let text="cargarArchivos";
     let idProyecto= $("#idProyecto").val();

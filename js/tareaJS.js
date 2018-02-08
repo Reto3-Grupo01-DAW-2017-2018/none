@@ -10,24 +10,17 @@ function eventos() {
     $("#editarTarea").bind('click', { param: $(this) }, validarTarea);
     $("#cancelarEditarTarea").click(cancelarEdicion); 
     $(".finalizadaViejaTarea").bind('click', { param: $(this) }, guardarFinalizada);
-    /*$("#formNuevaTarea").submit(function(event){
-        event.preventDefault()
-        validarTarea();
-    });*/
-    
-    //finalizarTarea();
-    /*$('.finalizada').prop('checked')(finalizarTarea);
-    $('.finalizada').click(finalizarTarea);*/
 }
 
+//Función para las validaciones necesarias para los formularios de tareasProyectoView
 function validarTarea(param) {
     var tipoForm = param.target.value;
     var fechaActual = new Date();
     var ayer = fechaActual.getDate() - 1;
     var fechaAyer = fechaActual.setDate(ayer);
 
+    //Si el formulario es el de 'crear tarea'
     if(tipoForm == 'Crear Tarea') {
-
         var recogerFechaInicio = $('#fit').text();
         var fechaInicioTarea = new Date(recogerFechaInicio);
         var recogerFechaFin = $('#fft').text();
@@ -55,6 +48,7 @@ function validarTarea(param) {
         }
     }
     else {
+        //Si el formulario es el de 'editar tarea'
         if(tipoForm == 'Modificar') {
             var recogerEditandoFechaInicio = $('#efit').text();
             var fechaInicioTareaEdit = new Date(recogerEditandoFechaInicio);
@@ -86,6 +80,7 @@ function validarTarea(param) {
     }
 }
 
+//Función que oculta el formulario de 'crear tarea' y muestra el de 'editar tarea'
 function mostrarFormEditar(event) {
     $("#nueTarea").hide();
     $("#ediTarea").show();
@@ -99,14 +94,10 @@ function mostrarFormEditar(event) {
     
     var fechaFinTarea = $("#fechaFinViejaTarea"+contadorTarea+" > strong").text();
     var fechaFinTareaFormateada = cambiarFormatoFechas(fechaFinTarea);
-    
-    //AKI COMPROBAR LOS QUE ESTAN SELECCIONADOS DE URGENTE Y ASIGNADA A
+
     
     var urgente = $("#urgenteViejaTarea"+contadorTarea+" > strong").text();    
-    
-    //var editada = $("#editadaViejaTarea"+contadorTarea+" > strong").text();
-    //EDITADA, AL MODIFICAR, SIEMPRE VA A SER SI (donde modificamos esto, aki o en controller??)
-   //var editada = 'si';
+
     
     var asignada = $("#idUsuarioAsignado"+contadorTarea).val();
     var creador = $("#idUsuarioCreador"+contadorTarea).val();
@@ -137,17 +128,13 @@ function mostrarFormEditar(event) {
     $("#ect").attr("value", creador); // creadortarea = participante que creó la tarea
 }
 
+//Función para cambiar el formato de las fechas y poderlo cargar como value en el formulario 'editar tarea'
 function cambiarFormatoFechas(fecha) {
-    //var fechaFormateada = fecha.replace(/\//g, "-").split("-").reverse().join("-");
     var fechaFormateada = fecha.split("/").reverse().join("-");
-    /*var fechaFormateada2 = fechaFormateada.split("-");
-    var fechaFormateada3 = fechaFormateada2.reverse();
-    var fechaFormateadaFinal = fechaFormateada3.join('-');*/
-    
-    //return fechaFormateadaFinal;
     return fechaFormateada;
 }
 
+//Función para guardar la tarea marcada como finalizada
 function guardarFinalizada(event)
 {
     var finalizada;
@@ -177,22 +164,25 @@ function guardarFinalizada(event)
             }
             else
             {
-                //modal error
+                modal = new Modal("Error: No se ha podido actualizar la tarea");
+                modal.getModal();
             }
         },
         error: function (error)
         {
-            alert("error del servidor");
-            console.log('Llamada Oo--> '+error);
+            modal = new Modal("Error en la conexión");
+            modal.getModal();
         }
     });
 }
 
+//Función para el botón 'cancelar editar tarea'
 function cancelarEdicion() {
     $("#ediTarea").hide();
     $("#nueTarea").show();
 }
 
+//Función que marca como finalizada la tarea en la vista
 function finalizarTarea(contadorParaFinalizada) {
 
     if($("#final"+contadorParaFinalizada).is(':checked')){
@@ -201,18 +191,4 @@ function finalizarTarea(contadorParaFinalizada) {
     else{
         $("#btnedi"+contadorParaFinalizada).prop( "disabled", false);
     }
-}
-
-function esconderModal(){
-    $(".modal").css("display","none");
-    $(".modal").html('');
-}
-
-function confirmModal(event){
-    event.preventDefault();
-    var ruta=event.target.parentElement.href;
-    let text="La Tarea se eliminará por completo,<br>¿Estas seguro?";
-    modal.setText(text);
-    modal.setPath(ruta);
-    modal.getModalConfirm();
 }

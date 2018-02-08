@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block container %}
 <div class="contenido">
-    <h3>Proyectos del usuario</h3>
+    <h3>Proyectos del usuario <strong>{{user.username}}</strong></h3>
     <hr/>
     <section class="proyectos">
         {% for proyecto in proyectos %}

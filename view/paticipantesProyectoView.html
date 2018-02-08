@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block container %}
     <section class="usuario">
-        <h3>Proyecto <strong>{{proyecto.nombre}}</strong></h3>
+        <h3>Participantes en el proyecto <strong>{{proyecto.nombre}}</strong></h3>
         <hr/>
         <table class="table">
             <thead>
@@ -51,13 +51,13 @@
         </select>
 
         <br>
-       <input type="submit" class="btn btn-info btn-sm acciones-btns" name="enviar" value="Invitar"/> <!-- antes era 180px -->
+       <input type="submit" class="btn btn-success btn-sm acciones-btns" name="enviar" value="Invitar"/> <!-- antes era 180px -->
     </form>
     <hr class="separadorAside"/>
     <h4><strong>Acciones:</strong></h4>
-    <a href="index.php?controller=tarea&action=tareasUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm acciones-btns" title="Ver Tareas del Usuario">Tareas del Usuario</a>
-    <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm acciones-btns" title="Ver Archivos del Usuario">Archivos del Usuario</a>
-    <a href="index.php?controller=comentario&action=comentariosUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm acciones-btns" title="Ver Comentarios del Usuario">Comentarios del Usuario</a>
+    <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{proyecto.idProyecto}}&participante={{participanteCreador}}&origen=proyecto" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Tareas en el Proyecto">Tareas Proyecto</a>
+    <a href="index.php?controller=archivo&action=archivosPorProyecto&proyecto={{proyecto.idProyecto}}&proyectoNombre={{proyecto.nombre}}&responsable={{proyecto.responsable}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Archivos en el Proyecto">Archivos Proyecto</a>
+    <a href="index.php?controller=comentario&action=comentariosPorProyecto&proyecto={{proyecto.idProyecto}}&nombreProyecto={{proyecto.nombre}}&responsable={{proyecto.responsable}}&participante={{participanteCreador}}" class="btn btn-info btn-sm acciones-btns" title="Ver Comentarios en el Proyecto">Comentarios Proyecto</a>
     <a href="javascript: history.back()" class="btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
     <br><br>
 </aside>

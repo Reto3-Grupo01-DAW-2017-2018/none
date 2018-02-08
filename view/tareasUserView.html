@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block container %}
-    <div class="col-lg-9">
+    <div class="usuario">
         {% if tareasUser is defined %}
         <h3>Tareas del Usuario <strong>{{user.username}}</strong></h3>
         {% endif %}
         <hr/>
-        <table class="table col-lg-12">
+        <table>
             <!-- Tabla para mostrar los datos de cada tarea del usuario -->
             {% if tareasUser is not null %}
                 <thead>
@@ -35,13 +35,13 @@
                         {% set origen = 'participando' %}
                         {% endif %}
                         <!-- Enlace para el boton Gestionar para mostrar los datos del proyecto en el que está la tarea (se pasa como action -> verDetalle) -->
-                        <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{tarea.proyecto}}&tarea={{tarea.idTarea}}&participante={{tarea.participante}}&origen={{origen}}" class="btn btn-info btn-sm" style="text-decoration: none">
+                        <a href="index.php?controller=proyecto&action=verDetalle&proyecto={{tarea.proyecto}}&tarea={{tarea.idTarea}}&participante={{tarea.participante}}&origen={{origen}}" class="btn btn-info btn-sm">
                             Entrar
                         </a>
                     </td>
                 </tr>
             {% else %}
-                <div id="mensajeTareasUser" style="border: 1px solid black; text-align: center;">
+                <div id="mensajeTareasUser" class="mensajeProyecto">
                     <h5>El usuario no tiene ninguna tarea asignada</h5>
                 </div>
             {% endfor %}
@@ -51,12 +51,19 @@
             {% endif %}
         <hr/>
     </div>
-    <aside class="col-lg-3" style="border-left: 1px solid black !important; margin-top: 30px;">
+<div class="openAside" >
+    <span class="glyphicon glyphicon-chevron-left" onclick="openNav()"></span>
+</div>
+<aside>
+    <div class="closeAside" >
+        <span class="glyphicon glyphicon-chevron-right" onclick="closeNav()"></span>
+    </div>
         <h4><strong>Acciones:</strong></h4>
-        <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Archivos del Usuario">Archivos del Usuario</a>
-        <br><br>
-        <a href="index.php?controller=comentario&action=comentariosUsuario&usuario={{user.idUser}}" class="col-xs-12 btn btn-info btn-sm acciones-btns" title="Comentarios del Usuario">Comentarios del Usuario</a>
-        <br><br>
+        <a href="index.php?controller=archivo&action=archivosUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm acciones-btns" title="Archivos del Usuario">Archivos del Usuario</a>
+        <a href="index.php?controller=comentario&action=comentariosUsuario&usuario={{user.idUser}}" class="btn btn-info btn-sm acciones-btns" title="Comentarios del Usuario">Comentarios del Usuario</a>
         <a href="javascript: history.back()" class="col-xs-12 btn btn-primary btn-sm acciones-btns" title="Volver">Volver</a>
     </aside>
+{% endblock %}
+{% block scripts %}
+<script src="/../nonecollab/js/genericoJS.js"></script>
 {% endblock %}

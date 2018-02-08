@@ -83,7 +83,7 @@ class TareaController extends BaseController {
     }
 
     /*--------------------------------------------------------------
-    Función manda al modelo para buscar los datos de la tarea seleccionada en el boton 'Ver Tarea' */
+    Función manda al modelo para buscar los datos de la tarea seleccionada */
     public function mostrarDatosTarea() {
         //Creamos el objeto solo con el Id y con esto sacaremos todos sus datos de BD
         $tareaDetalle = new Tarea($this->conexion);
@@ -115,13 +115,13 @@ class TareaController extends BaseController {
         $tareaModificar->setProyecto($_POST['proyecto']);
         $update = $tareaModificar->update();
 
-        //Volvemos a cargar index.php pasándole los datos del 'controller', 'action' y el id de la tarea para cargar de nuevo 'detalleTareaView.php'
+        //Volvemos a cargar proyectoView.php
         header('Location: index.php?controller=proyecto&action=verDetalle&proyecto='. $_POST['proyecto']. '&participante='. $_POST['creadorTarea'] .'&origen=proyecto');
 
     }
 
     /*-------------------------------------------------------------------
-    Función que manda a borrar la tarea seleccionada*/
+    Función que manda marcar como finalizada la tarea seleccionada*/
     public function guardarFinalizada() {
         //Creamos el objeto solo con el Id y lo mandamos al modelo para borrar
         if(isset($_POST['idTarea'])&&isset($_POST['finalizada'])){
@@ -135,10 +135,6 @@ class TareaController extends BaseController {
                 echo "1";
             }
         }
-
-        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
-        //Volvemos a cargar index.php
-        //header('Location: index.php?controller=proyecto&action=verDetalle&proyecto='. $_GET['proyecto']. '&participante='. $_GET['participante']. '&origen=proyecto');
     }
     
     /*-------------------------------------------------------------------
@@ -149,8 +145,7 @@ class TareaController extends BaseController {
         $tareaBorrar ->setIdTarea($_GET['tarea']);
         $delete = $tareaBorrar->remove();
 
-        //AQUÍ HABRÁ QUE CARGAR OTRA VISTA, NO LA INDICADA 'index.php' (ARREGLARLO)
-        //Volvemos a cargar index.php
+        //Volvemos a cargar proyectoView.php
         header('Location: index.php?controller=proyecto&action=verDetalle&proyecto='. $_GET['proyecto']. '&participante='. $_GET['participante']. '&origen=proyecto');
     }
 }
